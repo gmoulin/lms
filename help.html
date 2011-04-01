@@ -1,0 +1,144 @@
+<button class="button icon help" data-icon="0">?</button>
+<ul>
+	<li>
+		<h2>Catégories</h2>
+		<ol class="categories">
+			<li class="saga">Sagas</li>
+			<li class="book">Livres</li>
+			<li class="author">Auteurs</li>
+			<li class="movie">Films</li>
+			<li class="artist">Artistes</li>
+			<li class="album">Albums</li>
+			<li class="band">Groupes</li>
+			<li class="storage">Rangements</li>
+		</ol>
+	</li>
+	<li>
+		<h2>Icônes</h2>
+		<ol class="icons">
+			<li><span class="button icon" data-icon="+"></span><abbr>ajout</abbr></li>
+			<li><span class="button icon" data-icon="}"></span><abbr>détail</abbr></li>
+			<li><span class="button icon" data-icon="P"></span><abbr>édition</abbr></li>
+			<li><span class="button icon" data-icon="X"></span><abbr>fermer</abbr></li>
+			<li><span class="button icon" data-icon="f"></span><abbr>filtre</abbr></li>
+			<li><span class="button icon" data-icon="/"></span><abbr>lien internet</abbr></li>
+			<li><span class="button icon loan" data-icon="u"></span><abbr>prêt</abbr></li>
+			<li><span class="button icon" data-icon="t"></span><abbr>suppression</abbr></li>
+			<li><span class="button icon" data-icon="b"></span><abbr>déplacer</abbr></li>
+		</ol>
+	</li>
+	<li>
+		<h2>Tris</h2>
+		<p>
+			Le changement de l'ordre de tris s'effectue en cliquant sur <span class="button icon order" data-icon="3"></span> ou <span class="button icon order" data-icon="5"></span> pour une catégorie.
+			<br />
+			Par défaut pour les livres par exemple : titre de Saga, position dans la Saga, titre du livre, nom de l'auteur, prénom de l'auteur.
+			<br />
+			Un clic sur <span class="button icon order" data-icon="3"></span> pour une catégorie modifiera l'ordre en triant sur celle-ci dans l'ordre alphabétique croissant (<span class="button icon order" data-icon="5"></span> décroissant).
+			<br />
+			La couleur blanche de la flèche d'un <span class="button icon order active" data-icon="3"></span> ou <span class="button icon order active" data-icon="5"></span> signifie que ce tri est actuellement utilisé.
+			<br />
+			Dans le cas d'une recherche la pertinence est prioritaire sur le tris choisi.
+			<br />
+			De plus il est possible de filter directement sur une information d'un résultat via le bouton <span class="button icon" data-icon="f"></span>.
+		</p>
+	</li>
+	<li>
+		<h2>Recherche</h2>
+		<p>
+			Bouton: en haut à droite <span class="button category filterFormSwitch" rel="book"></span>, un clic pour afficher ou masquer.
+			<br />
+			Raccourci : <span class="keyboard">ALT</span> + <span class="keyboard">F</span>
+		</p>
+		<p>
+			La recherche est possible sur les livres et les films.
+			<br />
+			Elle peut être réalisée sur de manière globale et/ou une ou plusieurs informations.
+			<br />
+			Des listes correspondant aux valeurs connues sont présentes pour chaque information.
+
+			<br />
+			<br />
+			Dans le cas d'une recherche comportant plusieurs mots, ils seront tous pris en compte séparement. Cependant le tri des résultats sera prioritairement réalisé sur leur pertinence.
+		</p>
+	</li>
+	<li>
+		<h2>Détail</h2>
+		<p>
+			Chaque résultat listé dispose, quand nécessaire, d'un bouton <span class="button icon" data-icon="}"></span> permettant d'afficher son détail.
+		</p>
+	</li>
+	<li>
+		<h2>Ajout</h2>
+		<p>
+			Bouton: en bas à droite <span class="button category add" rel="book"></span>.
+			<br />
+			Raccourci : <span class="keyboard">ALT</span> + <span class="keyboard">A</span>
+		</p>
+		<p>
+			Un formulaire s'affiche avec les différentes informations à saisir.
+			<br />
+			Un astérisque * signifie que cette information est requise.
+			La validation des informations est immédiatement et un symbole s'affiche avant le champ : <span class="validation valid"></span>valide, <span class="validation invalid"></span>problème, <span class="validation error"></span>erreur.
+			<br />
+			Si une errreur survient à la soumission du formulaire un message explicatif s'affiche à côté du champ incriminé.
+		</p>
+		<p>
+			Pour ajouter une image il est possible de déposer un fichier image depuis l'ordinateur ou de déposer une image depuis un site internet.
+			<br />
+			Une fois la récupération effectuée l'image s'affiche sur la droite du formulaire.
+			<br />
+			Dans le cas d'une image provenant d'un autre site, il peut arriver que la récupération réussisse mais que l'image ne s'affiche pas, dans ce cas copier l'image sur l'ordinateur et déposer la copie sur le formulaire.
+		</p>
+	</li>
+	<li>
+		<h2>Modification</h2>
+		<p>
+			Le bouton <span class="button icon" data-icon="P"></span> permet d'éditer l'information correspondante.
+			<br />
+			Dans le cas d'un livre ou d'un film, en plus de son propre bouton, plusieurs informations disposent du bouton (auteur, artiste, saga, rangement).
+			<br />
+			Un formulaire s'affiche et est soumis aux même règles de validation que le formulaire d'ajout.
+			<br />
+			Chaque modification soumisse entraîne la mise à jour de la liste affichée et si possible la réouverture du détail mis à jour.
+		</p>
+	</li>
+	<li>
+		<h2>Suppression</h2>
+		<p>
+			Le bouton <span class="button icon" data-icon="t"></span> permet de supprimer l'information correspondante.
+			<br />
+			Dans la plupart des cas un formulaire de confirmation s'affichera.
+			<br />
+			Il peut comporter des remarques sur les conséquences de la suppression.
+			<br />
+			Dans le cas d'un rangement par exemple, il sera nécessaire d'allouer les films et livres à un autre rangement.
+		</p>
+	</li>
+	<li>
+		<h2>Prêt</h2>
+		<p>
+			Il est possible d'ajouter le nom de la personne à qui un livre ou film a été prêté via le bouton <span class="button icon loan" data-icon="u"></span>.
+			<br />
+			Cette information apparaît dans le détail d'un livre ou film.
+			<br />
+			Remarque : le rangement n'est pas modifié lors de l'ajout d'un prêt.
+		</p>
+	</li>
+	<li>
+		<a href="http://www.w3.org/html/logo/">
+			<img src="http://www.w3.org/html/logo/badge/html5-badge-h-css3-performance-semantics.png"
+				width="197" height="64" alt="HTML5 Powered with CSS3 / Styling, Performance &amp; Integration, and Semantics"
+				title="HTML5 Powered with CSS3 / Styling, Performance &amp; Integration, and Semantics">
+		</a>
+		<a href="http://jquery.com/">
+			<img width="215" height="53" alt="jQuery: Write Less, Do More." src="http://static.jquery.com/files/rocker/images/logo_jquery_215x53.gif">
+		</a>
+		<a href="http://www.mozilla.org/">
+			<img alt="Get Firefox" src="/img/FxLogo100x100black.png">
+		</a>
+		<a href="http://stackoverflow.com/users/617533/gmo">
+			<img src="http://stackoverflow.com/users/flair/617533.png?theme=dark" width="208" height="58" alt="profile for GMO at Stack Overflow, Q&A for professional and enthusiast programmers" title="profile for GMO at Stack Overflow, Q&A for professional and enthusiast programmers" />
+		</a>
+	</li>
+</ul>

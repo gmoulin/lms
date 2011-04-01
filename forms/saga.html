@@ -1,0 +1,27 @@
+<form name="saga_form" method="post" action="" id="manage_saga" class="form" title="" rel="saga">
+	<input type="hidden" id="sagaAction" name="action" value="" />
+	<input type="hidden" id="sagaID" name="id" value="" />
+	<span class="result"></span>
+	<fieldset>
+		<legend>
+			Détails de la saga
+		</legend>
+		<ol>
+			<li>
+				<input type="text" id="sagaTitle" name="title" value="" placeholder="Titre de la saga" required />
+				<label for="sagaTitle">Titre *</label>
+			</li>
+		</ol>
+	</fieldset>
+	<fieldset>
+		<legend>
+			Liens relatifs
+		</legend>
+		<ol>
+			<li>
+				<input type="text" id="sagaSearchURL" name="searchURL" value="" placeholder="Liste des livres de la saga" pattern="https?://.+" />
+				<label for="sagaSearchURL">Recherche</label>
+			</li>
+		</ol>
+	</fieldset>
+</form>

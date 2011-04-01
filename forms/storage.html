@@ -1,0 +1,46 @@
+<form id="manage_storage" name="storage_form" method="post" action="" class="form" title="" rel="storage">
+	<input type="hidden" id="storageAction" name="action" value="" />
+	<input type="hidden" id="storageID" name="id" value="" />
+	<span class="result"></span>
+	<fieldset>
+		<legend>
+			Détails du rangement
+		</legend>
+		<ol>
+			<li>
+				<input type="text" id="storageRoom" name="room" value="" list="storageRoomList" placeholder="Pièce du rangement" required />
+				<label for="storageRoom">Pièce *</label>
+				<datalist id="storageRoomList">
+					<option value="">Pièces déjà présentes</option>
+				</datalist>
+			</li>
+			<li>
+				<input type="text" id="storageType" name="type" value="" list="storageTypeList" placeholder="Type du rangement" required />
+				<label for="storageRoom">Type *</label>
+				<datalist id="storageTypeList">
+					<option value="">Types déjà présents</option>
+				</datalist>
+			</li>
+			<li>
+				<input type="text" id="storageColumn" name="column" value="" placeholder="Colonne du rangement" pattern="[a-zA-Z]+" />
+				<label for="storageColumn">Colonne</label>
+			</li>
+			<li>
+				<input type="number" id="storageLine" name="line" value="" placeholder="Ligne du rangement" pattern="[0-9]+" class="spinbox" />
+				<label for="storageLine">Ligne</label>
+			</li>
+		</ol>
+	</fieldset>
+	<fieldset>
+		<legend>
+			Visuel du rangement
+		</legend>
+		<ol>
+			<li>
+				<input type="hidden" id="storageCover" name="cover" value="" />
+				<div id="storageCoverStatus" class="coverStatus">Glisser la photo</div>
+				<label for="storageCoverStatus">Photo</label>
+			</li>
+		</ol>
+	</fieldset>
+</form>

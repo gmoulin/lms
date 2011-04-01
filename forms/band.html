@@ -1,0 +1,33 @@
+<form name="band_form" method="post" action="" id="manage_band" class="form" rel="band">
+	<input type="hidden" id="bandAction" name="action" value="" />
+	<input type="hidden" id="bandID" name="id" value="" />
+	<fieldset>
+		<legend>
+			Détails du groupe
+		</legend>
+		<ol>
+			<li>
+				<input type="text" id="bandName" name="name" value="" placeholder="Nom du groupe" required />
+				<label for="bandName">Nom *</label>
+			</li>
+			<li>
+				<input type="text" id="bandGenre" name="genre" list="bandGenreList" placeholder="Genre du groupe" required />
+				<label for="bandGenre">Genre *</label>
+				<datalist id="bandGenreList">
+					<option value="">Genre déjà présents</option>
+				</datalist>
+			</li>
+		</ol>
+	</fieldset>
+	<fieldset>
+		<legend>
+			Liens relatifs
+		</legend>
+		<ol>
+			<li>
+				<input type="url" id="bandWebSite" name="webSite" value="" placeholder="Site du groupe" />
+				<label for="bandWebSite">Site</label>
+			</li>
+		</ol>
+	</fieldset>
+</form>
