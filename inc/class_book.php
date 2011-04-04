@@ -501,7 +501,7 @@ class book extends commun {
 	}
 
 	/**
-	 * clean the session for the book related lists
+	 * clean the caches for the related lists
 	 */
 	private function _cleanCaches(){
 		//clear stash cache

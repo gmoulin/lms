@@ -180,7 +180,7 @@ class storage extends commun {
 	public function getStoragesForFilterList() {
 		try {
 			//stash cache init
-			$stashFileSystem = new StashFileSystem(STASH_PATH);
+			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
 			StashBox::setHandler($stashFileSystem);
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
@@ -209,7 +209,7 @@ class storage extends commun {
 	}
 
 	/**
-	 * clean the session for the storage related lists
+	 * clean the caches for the related lists
 	 */
 	private function _cleanCaches(){
 		//clear stash cache

@@ -1072,7 +1072,7 @@ $.fn.loadList = function(){
 		//ask the list values to the server and create the <option>s with it
 		var decoder = $('<textarea>');
 		$.get( 'ajax/loadList.php?field=' + list.attr('id') + '&forceUpdate=' + forceUpdate, function(data, textStatus, jqXHR){
-			//server will send a 304 status if the list has not changed
+			//server will send a 304 status if the list has not changed and forceUpdate != 1
 			if( jqXHR.status == 200 ){
 				if( list.is('datalist') ) list.empty();
 				else {

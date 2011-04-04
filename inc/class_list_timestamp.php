@@ -56,14 +56,14 @@ class list_timestamp extends commun {
 				REPLACE INTO list_timestamp (name, stamp) VALUES (:name, NOW())
 			");
 
-			if( !empty($lists) ){
-				foreach( $lists as $l ){
-					$update->execute(array(':name' => $l['name']));
-					$update->closeCursor();
-				}
-			} else {
-				$update->execute(array(':name' => $name));
+			foreach( $lists as $l ){
+				$update->execute(array(':name' => $l['name']));
+				$update->closeCursor();
 			}
+
+			//always do the refresh for the exact name,
+			//because the name can be 'movieArtist' which find 'movieArtistFilter' and so not create 'movieArtist' entry
+			$update->execute(array(':name' => $name));
 
 		} catch ( Exception $e ){
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );

@@ -62,7 +62,7 @@
 					<dd class="listHidden"><?php echo $movie['movieMediaType']; ?></dd>
 
 					<dt class="listHidden">Durée</dt>
-					<dd class="listHidden"><?php echo $movie['movieLength']; ?></dd>
+					<dd class="listHidden"><?php echo $movie['movieLength'].( !empty($movie['movieLength']) ? ' minutes' : '' ); ?></dd>
 
 					<dt class="listHidden">Rangement</dt>
 					<dd class="listHidden">

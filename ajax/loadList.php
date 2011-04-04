@@ -21,9 +21,20 @@ try {
 		if( is_null($forceUpdate) || $forceUpdate === false ){
 			throw new Exception('Chargement des listes déroulantes : paramètre incorrect.');
 		}
-		$forceUpdate = filter_var($forceUpdate, FILTER_VALIDATE_INT, array('min_range' => 0, 'max_range' => 1));
-		if( $forceUpdate === false ){
+		$forceUpdate = filter_var($forceUpdate, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+		if( is_null($forceUpdate) ){
 			throw new Exception('Chargement des listes déroulantes : paramètre incorrect.');
+		}
+
+		//multiple list call for the same function
+		if( stripos($field, 'storage') !== false && $field != 'storageTypeList' && $field != 'storageRoomList'){
+			if( stripos($field, 'filter') !== false ){
+				//movie_book_album in the name is used in _cleanSession functions
+				$field = 'movie_book_album_storagesForFilterList';
+			} else {
+				//movie_book_album in the name is used in _cleanSession functions
+				$field = 'movie_book_album_storagesForDropDownList';
+			}
 		}
 
 		//check the request headers for "If-Modified-Since"
@@ -62,17 +73,6 @@ try {
 		}
 
 		if( $lastModified != 0 ) header("Last-Modified: " . gmdate("D, d M Y H:i:s", $lastModified) . " GMT");
-
-		//multiple list call for the same function
-		if( stripos($field, 'storage') !== false && $field != 'storageTypeList' && $field != 'storageRoomList'){
-			if( stripos($field, 'filter') !== false ){
-				//movie_book_album in the name is used in _cleanSession functions
-				$field = 'movie_book_album_storagesForFilterList';
-			} else {
-				//movie_book_album in the name is used in _cleanSession functions
-				$field = 'movie_book_album_storagesForDropDownList';
-			}
-		}
 
 		switch ( $field ){
 			/* form fields */

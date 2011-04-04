@@ -53,7 +53,7 @@ class album extends commun {
 
 				$getAlbums->execute();
 
-				$results = $this->_merged($getAlbums->fetchAll());
+				$results = $this->_merge($getAlbums->fetchAll());
 
 				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
 			}
@@ -199,7 +199,7 @@ class album extends commun {
 
 				$getAlbums->execute( $params );
 
-				$results = $this->_merged($getAlbums->fetchAll());
+				$results = $this->_merge($getAlbums->fetchAll());
 
 				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
 			}
@@ -457,9 +457,7 @@ class album extends commun {
 	}
 
 	/**
-	 * clean the session for the album related lists
-	 * @param integer $id: id of the album
-	 * @param boolean $cleanCover: flag for cleaning the image in session
+	 * clean the caches for the related lists
 	 */
 	private function _cleanCaches(){
 		//clear stash cache

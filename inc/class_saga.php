@@ -181,8 +181,109 @@ class saga extends commun {
 	}
 
 	/**
-	 * clean the session for the saga related lists
-	 * @param boolean $cleanLinked: flag for the linked list cleaning ( on add, books and movies list does not need cleaning )
+	 * @return array[]
+	 */
+	public function getSagasForFilterList(){
+		try {
+			//stash cache init
+			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
+			StashBox::setHandler($stashFileSystem);
+
+			StashManager::setHandler(get_class( $this ), $stashFileSystem);
+			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+			$results = $stash->get();
+			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
+				$getSagasForFilterList = $this->db->prepare("
+					SELECT sagaTitle as value
+					FROM saga
+					GROUP BY sagaTitle
+					ORDER BY sagaTitle
+				");
+
+				$getSagasForFilterList->execute();
+
+				$results = $getSagasForFilterList->fetchAll();
+
+				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+			}
+
+			return $results;
+
+		} catch ( PDOException $e ){
+			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
+		}
+	}
+
+	/**
+	 * @return array[]
+	 */
+	public function getBooksSagasForFilterList(){
+		try {
+			//stash cache init
+			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
+			StashBox::setHandler($stashFileSystem);
+
+			StashManager::setHandler(get_class( $this ), $stashFileSystem);
+			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+			$results = $stash->get();
+			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
+				$getBooksSagasForFilterList = $this->db->prepare("
+					SELECT sagaTitle as value
+					FROM books_view
+					GROUP BY sagaTitle
+					ORDER BY sagaTitle
+				");
+
+				$getBooksSagasForFilterList->execute();
+
+				$results = $getBooksSagasForFilterList->fetchAll();
+
+				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+			}
+
+			return $results;
+
+		} catch ( PDOException $e ){
+			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
+		}
+	}
+
+	/**
+	 * @return array[]
+	 */
+	public function getMoviesSagasForFilterList(){
+		try {
+			//stash cache init
+			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
+			StashBox::setHandler($stashFileSystem);
+
+			StashManager::setHandler(get_class( $this ), $stashFileSystem);
+			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+			$results = $stash->get();
+			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
+				$getMoviesSagasForFilterList = $this->db->prepare("
+					SELECT sagaTitle as value
+					FROM movies_view
+					GROUP BY sagaTitle
+					ORDER BY sagaTitle
+				");
+
+				$getMoviesSagasForFilterList->execute();
+
+				$results = $getMoviesSagasForFilterList->fetchAll();
+
+				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+			}
+
+			return $results;
+
+		} catch ( PDOException $e ){
+			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
+		}
+	}
+
+	/**
+	 * clean the caches for the related lists
 	 */
 	private function _cleanCaches(){
 		//clear stash cache
@@ -430,108 +531,6 @@ class saga extends commun {
 			return $verif;
 
 		} catch ( PDOException $e ) {
-			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
-		}
-	}
-
-	/**
-	 * @return array[]
-	 */
-	public function getSagasForFilterList(){
-		try {
-			//stash cache init
-			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
-			StashBox::setHandler($stashFileSystem);
-
-			StashManager::setHandler(get_class( $this ), $stashFileSystem);
-			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
-			$results = $stash->get();
-			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
-				$getSagasForFilterList = $this->db->prepare("
-					SELECT sagaTitle as value
-					FROM saga
-					GROUP BY sagaTitle
-					ORDER BY sagaTitle
-				");
-
-				$getSagasForFilterList->execute();
-
-				$results = $getSagasForFilterList->fetchAll();
-
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
-			}
-
-			return $results;
-
-		} catch ( PDOException $e ){
-			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
-		}
-	}
-
-	/**
-	 * @return array[]
-	 */
-	public function getBooksSagasForFilterList(){
-		try {
-			//stash cache init
-			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
-			StashBox::setHandler($stashFileSystem);
-
-			StashManager::setHandler(get_class( $this ), $stashFileSystem);
-			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
-			$results = $stash->get();
-			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
-				$getBooksSagasForFilterList = $this->db->prepare("
-					SELECT sagaTitle as value
-					FROM books_view
-					GROUP BY sagaTitle
-					ORDER BY sagaTitle
-				");
-
-				$getBooksSagasForFilterList->execute();
-
-				$results = $getBooksSagasForFilterList->fetchAll();
-
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
-			}
-
-			return $results;
-
-		} catch ( PDOException $e ){
-			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
-		}
-	}
-
-	/**
-	 * @return array[]
-	 */
-	public function getMoviesSagasForFilterList(){
-		try {
-			//stash cache init
-			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
-			StashBox::setHandler($stashFileSystem);
-
-			StashManager::setHandler(get_class( $this ), $stashFileSystem);
-			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
-			$results = $stash->get();
-			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
-				$getMoviesSagasForFilterList = $this->db->prepare("
-					SELECT sagaTitle as value
-					FROM movies_view
-					GROUP BY sagaTitle
-					ORDER BY sagaTitle
-				");
-
-				$getMoviesSagasForFilterList->execute();
-
-				$results = $getMoviesSagasForFilterList->fetchAll();
-
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
-			}
-
-			return $results;
-
-		} catch ( PDOException $e ){
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
 		}
 	}

@@ -535,7 +535,7 @@ class movie extends commun {
 	}
 
 	/**
-	 * clean the session for the movie related lists
+	 * clean the caches for the related lists
 	 */
 	private function _cleanCaches(){
 		//clear stash cache
