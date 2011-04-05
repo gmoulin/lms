@@ -30,7 +30,7 @@ dwsync.xml
 .svn
 publish
 covers/*
-stash/*
+stash
 .idea
 
 # build script local files
