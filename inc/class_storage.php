@@ -255,9 +255,11 @@ class storage extends commun {
 				rename(UPLOAD_STORAGE_PATH.'tmp_storage.png', UPLOAD_STORAGE_PATH.$filename);
 			}
 
+			$id = $this->db->lastInsertId();
+
 			$this->_cleanCaches();
 
-			return $this->db->lastInsertId();
+			return $id;
 
 		} catch ( PDOException $e ) {
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );

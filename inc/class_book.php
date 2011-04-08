@@ -161,7 +161,7 @@ class book extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			if( empty($params) ) $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql);
-			else $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql, $params);
+			else $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql, serialize($params));
 			$results = $stash->get();
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 
@@ -568,7 +568,7 @@ class book extends commun {
 			//create stash cache
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
 			$stash = new Stash($stashFileSystem);
-			$stash->setKey('covers', get_class($this), $bookID);
+			$stash->setupKey('covers', get_class($this), $bookID);
 			$stash->store(base64_decode($data['cover']), STASH_EXPIRE);
 
 			return $bookID;
@@ -644,7 +644,7 @@ class book extends commun {
 				//update stash cache
 				$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
 				$stash = new Stash($stashFileSystem);
-				$stash->setKey('covers', get_class($this), $data['id']);
+				$stash->setupKey('covers', get_class($this), $data['id']);
 				$stash->store(base64_decode($data['cover']), STASH_EXPIRE);
 			}
 

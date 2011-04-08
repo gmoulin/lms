@@ -72,7 +72,7 @@
 	</aside>
 </form>
 <section id="list_book" class="list smallBoxes hasCovers">
-	<section id="listDisplaySwitch">
+	<section class="listDisplaySwitch">
 		<a href="#" title="format vignette" rel="smallBoxes" class="button icon disabled" data-icon="c"></a>
 		<a href="#" title="format rectangle" rel="rectangleBoxes" class="button icon" data-icon="d"></a>
 	</section>

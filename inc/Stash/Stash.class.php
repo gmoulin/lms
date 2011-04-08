@@ -317,6 +317,7 @@ class Stash
 			throw new StashError('No key sent to the cache constructor.');
 
 		$key = func_get_args();
+
 		if(count($key) == 1 && is_array($key[0]))
 			$key = $key[0];
 

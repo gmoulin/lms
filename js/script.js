@@ -897,6 +897,56 @@ $(document).ready(function(){
 			//else window.addEventListener('hashchange', tabSwitch, false);
 		});
 
+	//internet links for title in form
+		$('#movieTitle').change(function(){
+			$(this).siblings('label')
+				.html(function(){ return $(this).text() }) //clean the label of any html tag
+				.append(
+					$('<a>', {
+						'class': 'button icon externalLink small',
+						'title': 'Rechercher sur Google Image',
+						'href': 'http://www.google.ch/images?q=' + $(this).val() + ' movie' ,
+						'target': '_blank',
+						'style': 'margin-left: 5px',
+						'data-icon': '/'
+					})
+				)
+				.append(
+					$('<a>', {
+						'class': 'button icon externalLink small',
+						'title': 'Rechercher sur IMDB',
+						'href': 'http://www.imdb.com/find?s=all&q=' + $(this).val() ,
+						'target': '_blank',
+						'style': 'margin-left: 5px',
+						'data-icon': '/'
+					})
+				);
+		});
+		$('#bookTitle').change(function(){
+			$(this).siblings('label')
+				.html(function(){ return $(this).text() }) //clean the label of any html tag
+				.append(
+					$('<a>', {
+						'class': 'button icon externalLink small',
+						'title': 'Rechercher sur Google Image',
+						'href': 'http://www.google.ch/images?q=' + $(this).val() + ' book' ,
+						'target': '_blank',
+						'style': 'margin-left: 5px',
+						'data-icon': '/'
+					})
+				)
+				.append(
+					$('<a>', {
+						'class': 'button icon externalLink small',
+						'title': 'Rechercher sur Fantastic Fiction',
+						'href': 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val() ,
+						'target': '_blank',
+						'style': 'margin-left: 5px',
+						'data-icon': '/'
+					})
+				);
+		});
+
 	//saga title in form
 		$('#bookSagaTitle, #movieSagaTitle').change(function(){
 			console.log('sagaTitle change');
@@ -978,6 +1028,11 @@ $(document).ready(function(){
 				e.stopPropagation();
 				isAlt = false;
 				$('.filterFormSwitch', '#'+$('#nav').data('activeTab')).click();
+			} else if( e.which == 86 && isAlt ){
+				e.preventDefault();
+				e.stopPropagation();
+				isAlt = false;
+				$('.listDisplaySwitch', '#'+$('#nav').data('activeTab')).find('.disabled').siblings().first().click();
 			}
 		});
 
@@ -989,45 +1044,43 @@ $(document).ready(function(){
 		});
 
 	//list display switch
-		if( $('#listDisplaySwitch').length ){
-			var listDisplay = $('a', '#listDisplaySwitch').map(function(){ return $(this).attr('rel'); }).get().join(' ');
-			$('a', '#listDisplaySwitch').click(function(e){
-				console.log('listDisplaySwitch click');
-				e.preventDefault();
+		$('a', '.listDisplaySwitch').click(function(e){
+			console.log('listDisplaySwitch click');
+			e.preventDefault();
 
-				var wrapper = $(this).closest('.list');
+			var listDisplay = $(this).closest('.listDisplaySwitch').find('a').map(function(){ return $(this).attr('rel'); }).get().join(' ');
+			console.log(listDisplay);
 
-				var switchTo = $(this).attr('rel');
+			var wrapper = $(this).closest('.list');
 
-				if( !wrapper.hasClass( switchTo ) ){
-					$(this).addClass('disabled').siblings().removeClass('disabled');
-					wrapper.removeClass( listDisplay.replace(/switchTo/, '') + ' animDone' ).addClass(switchTo).delay(300).addClass('animDone');
-				}
-			});
-		}
+			var switchTo = $(this).attr('rel');
+
+			if( !wrapper.hasClass( switchTo ) ){
+				$(this).addClass('disabled').siblings().removeClass('disabled');
+				wrapper.removeClass( listDisplay + ' animDone' ).addClass(switchTo).delay(1000).addClass('animDone');
+			}
+		});
 
 	//band last check date
-		if( $('#list_band').length ){
-			$('.externalLink').live('click', function(e){
-				console.log('list_band externalLink click');
-				//update the date on band web site link click
-				$.post('ajax/manageBand.php', {action: 'updateLastCheckDate', id : $(this).attr('rel')});
+		$('.externalLink', '#list_band').live('click', function(e){
+			console.log('list_band externalLink click');
+			//update the date on band web site link click
+			$.post('ajax/manageBand.php', {action: 'updateLastCheckDate', id: $(this).attr('rel')});
 
-				//date sort active
-				if( $('#bandSortType').val() >= 2 ){
-					var _li = $(this).closest('li');
-					var _ul = _li.parent();
+			//date sort active
+			if( $('#bandSortType').val() >= 2 ){
+				var $li = $(this).closest('li');
+				var $ul = $li.parent();
 
-					if( $('#bandSortType').val() == 2 ){
-						//asc sort, oldest first, so we paste the li at the end
-						_li.appendTo(_ul);
-					} else {
-						//desc sort, newest first, so we paste the li at the start
-						_li.prependTo(_ul);
-					}
+				if( $('#bandSortType').val() == 2 ){
+					//asc sort, oldest first, so we paste the li at the end
+					$li.appendTo($ul);
+				} else {
+					//desc sort, newest first, so we paste the li at the start
+					$li.prependTo($ul);
 				}
-			});
-		}
+			}
+		});
 });
 
 /**
@@ -1049,6 +1102,7 @@ function tabSwitch(){
 		window.location.hash = '#' + target; //security if hash empty
 		$('#nav').data('activeTab', target);
 		hideInform();
+		$('#nav').data('updating', 0); //remove multiple call protection since it's a new tab
 		getList(0);
 	}
 
@@ -1294,6 +1348,7 @@ function dropCover(event){
 function upload(file, rel, coverStatus){
 	console.log('upload');
 	if( window.FileReader ){
+		hideInform();
 
 		var reader = new FileReader();
 		if( typeof(reader.addEventListener) === "function" ){
@@ -1456,8 +1511,7 @@ function getList( type ){
 				if( type != 3 ){
 					//remove old list
 					$('.listContent:not(.new)', list).remove();
-
-					$('#listDisplaySwitch').hide();
+					$('.listDisplaySwitch', list).hide();
 
 					if( $('.paginate', list).length == 2 ){
 						$('.paginate:first', list).remove();
@@ -1467,7 +1521,7 @@ function getList( type ){
 					$('.listContent.new', list).removeClass('new').show();
 
 					$('.paginate', list).show();
-					$('#listDisplaySwitch').show();
+					$('.listDisplaySwitch', list).show();
 
 					//pagination on scroll
 					if( $('.paginate', list).hasClass('begin') ){

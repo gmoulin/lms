@@ -148,7 +148,7 @@ class album extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			if( empty($params) ) $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql);
-			else $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql, $params);
+			else $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql, serialize($params));
 			$results = $stash->get();
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 
@@ -520,7 +520,7 @@ class album extends commun {
 			//create stash cache
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
 			$stash = new Stash($stashFileSystem);
-			$stash->setKey('covers', get_class($this), $albumID);
+			$stash->setupKey('covers', get_class($this), $albumID);
 			$stash->store(base64_decode($data['cover']), STASH_EXPIRE);
 
 			return $albumID;
@@ -588,7 +588,7 @@ class album extends commun {
 				//update stash cache
 				$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
 				$stash = new Stash($stashFileSystem);
-				$stash->setKey('covers', get_class($this), $data['id']);
+				$stash->setupKey('covers', get_class($this), $data['id']);
 				$stash->store(base64_decode($data['cover']), STASH_EXPIRE);
 			}
 

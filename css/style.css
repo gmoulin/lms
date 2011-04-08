@@ -153,7 +153,7 @@
 		}
 
 		/* Headers (h1, h2, etc) have no default font-size or margin; define those yourself */
-			h1, h2, h3, h4, h5, h6 { font-weight: bold; }
+			h1, h2, h3, h4, h5, h6 { font-weight: normal; }
 
 		a, a:active, a:visited { color: #607890; }
 		a:hover { color: #036; }
@@ -256,9 +256,9 @@
 			width: 40px;
 			height: 40px;
 
-			-webkit-transition: height 0.3s ease-in-out 0.3s, width 0.3s ease-in-out 0s;
-			-moz-transition: height 0.3s ease-in-out 0.3s, width 0.3s ease-in-out 0s;
-			transition: height 0.3s ease-in-out 0.3s, width 0.3s ease-in-out 0s;
+			-webkit-transition: height 0.3s ease-out 0.3s, width 0.3s linear 0s;
+			-moz-transition: height 0.3s ease-out 0.3s, width 0.3s linear 0s;
+			transition: height 0.3s ease-out 0.3s, width 0.3s linear 0s;
 		}
 
 		#help.deploy {
@@ -266,9 +266,9 @@
 			height: 50%;
 			padding-bottom: 10px;
 
-			-webkit-transition: height 0.3s ease-in-out 0s, width 0.3s ease-in-out 0.3s;
-			-moz-transition: height 0.3s ease-in-out 0s, width 0.3s ease-in-out 0.3s;
-			transition: height 0.3s ease-in-out 0s, width 0.3s ease-in-out 0.3s;
+			-webkit-transition: height 0.3s ease-out 0s, width 0.3s linear 0.3s;
+			-moz-transition: height 0.3s ease-out 0s, width 0.3s linear 0.3s;
+			transition: height 0.3s ease-out 0s, width 0.3s linear 0.3s;
 		}
 
 		#help > ul {
@@ -607,7 +607,7 @@
 			.slideMenu a,
 			.list li,
 			.paginate span,
-			#listDisplaySwitch,
+			.listDisplaySwitch,
 			#inform span,
 			.listFilter,
 			.listSort,
@@ -632,7 +632,7 @@
 				border-radius: 10px;
 			}
 
-			#listDisplaySwitch,
+			.listDisplaySwitch,
 			.paginate span {
 				border-radius: 0 0 6px 6px;
 			}
@@ -649,7 +649,7 @@
 		/* background-color */
 			.slideMenu a,
 			.list li,
-			#listDisplaySwitch,
+			.listDisplaySwitch,
 			.paginate span,
 			#inform span,
 			.listFilter,
@@ -674,8 +674,12 @@
 							inset 0 10px 20px rgba(255, 255, 255, 0.25),
 							inset 0 -10px 10px rgba(0, 0, 0, 0.3);
 			}
+			#help.deploy {
+				border-left: none;
+				border-bottom: none;
+			}
 
-			#listDisplaySwitch,
+			.listDisplaySwitch,
 			.paginate span {
 				border: 1px solid #CCC;
 				border-top: none;
@@ -760,6 +764,10 @@
 			display: inline-block;
 			margin: 0 2px;
 			vertical-align: top;
+		}
+
+		.anotherInfo input {
+			width: 228px;
 		}
 
 		input {
@@ -1016,8 +1024,20 @@
 			position: relative;
 		}
 
-		.list:not(.hasCovers) article {
+		.list.hasCovers li {
+			-webkit-transition: background-position .25s ease-in-out .25s, width .3s ease-out 0s, height .3s ease-in .25s;
+			-moz-transition:	background-position .25s ease-in-out .25s, width .3s ease-out 0s, height .3s ease-in .25s;
+			transition:			background-position .25s ease-in-out .25s, width .3s ease-out 0s, height .3s ease-in .25s;
+		}
+
+		.list:not(.hasCovers) .block {
 			height: 2.5em;
+		}
+
+		.list.hasCovers .info {
+			-webkit-transition: all .3s ease-in-out 0s;
+			-moz-transition:	all .3s ease-in-out 0s;
+			transition:			all .3s ease-in-out 0s;
 		}
 
 		.list dd:only-child {
@@ -1045,24 +1065,15 @@
 		/* smallBoxes list display */
 			.smallBoxes li {
 				margin: 5px; /*Creates the 10px gap between each column and each line*/
-				width: auto;
-				height: auto;
+				width: 280px;
+				height: 200px;
 				padding: 2px 3px;
-
-				-webkit-transition: all 0.2s linear 0.1s;
-				-moz-transition:	all 0.2s linear 0.1s;
-				transition:			all 0.2s linear 0.1s;
 			}
 
 			.smallBoxes.hasCovers li {
 				background-position: center center;
 				background-repeat: no-repeat;
 				background-size: auto 100%;
-			}
-
-			.smallBoxes.hasCovers article {
-				width: 280px;
-				height: 200px;
 			}
 
 			.smallBoxes .cover {
@@ -1073,14 +1084,10 @@
 				display: block;
 				width: 100%;
 				text-align: center;
-
-				-webkit-transition: all 0.2s linear 0s;
-				-moz-transition:	all 0.2s linear 0s;
-				transition:			all 0.2s linear 0s;
 			}
 
 			/* put the infos at the base of each block */
-			.smallBoxes .cover + .info {
+			.smallBoxes.hasCovers .info {
 				position: absolute;
 				bottom: 0;
 				text-align: left;
@@ -1111,48 +1118,40 @@
 				width: -o-calc(50% - 30px);
 				width: -webkit-calc(50% - 30px);
 				width: -moz-calc(50% - 30px);
-				height: 400px;
+
+				height: 500px;
 
 				padding: 0;
-
-				-webkit-transition: all 0.2s linear 0s;
-				-moz-transition:	all 0.2s linear 0s;
-				transition:			all 0.2s linear 0s;
 			}
 
 			.rectangleBoxes.hasCovers li {
-				background-image: none !important; /* override the li inline style which contains the background-image rule for .smallBoxes */
+				background-position: left top;
+				background-repeat: no-repeat;
+				background-size: 39% auto;
 			}
 
-			.rectangleBoxes.hasCovers .cover {
-				float: left;
-				max-width: 300px;
-				max-height: 400px;
-				margin: 0 15px 0 0;
+			.rectangleBoxes .cover {
+				display: none;
+			}
+
+			.rectangleBoxes .button.detail {
+				display: none;
 			}
 
 			.rectangleBoxes.hasCovers .info {
 				display: block;
 				text-align: left;
-				margin: 0;
+
+				margin: 0 0 0 40%;
+
 				padding-right: 20px;
+				padding-bottom: 15px;
 
-				-webkit-transition: all 0.2s linear 0.1s;
-				-moz-transition:	all 0.2s linear 0.1s;
-				transition:			all 0.2s linear 0.1s;
+				overflow: hidden;
+				max-height: 385px;
 			}
 
-			.rectangleBoxes.hasCovers.animDone .info {
-				overflow-x: hidden;
-				overflow-y: auto;
-				max-height: 400px;
-			}
-
-			.rectangleBoxes .detail {
-				display: none;
-			}
-
-			.rectangleBoxes .detailHidden {
+			.rectangleBoxes.hasCovers:not(.animDone) .info {
 				display: none;
 			}
 
@@ -1166,19 +1165,37 @@
 
 			.rectangleBoxes dd {
 				display: block;
-				margin-left: 105px;
+				float: left;
+				margin-right: 7px;
 				font-size: 1.1em;
+				position: relative;
+			}
+
+			.rectangleBoxes dd .button {
+				display: none;
+			}
+			.rectangleBoxes dd:hover .button {
+				display: inline-block;
+				position: absolute;
+				left: 0;
+				top: 2.2em;
+			}
+			.rectangleBoxes dd .button:nth-child(2) {
+				left: 1.7em;
+			}
+			.rectangleBoxes dd .button:nth-child(3) {
+				left: 3.4em;
+			}
+			.rectangleBoxes dd .button:nth-child(4) {
+				left: 5.1em;
 			}
 
 			.rectangleBoxes .actions {
 				position: absolute;
-				right: 0;
-				top: -7px;
+				right: 7px;
+				top: -3px;
+				width: auto;
 				padding: 0;
-			}
-
-			.rectangleBoxes dd + dd {
-				clear: left;
 			}
 
 		/* display on detail "view" */
@@ -1221,7 +1238,7 @@
 
 		/* paginate, inform and list style zone */
 			#inform,
-			#listDisplaySwitch,
+			.listDisplaySwitch,
 			.paginate {
 				position: fixed;
 				text-align: center;
@@ -1236,7 +1253,7 @@
 				width: calc(100% - 80px); /* 2*40px side margin for fixed content */
 			}
 
-			#listDisplaySwitch,
+			.listDisplaySwitch,
 			.paginate {
 				top: 0;
 			}
@@ -1255,7 +1272,7 @@
 				position: relative;
 			}
 
-			#listDisplaySwitch {
+			.listDisplaySwitch {
 				z-index: 99;
 				right: 60px;
 				padding: 4px 5px 0;

@@ -28,7 +28,7 @@ class loan extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			if( empty($params) ) $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql);
-			else $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql, $params);
+			else $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql, serialize($params));
 			$results = $stash->get();
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getHolders = $this->db->prepare("

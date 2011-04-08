@@ -160,7 +160,7 @@ class movie extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			if( empty($params) ) $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql);
-			else $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql, $params);
+			else $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql, serialize($params));
 			$results = $stash->get();
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 
@@ -604,7 +604,7 @@ class movie extends commun {
 			//create stash cache
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
 			$stash = new Stash($stashFileSystem);
-			$stash->setKey('covers', get_class($this), $movieID);
+			$stash->setupKey('covers', get_class($this), $movieID);
 			$stash->store(base64_decode($data['cover']), STASH_EXPIRE);
 
 			return $movieID;
@@ -684,7 +684,7 @@ class movie extends commun {
 				//update stash cache
 				$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
 				$stash = new Stash($stashFileSystem);
-				$stash->setKey('covers', get_class($this), $data['id']);
+				$stash->setupKey('covers', get_class($this), $data['id']);
 				$stash->store(base64_decode($data['cover']), STASH_EXPIRE);
 			}
 
@@ -743,7 +743,7 @@ class movie extends commun {
 			restore_error_handler();
 
 			$this->_cleanCaches();
-			$this->cleanImageCache($data['id']);
+			$this->cleanImageCache($id);
 
 		} catch ( Exception $e ){
 			restore_error_handler();
@@ -830,7 +830,7 @@ class movie extends commun {
 			if( empty($result) ) {
 				return true;
 			} elseif( isset($data['id']) ){
-				return $result[0]['movieID'] == $data['id'];
+				return $result['movieID'] == $data['id'];
 			}
 
 			return false;
