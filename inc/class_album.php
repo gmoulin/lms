@@ -491,7 +491,7 @@ class album extends commun {
 			//album
 			$addAlbum = $this->db->prepare("
 				INSERT INTO album (albumTitle, albumCover, albumType, albumStorageFK, albumLoanFK, albumDate)
-				VALUES (:title, :cover, :type, :position, :storage, NULL, NOW())
+				VALUES (:title, :cover, :type, :storage, NULL, NOW())
 			");
 
 			$addAlbum->execute(
@@ -499,7 +499,6 @@ class album extends commun {
 					':title' => $data['title'],
 					':cover' => $data['cover'],
 					':type' => $data['type'],
-					':position' => $data['position'],
 					':storage' => $data['storage'],
 				)
 			);

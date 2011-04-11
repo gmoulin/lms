@@ -51,7 +51,7 @@ try {
 				$f = 'get'.ucfirst($type).'CoverById';
 				$cover = $o->$f($id);
 
-				if( $lastModified == 0 ){
+				if( $lastModified == 0 ){ //browser did'nt have cache, so $lastModified was not retrieved
 					$f = 'get'.ucfirst($type).'DateById';
 					$lastModified = $o->$f($id);
 					$lastModified = strtotime($lastModified);
@@ -88,14 +88,12 @@ try {
 		}
 	}
 
-	if( empty($cover) ){
-		//place holder image
-		$ph = file_get_contents(LMS_PATH.'/img/placeholder.png');
-		header('Content-Type: image/png');
-		echo $ph;
+	//place holder image
+	$ph = file_get_contents(LMS_PATH.'/img/placeholder.png');
+	header('Content-Type: image/png');
+	echo $ph;
 
-		die;
-	}
+	die;
 } catch (Exception $e) {
 	echo $e->getMessage();
 	die;

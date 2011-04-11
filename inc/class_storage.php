@@ -162,7 +162,7 @@ class storage extends commun {
 
 				$getStoragesTypesList->execute();
 
-				$results = $getStoragesRoomsList->fetchAll();
+				$results = $getStoragesTypesList->fetchAll();
 
 				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
 			}

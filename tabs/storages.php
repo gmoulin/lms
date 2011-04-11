@@ -4,8 +4,4 @@
 	</aside>
 </form>
 <section id="list_storage" class="list smallBoxes hasCovers">
-	<section class="listDisplaySwitch">
-		<a href="#" title="format vignette" rel="smallBoxes" class="button icon disabled" data-icon="c"></a>
-		<a href="#" title="format vignette" rel="rectangleBoxes" class="button icon" data-icon="d"></a>
-	</section>
 </section>

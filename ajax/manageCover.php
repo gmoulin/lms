@@ -14,7 +14,9 @@ try {
 		throw new Exception('Gestion des couvertures : type incorrect.');
 	}
 
-	if( $rel == 'storage' ){
+	$isStorage = $rel == 'storage';
+
+	if( $isStorage ){
 		$path = UPLOAD_STORAGE_PATH;
 	} else {
 		$path = UPLOAD_COVER_PATH;

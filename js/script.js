@@ -25,6 +25,7 @@ $(document).ready(function(){
 		tabSwitch();
 
 	//reset the modals
+	//sometimes the "show" checkbox is checked on page load
 		$('#editHide, #detailHide, #storageHide, #previewHide, #confirmHide').click();
 
 	//input type number crossbrowser support
@@ -43,19 +44,18 @@ $(document).ready(function(){
 
 			if( !$(this).is('button') ) return;
 
-			var list = $(this).siblings('ol');
-			var anotherBlock = $('.anotherInfo:last', list).clone(true);
+			var $list = $(this).siblings('ol'),
+				$anotherBlock = $list.find('.anotherInfo:last').clone(true),
+				tmp = $anotherBlock.find('input').attr('id').split('_'),
+				indice = parseInt(tmp[1]);
 
-			var tmp = $('input', anotherBlock).attr('id').split('_');
-			var indice = parseInt(tmp[1]);
-
-			$('input', anotherBlock)
+			$anotherBlock.find('input')
 				.attr('id', function(index, attr){ return attr.replace(new RegExp(indice), indice + 1); })
 				.attr('name', function(index, attr){ return attr.replace(new RegExp(indice), indice + 1); })
 				.val('') //reseting the value
-				.siblings('label').attr('for', $('input', anotherBlock).attr('id'));
+				.siblings('label').attr('for', $anotherBlock.find('input').attr('id'));
 
-			anotherBlock.appendTo( list );
+			$list.append( $anotherBlock );
 		});
 
 		$('.delete_another').click(function(event){
@@ -65,7 +65,7 @@ $(document).ready(function(){
 			if( !$(this).is('button') ) return;
 
 			//only remove if not the only one
-			if( $('li', $(this).closest('ol')).length > 1 ){
+			if( $(this).closest('ol').children('li').length > 1 ){
 				$(this).closest('.anotherInfo').remove();
 			} else { //reset the input
 				$(this).siblings('input').val('');
@@ -73,38 +73,35 @@ $(document).ready(function(){
 		});
 
 	//tabs filter section
-		$('.filterFormSwitch').click(function(e){
-			console.log('filterFormSwitch click');
-			e.preventDefault();
+		$('.filterForm')
+			.delegate('.filterFormSwitch', 'click', function(e){
+				console.log('filterFormSwitch click');
+				e.preventDefault();
 
-			if( !$(this).is('a') ) return;
+				if( !$(this).is('a') ) return;
 
-			var ul = $(this).closest('.listFilter');
-			if( !ul.hasClass('deploy') ){
-				ul.addClass('deploy');
+				var $ul = $(this).closest('.listFilter');
+				if( !$ul.hasClass('deploy') ){
+					$ul.addClass('deploy');
 
-				//load the filters values
-				$('datalist, select', ul).loadList();
+					//load the filters values
+					$('datalist, select', $ul).loadList();
 
-			} else {
-				ul.removeClass('deploy');
-			}
-		});
-
-		$('.search').click(function(e){
-			console.log('search click');
-			e.preventDefault();
-			hideInform();
-			getList(1);
-		});
-
-		$('.cancel').click(function(e){
-			console.log('cancel click');
-			e.preventDefault();
-			$(':input', $(this).closest('.filterForm')).val(''); //filter form reset
-			hideInform();
-			getList(0);
-		});
+				} else {
+					$ul.removeClass('deploy');
+				}
+			}).delegate('.search', 'click', function(e){
+				console.log('search click');
+				e.preventDefault();
+				hideInform();
+				getList(1);
+			}).delegate('.cancel', click, function(e){
+				console.log('cancel click');
+				e.preventDefault();
+				$(':input', $(this).closest('.filterForm')).val(''); //filter form reset
+				hideInform();
+				getList(0);
+			});
 
 	//sort result links
 		$('.sort').click(function(e){
@@ -117,6 +114,8 @@ $(document).ready(function(){
 			//save clicked link current icon
 			var tmp = t.attr('class');
 			var form = t.closest('.filterForm');
+
+			//each index correspond to a "ORDER BY" string in php database tables classes
 			var index = t.attr('href');
 
 			//reset all links icons
@@ -905,7 +904,7 @@ $(document).ready(function(){
 					$('<a>', {
 						'class': 'button icon externalLink small',
 						'title': 'Rechercher sur Google Image',
-						'href': 'http://www.google.ch/images?q=' + $(this).val() + ' movie' ,
+						'href': 'http://www.google.com/images?q=' + $(this).val() + ' movie',
 						'target': '_blank',
 						'style': 'margin-left: 5px',
 						'data-icon': '/'
@@ -929,7 +928,7 @@ $(document).ready(function(){
 					$('<a>', {
 						'class': 'button icon externalLink small',
 						'title': 'Rechercher sur Google Image',
-						'href': 'http://www.google.ch/images?q=' + $(this).val() + ' book' ,
+						'href': 'http://www.google.com/images?q=' + $(this).val() + ' book',
 						'target': '_blank',
 						'style': 'margin-left: 5px',
 						'data-icon': '/'
@@ -940,6 +939,40 @@ $(document).ready(function(){
 						'class': 'button icon externalLink small',
 						'title': 'Rechercher sur Fantastic Fiction',
 						'href': 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val() ,
+						'target': '_blank',
+						'style': 'margin-left: 5px',
+						'data-icon': '/'
+					})
+				);
+		});
+		$('#bandName').change(function(){
+			$(this).siblings('label')
+				.html(function(){ return $(this).text() }) //clean the label of any html tag
+				.append(
+					$('<a>', {
+						'class': 'button icon externalLink small',
+						'title': 'Rechercher sur Google',
+						'href': 'http://www.google.com/search?q=' + $(this).val() + ' music band',
+						'target': '_blank',
+						'style': 'margin-left: 5px',
+						'data-icon': '/'
+					})
+				)
+				.append(
+					$('<a>', {
+						'class': 'button icon externalLink small',
+						'title': 'Rechercher sur Wikipedia',
+						'href': 'http://en.wikipedia.org/w/index.php?search=' + $(this).val() + ' music band',
+						'target': '_blank',
+						'style': 'margin-left: 5px',
+						'data-icon': '/'
+					})
+				)
+				.append(
+					$('<a>', {
+						'class': 'button icon externalLink small',
+						'title': 'Rechercher sur Google Image',
+						'href': 'http://www.google.com/images?q=' + $(this).val() + ' music band',
 						'target': '_blank',
 						'style': 'margin-left: 5px',
 						'data-icon': '/'
@@ -1215,9 +1248,11 @@ function addEscapeSupport(){
 function formErrors( data ) {
 	console.log('formErrors');
 	$.each(data, function(index, error){
-		$('#' + error[0]).addClass(error[2]).siblings('.tip').remove(); //remove previous error message if present
+		if( error[0] != 'global' ){
+			$('#' + error[0]).addClass(error[2]).siblings('.tip').remove(); //remove previous error message if present
 
-		$('#' + error[0]).parent().append( $('<span>', { 'class': 'tip', 'text': error[1] }) ); //add error message
+			$('#' + error[0]).parent().append( $('<span>', { 'class': 'tip', 'text': error[1] }) ); //add error message
+		}
 	});
 }
 

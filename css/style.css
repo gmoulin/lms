@@ -1065,8 +1065,8 @@
 		/* smallBoxes list display */
 			.smallBoxes li {
 				margin: 5px; /*Creates the 10px gap between each column and each line*/
-				width: 280px;
-				height: 200px;
+				width: auto;
+				height: auto;
 				padding: 2px 3px;
 			}
 
@@ -1074,6 +1074,8 @@
 				background-position: center center;
 				background-repeat: no-repeat;
 				background-size: auto 100%;
+				width: 280px;
+				height: 200px;
 			}
 
 			.smallBoxes .cover {
@@ -1284,6 +1286,7 @@
 
 			#inform span {
 				z-index: 300;
+				border-bottom: none;
 			}
 
 		/** deletion impact **/
@@ -1362,7 +1365,6 @@
 		}
 
 		.listFilter.deploy {
-			right: 0;
 			z-index: 100; /* hover the add and sort section */
 		}
 
