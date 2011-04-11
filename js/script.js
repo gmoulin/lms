@@ -945,6 +945,20 @@ $(document).ready(function(){
 					})
 				);
 		});
+		$('#albumTitle').change(function(){
+			$(this).siblings('label')
+				.html(function(){ return $(this).text() }) //clean the label of any html tag
+				.append(
+					$('<a>', {
+						'class': 'button icon externalLink small',
+						'title': 'Rechercher sur Google Image',
+						'href': 'http://www.google.com/images?q=' + $(this).val() + ' album',
+						'target': '_blank',
+						'style': 'margin-left: 5px',
+						'data-icon': '/'
+					})
+				);
+		});
 		$('#bandName').change(function(){
 			$(this).siblings('label')
 				.html(function(){ return $(this).text() }) //clean the label of any html tag
