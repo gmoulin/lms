@@ -157,17 +157,26 @@ try {
 					$artists = array_slice( $artists, $_SESSION['artists']['numPerPage'] * $_SESSION['artists']['page'], $_SESSION['artists']['numPerPage'], false );
 				}
 
-				include( LMS_PATH . '/list/artist.php' );
-				die;
+				if( $type == 2 || ( $type == 0 && $_SESSION['artists']['page'] > 0 ) ){
+					$nb = count($artists);
+				} else {
+					$nb = $_SESSION['artists']['numPerPage'] * $_SESSION['artists']['page'] + count($artists);
+				}
+
+				if( $nb > $_SESSION['artists']['total'] ) $nb = $_SESSION['artists']['total'];
+
+				$response = array('nb' => $nb, 'total' => $_SESSION['artists']['total'], 'list' => $artists);
+
 			break;
 		case 'more':
 				if( isset($_SESSION['artists']) ){
 					$_SESSION['artists']['page']++;
 					$artists = array_slice( $_SESSION['artists']['list'], $_SESSION['artists']['numPerPage'] * $_SESSION['artists']['page'], $_SESSION['artists']['numPerPage'], false );
 					$type = 3;
+					$nb = $_SESSION['artists']['numPerPage'] * $_SESSION['artists']['page'] + count($artists);
 
-					include( LMS_PATH . '/list/artist.php' );
-					die;
+					$response = array('nb' => $nb, 'total' => $_SESSION['artists']['total'], 'list' => $artists);
+
 				} else {
 					throw new Exception('Gestion des artistes : pagination impossible, liste non disponible.');
 				}

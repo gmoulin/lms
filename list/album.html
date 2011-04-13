@@ -1,0 +1,74 @@
+<script id="albumPaginateTemplate" type="text/x-jquery-tmpl">
+	{{if nb > 0}}
+		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
+			<span>
+				${nb} album{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
+			</span>
+		</section>
+	{{else}}
+		<section class="paginate end">
+			<span>aucun album trouvé</span>
+		</section>
+	{{/if}}
+</script>
+<script id="albumListTemplate" type="text/x-jquery-tmpl">
+	<ul class="listContent clearfix">
+		{{each(i, album) list}}
+			<li style="background-image:url(image.php?cover=album&id=${album.albumID});">
+				<a class="button icon detail" data-icon="}" href="${album.albumID}" title="voir le détail"></a>
+				{{if album.loanHolder != null}}
+					<span class="button icon loan" data-icon="u" title="prêtè à ${album.loanHolder} - ${album.loanDate}"></span>
+				{{/if}}
+				<article class="block">
+					<img src="image.php?cover=album&id=${album.albumID}" alt="" class="cover" />
+					<dl class="info">
+						<dt class="listHidden">Titre</dt>
+						<dd class="title">${album.albumTitle}</dd>
+
+						<dt class="listHidden">Auteur{{if album.bands.length > 1}}s{{/if}}</dt>
+						{{each(j, band) album.bands}}
+							<dd class="listHidden">
+								${band.bandName} (${band.bandGenre})
+								<a class="listHidden button icon update" data-icon="P" href="${band.bandID}" title="Mettre à jour les informations de ce groupe" rel="band"></a>
+								<a class="listHidden button icon delete" data-icon="t" href="${band.bandID}" title="Supprimer ce groupe" rel="band"></a>
+								{{if band.bandWebSite != null}}
+									<a class="listHidden button icon externalLink" data-icon="/" href="${band.bandWebSite}" title="Voir le site du groupe dans une nouvelle page" target="_blank"></a>
+								{{/if}}
+								<a class="button icon filter" data-icon="f" rel="band" href="${band.bandFirstName} ${band.bandLastName}" title="Filtrer la liste pour n'afficher que les albums de ce groupe"></a>
+							</dd>
+						{{/each}}
+
+						<dt class="listHidden">Type</dt>
+						<dd class="listHidden">${album.albumType}</dd>
+
+						<dt class="listHidden">Rangement</dt>
+						<dd class="listHidden">
+							${$album.storageRoom} - ${$album.storageType}{{if $album.storageColumn != null}} - ${$album.storageColumn}{{/if}}{{if $album.storageLine != null}}${$album.storageLine}{{/if}}
+							<a class="listHidden button icon update" data-icon="P" href="${album.storageID}" title="Mettre à jour les informations de ce rangement" rel="storage"></a>
+							<a class="listHidden button icon storage" data-icon="}" href="storage/${album.storageRoom.urlify()}_${album.storageType.urlify()}_${album.storageColumn}_${album.storageLine}"></a>
+							<a class="listHidden button icon filter" data-icon="f" rel="storage" href="${album.storageID}" title="Filtrer la liste pour n'afficher que les albums de ce rangement"></a>
+						</dd>
+
+						{{if album.loanHolder != null}}
+							<dt class="listHidden">Prêt</dt>
+							<dd class="listHidden">
+								${album.loanHolder} - ${album.loanDate}
+								<a class="button icon delete" data-icon="t" href="${album.loanID}" title="Supprimer ce prêt" rel="loan"></a>
+								<a class="button icon filter" data-icon="f" rel="loan" href="${album.loanHolder}" title="Filtrer la liste pour n'afficher que les albums prêtés à cette personne"></a>
+							</dd>
+							{{/if}}
+
+						<dt class="listHidden actions">
+							<a class="button icon update" data-icon="P" href="${album.albumID}" title="Mettre à jour les informations de cet album" rel="album"></a>
+							<a class="button icon delete" data-icon="t" href="${album.albumID}" title="Supprimer cet album" rel="album"></a>
+							{{if album.loanHolder == null}}
+								<a class="button icon addLoan" data-icon="u" href="${album.albumID}" title="Ajouter un prêt pour cet album" rel="album"></a>
+							{{/if}}
+						</dt>
+					</dl>
+				</article>
+			</li>
+		{{/each}}
+	</ul>
+</script>

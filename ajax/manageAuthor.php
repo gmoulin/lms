@@ -157,17 +157,26 @@ try {
 					$authors = array_slice( $authors, $_SESSION['authors']['numPerPage'] * $_SESSION['authors']['page'], $_SESSION['authors']['numPerPage'], false );
 				}
 
-				include( LMS_PATH . '/list/author.php' );
-				die;
+				if( $type == 2 || ( $type == 0 && $_SESSION['authors']['page'] > 0 ) ){
+					$nb = count($authors);
+				} else {
+					$nb = $_SESSION['authors']['numPerPage'] * $_SESSION['authors']['page'] + count($authors);
+				}
+
+				if( $nb > $_SESSION['authors']['total'] ) $nb = $_SESSION['authors']['total'];
+
+				$response = array('nb' => $nb, 'total' => $_SESSION['authors']['total'], 'list' => $authors);
+
 			break;
 		case 'more':
 				if( isset($_SESSION['authors']) ){
 					$_SESSION['authors']['page']++;
 					$authors = array_slice( $_SESSION['authors']['list'], $_SESSION['authors']['numPerPage'] * $_SESSION['authors']['page'], $_SESSION['authors']['numPerPage'], false );
 					$type = 3;
+					$nb = $_SESSION['authors']['numPerPage'] * $_SESSION['authors']['page'] + count($authors);
 
-					include( LMS_PATH . '/list/author.php' );
-					die;
+					$response = array('nb' => $nb, 'total' => $_SESSION['authors']['total'], 'list' => $authors);
+
 				} else {
 					throw new Exception('Gestion des auteurs : pagination impossible, liste non disponible.');
 				}

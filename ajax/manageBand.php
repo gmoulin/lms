@@ -174,17 +174,26 @@ try {
 					$bands = array_slice( $bands, $_SESSION['bands']['numPerPage'] * $_SESSION['bands']['page'], $_SESSION['bands']['numPerPage'], false );
 				}
 
-				include( LMS_PATH . '/list/band.php' );
-				die;
+				if( $type == 2 || ( $type == 0 && $_SESSION['bands']['page'] > 0 ) ){
+					$nb = count($bands);
+				} else {
+					$nb = $_SESSION['bands']['numPerPage'] * $_SESSION['bands']['page'] + count($bands);
+				}
+
+				if( $nb > $_SESSION['bands']['total'] ) $nb = $_SESSION['bands']['total'];
+
+				$response = array('nb' => $nb, 'total' => $_SESSION['bands']['total'], 'list' => $bands);
+
 			break;
 		case 'more':
 				if( isset($_SESSION['bands']) ){
 					$_SESSION['bands']['page']++;
 					$bands = array_slice( $_SESSION['bands']['list'], $_SESSION['bands']['numPerPage'] * $_SESSION['bands']['page'], $_SESSION['bands']['numPerPage'], false );
 					$type = 3;
+					$nb = $_SESSION['bands']['numPerPage'] * $_SESSION['bands']['page'] + count($bands);
 
-					include( LMS_PATH . '/list/band.php' );
-					die;
+					$response = array('nb' => $nb, 'total' => $_SESSION['bands']['total'], 'list' => $bands);
+
 				} else {
 					throw new Exception('Gestion des groupes : pagination impossible, liste non disponible.');
 				}

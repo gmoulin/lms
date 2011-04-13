@@ -1,15 +1,12 @@
 <?php
 try {
-	//@todo getList() should have several display template (table, list, slideshow, ...)
-	//@todo add crosstab filter links (saga -> books)
-
 	require_once('conf.ini.php');
 
 	//metadata
 	$metadata['description'] = 'Librairy Content Manager - gestionnaire de bibliothèque, vidéothèque et musicothèque';
 	$metadata['motscles'] = 'librairie, contenu, gestion, gestionnaire, bibliothèque, livre, roman, auteur, vidéothèque, film, acteur, musique, musicothèque, album, groupe';
 	$lang = 'fr';
-	
+
 	$css = filemtime( LMS_PATH.'/css/style.css' );
 
 	$js = filemtime( LMS_PATH.'/js/script.js' );
@@ -144,4 +141,13 @@ try {
 	<input type="radio" id="editHide" name="toggleEdit" class="boxToggleInput" autocomplete="off" />
 	<input type="radio" id="previewHide" name="togglePreview" class="boxToggleInput" autocomplete="off" />
 
+	<?php include( LMS_PATH . '/list/book.html' ); ?>
+	<?php include( LMS_PATH . '/list/movie.html' ); ?>
+	<?php include( LMS_PATH . '/list/album.html' ); ?>
+	<?php include( LMS_PATH . '/list/author.html' ); ?>
+	<?php include( LMS_PATH . '/list/artist.html' ); ?>
+	<?php include( LMS_PATH . '/list/band.html' ); ?>
+	<?php include( LMS_PATH . '/list/saga.html' ); ?>
+	<?php include( LMS_PATH . '/list/loan.html' ); ?>
+	<?php include( LMS_PATH . '/list/storage.html' ); ?>
 <?php include('html_footer.php'); ?>

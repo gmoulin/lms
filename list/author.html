@@ -1,0 +1,42 @@
+<script id="authorPaginateTemplate" type="text/x-jquery-tmpl">
+	{{if nb > 0}}
+		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
+			<span>
+				${nb} artiste{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
+			</span>
+		</section>
+	{{else}}
+		<section class="paginate end">
+			<span>aucun artiste trouvé</span>
+		</section>
+	{{/if}}
+</script>
+<script id="authorListTemplate" type="text/x-jquery-tmpl">
+	<ul class="listContent new clearfix">
+		{{each(i, author) list}}
+			<li>
+				<article class="block">
+					<dl class="info">
+						<dd>
+							${author.authorFirstName} ${author.authorLastName}
+
+							{{if author.authorWebSite != null}}
+								<a class="button icon externalLink" data-icon="/" href="${author.authorWebSite}" title="Voir le site de l'auteur dans une nouvelle page" target="_blank"></a>
+							{{/if}}
+							{{if author.authorSearchURL != null}}
+								<a class="button icon externalLink" data-icon="/" href="${author.authorSearchURL}" title="Rechercher les livres de l'auteur sur internet" target="_blank"></a>
+							{{/if}}
+
+							<a class="button icon update" data-icon="P" href="${author.authorID}" title="Mettre à jour les informations de cet auteur" rel="author">
+							</a>
+
+							<a class="button icon delete" data-icon="t" href="${author.authorID}" title="Supprimer cet auteur" rel="author">
+							</a>
+						</dd>
+					</dl>
+				</article>
+			</li>
+		{{/each}}
+	</ul>
+</script>

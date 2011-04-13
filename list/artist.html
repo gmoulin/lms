@@ -1,0 +1,35 @@
+<script id="artistPaginateTemplate" type="text/x-jquery-tmpl">
+	{{if nb > 0}}
+		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
+			<span>
+				${nb} artiste{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
+			</span>
+		</section>
+	{{else}}
+		<section class="paginate end">
+			<span>aucun artiste trouvé</span>
+		</section>
+	{{/if}}
+</script>
+<script id="artistListTemplate" type="text/x-jquery-tmpl">
+	<ul class="listContent clearfix">
+		{{each(i, artist) list}}
+			<li>
+				<article class="block">
+					<dl class="info">
+						<dd>
+							${artist.artistFirstName} ${artist.artistLastName}
+
+							<a class="button icon update" data-icon="P" href="${artist.artistID}" rel="artist" title="Mettre à jour les informations de cet artiste">
+							</a>
+
+							<a class="button icon delete" data-icon="t" href="${artist.artistID}" rel="artist" title="Supprimer cet artiste">
+							</a>
+						</dd>
+					</dl>
+				</article>
+			</li>
+		{{/each}}
+	</ul>
+</script>

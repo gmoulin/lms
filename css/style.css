@@ -1239,11 +1239,13 @@
 			}
 
 		/* paginate, inform and list style zone */
-			#inform,
 			.listDisplaySwitch,
 			.paginate {
 				position: fixed;
 				text-align: center;
+			}
+
+			#inform {
 				display: none;
 			}
 

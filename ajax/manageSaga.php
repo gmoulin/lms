@@ -253,17 +253,26 @@ try {
 					$sagas = array_slice( $sagas, $_SESSION['sagas']['numPerPage'] * $_SESSION['sagas']['page'], $_SESSION['sagas']['numPerPage'], false );
 				}
 
-				include( LMS_PATH . '/list/saga.php' );
-				die;
+				if( $type == 2 || ( $type == 0 && $_SESSION['sagas']['page'] > 0 ) ){
+					$nb = count($sagas);
+				} else {
+					$nb = $_SESSION['sagas']['numPerPage'] * $_SESSION['sagas']['page'] + count($sagas);
+				}
+
+				if( $nb > $_SESSION['sagas']['total'] ) $nb = $_SESSION['sagas']['total'];
+
+				$response = array('nb' => $nb, 'total' => $_SESSION['sagas']['total'], 'list' => $sagas);
+
 			break;
 		case 'more':
 				if( isset($_SESSION['sagas']) ){
 					$_SESSION['sagas']['page']++;
 					$sagas = array_slice( $_SESSION['sagas']['list'], $_SESSION['sagas']['numPerPage'] * $_SESSION['sagas']['page'], $_SESSION['sagas']['numPerPage'], false );
 					$type = 3;
+					$nb = $_SESSION['sagas']['numPerPage'] * $_SESSION['sagas']['page'] + count($sagas);
 
-					include( LMS_PATH . '/list/saga.php' );
-					die;
+					$response = array('nb' => $nb, 'total' => $_SESSION['sagas']['total'], 'list' => $sagas);
+
 				} else {
 					throw new Exception('Gestion des sagas : pagination impossible, liste non disponible.');
 				}

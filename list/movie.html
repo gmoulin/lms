@@ -1,0 +1,90 @@
+<script id="moviePaginateTemplate" type="text/x-jquery-tmpl">
+	{{if nb > 0}}
+		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
+			<span>
+				${nb} film{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
+			</span>
+		</section>
+	{{else}}
+		<section class="paginate end">
+			<span>aucun film trouvé</span>
+		</section>
+	{{/if}}
+</script>
+<script id="movieListTemplate" type="text/x-jquery-tmpl">
+	<ul class="listContent new clearfix">
+		{{each(i, movie) list}}
+			<li style="background-image:url(image.php?cover=movie&id=${movie.movieID});">
+				<a class="button icon detail" data-icon="}" href="${movie.movieID}" title="voir le détail"></a>
+				{{if movie.loanHolder != null}}
+					<span class="button icon loan" title="prêté à ${movie.loanHolder} - ${movie.loanDate}" data-icon="u"></span>
+				{{/if}}
+				<article class="block">
+					<img src="image.php?cover=movie&id=${movie.movieID}" alt="" class="cover" />
+					<dl class="info">
+						<dt class="listHidden">Titre</dt>
+						<dd class="title">${movie.movieTitle}</dd>
+
+						<dt class="listHidden">Artiste{{if movie.artists.length > 1}}s{{/if}}</dt>
+						{{each(j, artist) movie.artists}}
+							<dd class="listHidden">
+								${artist.artistFirstName} ${artist.artistLastName}
+								<a class="listHidden button icon update" data-icon="P" href="${artist.artistID}" title="Mettre à jour les informations de cet artiste" rel="artist"></a>
+								<a class="listHidden button icon delete" data-icon="t" href="${artist.artistID}" title="Supprimer cet artiste" rel="artist"></a>
+								<a class="button icon filter" data-icon="f" rel="artist" href="${artist.artistFirstName} ${artist.artistLastName}" title="Filtrer la liste pour n'afficher que les films de cet artiste"></a>
+							</dd>
+						{{/each}}
+
+						{{if movie.sagaTitle}}
+							<dt class="listHidden">Saga</dt>
+							<dd class="saga">
+								${movie.sagaTitle} - ${movie.movieSagaPosition} / ${movie.movieSagaSize}
+								<a class="listHidden button icon update" data-icon="P" href="${movie.sagaID}" title="Mettre à jour les informations de cette saga" rel="saga"></a>
+								<a class="listHidden button icon delete" data-icon="t" href="${movie.sagaID}" title="Supprimer cette saga" rel="saga"></a>
+								{{if movie.sagaSearchURL != null}}
+									<a class="listHidden button icon externalLink" data-icon="/" href="${movie.sagaSearchURL}" title="Rechercher les films de cette saga sur internet" target="_blank"></a>
+								{{/if}}
+								<a class="button icon filter" data-icon="f" rel="saga" href="${movie.sagaTitle}" title="Filtrer la liste pour n'afficher que les films de cette saga"></a>
+							</dd>
+						{{/if}}
+
+						<dt class="listHidden">Genre</dt>
+						<dd>${movie.movieGenre}</dd>
+
+						<dt class="listHidden">Format</dt>
+						<dd class="listHidden">${movie.movieMediaType}</dd>
+
+						<dt class="listHidden">Durée</dt>
+						<dd class="listHidden">${movie.movieLength}{{if $movie.movieLength != null}} minutes{{/if}}</dd>
+
+						<dt class="listHidden">Rangement</dt>
+						<dd class="listHidden">
+							${$movie.storageRoom} - ${$movie.storageType}{{if $movie.storageColumn != null}} - ${$movie.storageColumn}{{/if}}{{if $movie.storageLine != null}}${$movie.storageLine}{{/if}}
+							<a class="button icon update" data-icon="P" href="${movie.storageID}" title="Mettre à jour les informations de ce rangement" rel="storage"></a>
+							<a class="button icon storage" data-icon="}" href="storage/${movie.storageRoom.urlify()}_${movie.storageType.urlify()}_${movie.storageColumn}_${movie.storageLine}"></a>
+							<a class="button icon filter" data-icon="f" rel="storage" href="${movie.storageID}" title="Filtrer la liste pour n'afficher que les films de ce rangement"></a>
+						</dd>
+
+						{{if movie.loanHolder != null}}
+							<dt class="listHidden">Prêt</dt>
+							<dd class="listHidden">
+								${movie.loanHolder} - ${movie.loanDate}
+								<a class="button icon delete" data-icon="t" href="${movie.loanID}" title="Supprimer ce prêt" rel="loan"></a>
+								<a class="button icon filter" data-icon="f" rel="loan" href="${movie.loanHolder}" title="Filtrer la liste pour n'afficher que les films prêtés à cette personne"></a>
+							</dd>
+						{{/if}}
+
+						<dt class="listHidden actions">
+							<a class="button icon update" data-icon="P" href="${movie.movieID}" title="Mettre à jour les informations de ce film" rel="movie"></a>
+							<a class="button icon delete" data-icon="t" href="${movie.movieID}" title="Supprimer ce film" rel="movie"></a>
+							{{if movie.loanHolder == null}}
+								<a class="button icon addLoan" data-icon="u" href="${movie.movieID}" title="Ajouter un prêt pour ce film" rel="movie"></a>
+							{{/if}}
+						</dt>
+					</dl>
+				</article>
+			</li>
+		{{/each}}
+	</ul>
+</script>

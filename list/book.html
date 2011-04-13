@@ -1,0 +1,92 @@
+<script id="bookPaginateTemplate" type="text/x-jquery-tmpl">
+	{{if nb > 0}}
+		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
+			<span>
+				${nb} livre{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
+			</span>
+		</section>
+	{{else}}
+		<section class="paginate end">
+			<span>aucun livre trouvé</span>
+		</section>
+	{{/if}}
+</script>
+<script id="bookListTemplate" type="text/x-jquery-tmpl">
+	<ul class="listContent clearfix">
+		{{each(i, book) list}}
+			<li style="background-image: url(image.php?cover=book&id=${book.bookID});">
+				<a class="button icon detail" data-icon="}" href="${book.bookID}" title="voir le détail"></a>
+				{{if book.loanHolder != null}}
+					<span class="button icon loan" data-icon="u" title="prêtè à ${book.loanHolder} - ${book.loanDate}"></span>
+				{{/if}}
+				<article class="block">
+					<button class="button icon close listHidden" title="Fermer" data-icon="X">Fermer</button>
+					<img src="image.php?cover=book&id=${book.bookID}" alt="" class="cover" />
+					<dl class="info">
+						<dd class="listHidden formTitle">Détail</dd>
+						<dt class="listHidden">Titre</dt>
+						<dd class="title">${book.bookTitle}</dd>
+
+						<dt class="listHidden">Auteur{{if book.authors.length > 1}}s{{/if}}</dt>
+						{{each(j, author) book.authors}}
+							<dd class="listHidden">
+								${author.authorFirstName} ${author.authorLastName}
+								<a class="listHidden button icon update" data-icon="P" href="${author.authorID}" title="Mettre à jour les informations de cet auteur" rel="author"></a>
+								<a class="listHidden button icon delete" data-icon="t" href="${author.authorID}" title="Supprimer cet auteur" rel="author"></a>
+								{{if author.authorWebSite != ''}}
+									<a class="listHidden button icon externalLink" data-icon="/" href="${author.authorWebSite}" title="Voir le site de l'auteur dans une nouvelle page" target="_blank"></a>
+								{{/if}}
+								{{if author.authorSearchURL != ''}}
+									<a class="listHidden button icon externalLink" data-icon="/" href="${author.authorSearchURL}" title="Rechercher les livres de l'auteur sur internet" target="_blank"></a>
+								{{/if}}
+								<a class="button icon filter" data-icon="f" rel="author" href="${author.authorFirstName} ${author.authorLastName}" title="Filtrer la liste pour n'afficher que les livres de cet auteur"></a>
+							</dd>
+						{{/each}}
+
+						{{if book.sagaTitle != null}}
+							<dt class="listHidden">Saga</dt>
+							<dd class="saga">
+								${book.sagaTitle} - ${book.bookSagaPosition} / ${book.bookSagaSize}
+								<a class="listHidden button icon update" data-icon="P" href="${book.sagaID}" title="Mettre à jour les informations de cette saga" rel="saga"></a>
+								<a class="listHidden button icon delete" data-icon="t" href="${book.sagaID}" title="Supprimer cette saga" rel="saga"></a>
+								{{if book.sagaSearchURL != ''}}
+									<a class="listHidden button icon externalLink" data-icon="/" href="${book.sagaSearchURL}" title="Rechercher les livres de cette saga sur internet" target="_blank"></a>
+								{{/if}}
+								<a class="button icon filter" data-icon="f" rel="saga" href="${book.sagaTitle}" title="Filtrer la liste pour n'afficher que les livres de cette saga"></a>
+							</dd>
+						{{/if}}
+
+						<dt class="listHidden">Format</dt>
+						<dd class="listHidden">${book.bookSize}</dd>
+
+						<dt class="listHidden">Rangement</dt>
+						<dd class="listHidden">
+							${book.storageRoom} - ${book.storageType}{{if book.storageColumn != null}} - ${book.storageColumn}{{/if}}{{if book.storageLine != null}}${book.storageLine}{{/if}}
+							<a class="listHidden button icon update" data-icon="P" href="${book.storageID}" title="Mettre à jour les informations de ce rangement" rel="storage"></a>
+							<a class="listHidden button icon storage" data-icon="}" href="storage/${book.storageRoom.urlify()}_${book.storageType.urlify()}_${book.storageColumn}_${book.storageLine}"></a>
+							<a class="listHidden button icon filter" data-icon="f" rel="storage" href="${book.storageID}" title="Filtrer la liste pour n'afficher que les livres de ce rangement"></a>
+						</dd>
+
+						{{if book.loanHolder != null}}
+							<dt class="listHidden">Prêt</dt>
+							<dd class="listHidden">
+								${book.loanHolder} - ${book.loanDate}
+								<a class="button icon delete" data-icon="t" href="${book.loanID}" title="Supprimer ce prêt" rel="loan"></a>
+								<a class="button icon filter" data-icon="f" rel="loan" href="${book.loanHolder}" title="Filtrer la liste pour n'afficher que les livres prêtés à cette personne"></a>
+							</dd>
+						{{/if}}
+
+						<dt class="listHidden actions">
+							<a class="button icon update" data-icon="P" href="${book.bookID}" title="Mettre à jour les informations de ce livre" rel="book"></a>
+							<a class="button icon delete" data-icon="t" href="${book.bookID}" title="Supprimer ce livre" rel="book"></a>
+							{{if book.loanHolder == null}}
+								<a class="button icon addLoan" data-icon="u" href="${book.bookID}" title="Ajouter un prêt pour ce livre" rel="book"></a>
+							{{/if}}
+						</dt>
+					</dl>
+				</article>
+			</li>
+		{{/each}}
+	</ul>
+</script>

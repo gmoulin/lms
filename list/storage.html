@@ -1,0 +1,81 @@
+<script id="storagePaginateTemplate" type="text/x-jquery-tmpl">
+	{{if nb > 0}}
+		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
+			<span>
+				${nb} rangement{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
+			</span>
+		</section>
+	{{else}}
+		<section class="paginate end">
+			<span>aucun rangement trouvé</span>
+		</section>
+	{{/if}}
+</script>
+<script id="storageListTemplate" type="text/x-jquery-tmpl">
+	<ul class="listContent new clearfix">
+		${var currentStorage = ''}
+		{{each(i, storage) list}}
+			{{if currentStorage != storage.storageRoom + storage.storageType && storage.storageColumn != null}}
+				{{if currentStorage != '' || i > 0}}
+					</ul>
+					<ul class="listContent clearfix">
+				{{/if}}
+					${currentStorage = storage.storageRoom + storage.storageType}
+
+					${var currentStorageURL = 'storage/' + storage.storageRoom.urlify() + '_' + storage.storageType.urlify() + '.png'}
+
+					<li style="background-image: url(storage/${currentStorageURL);">
+						<article class="block">
+							<dl class="info">
+								<dt class="listHidden">Pièce</dt>
+								<dd class="title">
+									${storage.storageRoom}
+								</dd>
+								<dt class="listHidden">Type</dt>
+								<dd class="title">
+									${storage.storageType}
+								</dd>
+								<dd class="title">&nbsp;</dd>
+							</dl>
+						</article>
+						<a class="button icon storage" data-icon="}" href="${currentStorageURL}"></a>
+					</li>
+			{{/if}}
+
+			${var storageCodeURL = 'storage/' + storage.storageRoom.urlify() + '_' + storage.storageType.urlify() + ( storage.storageColumn != null || storage.storageLine != null ? '_' : '' ) + ${storage.storageColumn} + ${storage.storageLine} + '.png'}
+
+			<li style="background-image: url(${storageCodeURL});">
+				<article class="block">
+					<dl class="info">
+						<dt class="listHidden">Pièce</dt>
+						<dd class="title">
+							${storage.storageRoom}
+						</dd>
+						<dt class="listHidden">Type</dt>
+						<dd class="title">
+							${storage.storageType}
+						</dd>
+						<dd class="title detailHidden">
+							${storage.storageColumn}${storage.storageLine}
+						</dd>
+						<dt class="listHidden">Colonne</dt>
+						<dd class="listHidden">
+							${storage.storageColumn}
+						</dd>
+						<dt class="listHidden">Ligne</dt>
+						<dd class="listHidden">
+							${storage.storageLine}
+						</dd>
+						<dt class="listHidden actions">
+							<a class="button icon update" data-icon="P" href="${storage.storageID}" title="Mettre à jour les informations de ce rangement" rel="storage"></a>
+							<a class="button icon delete" data-icon="t" href="${storage.storageID}" title="Supprimer ce rangement" rel="storage"></a>
+							<a class="button icon storage" data-icon="}" href="${storageCodeURL}"></a>
+						</dt>
+					</dl>
+				</article>
+				<a class="button icon storage" data-icon="}" href="${storageCodeURL}"></a>
+			</li>
+		{{/each}}
+	</ul>
+</script>

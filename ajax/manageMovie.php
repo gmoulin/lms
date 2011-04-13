@@ -127,17 +127,26 @@ try {
 					$movies = array_slice( $movies, $_SESSION['movies']['numPerPage'] * $_SESSION['movies']['page'], $_SESSION['movies']['numPerPage'], false );
 				}
 
-				include( LMS_PATH . '/list/movie.php' );
-				die;
+				if( $type == 2 || ( $type == 0 && $_SESSION['movies']['page'] > 0 ) ){
+					$nb = count($movies);
+				} else {
+					$nb = $_SESSION['movies']['numPerPage'] * $_SESSION['movies']['page'] + count($movies);
+				}
+
+				if( $nb > $_SESSION['movies']['total'] ) $nb = $_SESSION['movies']['total'];
+
+				$response = array('nb' => $nb, 'total' => $_SESSION['movies']['total'], 'list' => $movies);
+
 			break;
 		case 'more':
 				if( isset($_SESSION['movies']) ){
 					$_SESSION['movies']['page']++;
 					$movies = array_slice( $_SESSION['movies']['list'], $_SESSION['movies']['numPerPage'] * $_SESSION['movies']['page'], $_SESSION['movies']['numPerPage'], false );
 					$type = 3;
+					$nb = $_SESSION['movies']['numPerPage'] * $_SESSION['movies']['page'] + count($movies);
 
-					include( LMS_PATH . '/list/movie.php' );
-					die;
+					$response = array('nb' => $nb, 'total' => $_SESSION['movies']['total'], 'list' => $movies);
+
 				} else {
 					throw new Exception('Gestion des films : pagination impossible, liste non disponible.');
 				}

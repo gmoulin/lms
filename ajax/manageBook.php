@@ -3,8 +3,6 @@
 try {
 	require_once('../conf.ini.php');
 
-	header('Content-type: application/json');
-
 	$action = filter_has_var(INPUT_POST, 'action');
 	if( is_null($action) || $action === false ){
 		throw new Exception('Gestion des livres : action manquante.');
@@ -127,17 +125,26 @@ try {
 					$books = array_slice( $books, $_SESSION['books']['numPerPage'] * $_SESSION['books']['page'], $_SESSION['books']['numPerPage'], false );
 				}
 
-				include( LMS_PATH . '/list/book.php' );
-				die;
+				if( $type == 2 || ( $type == 0 && $_SESSION['books']['page'] > 0 ) ){
+					$nb = count($books);
+				} else {
+					$nb = $_SESSION['books']['numPerPage'] * $_SESSION['books']['page'] + count($books);
+				}
+
+				if( $nb > $_SESSION['books']['total'] ) $nb = $_SESSION['books']['total'];
+
+				$response = array('nb' => $nb, 'total' => $_SESSION['books']['total'], 'list' => $books);
+
 			break;
 		case 'more':
 				if( isset($_SESSION['books']) ){
 					$_SESSION['books']['page']++;
 					$books = array_slice( $_SESSION['books']['list'], $_SESSION['books']['numPerPage'] * $_SESSION['books']['page'], $_SESSION['books']['numPerPage'], false );
 					$type = 3;
+					$nb = $_SESSION['books']['numPerPage'] * $_SESSION['books']['page'] + count($books);
 
-					include( LMS_PATH . '/list/book.php' );
-					die;
+					$response = array('nb' => $nb, 'total' => $_SESSION['books']['total'], 'list' => $books);
+
 				} else {
 					throw new Exception('Gestion des livres : pagination impossible, liste non disponible.');
 				}
@@ -146,6 +153,7 @@ try {
 			throw new Exception('Gestion des livres : action non reconnue.');
 	}
 
+	header('Content-type: application/json');
 	echo json_encode($response);
 	die;
 

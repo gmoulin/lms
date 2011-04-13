@@ -126,17 +126,26 @@ try {
 					$albums = array_slice( $albums, $_SESSION['albums']['numPerPage'] * $_SESSION['albums']['page'], $_SESSION['albums']['numPerPage'], false );
 				}
 
-				include( LMS_PATH . '/list/album.php' );
-				die;
+				if( $type == 2 || ( $type == 0 && $_SESSION['albums']['page'] > 0 ) ){
+					$nb = count($albums);
+				} else {
+					$nb = $_SESSION['albums']['numPerPage'] * $_SESSION['albums']['page'] + count($albums);
+				}
+
+				if( $nb > $_SESSION['albums']['total'] ) $nb = $_SESSION['albums']['total'];
+
+				$response = array('nb' => $nb, 'total' => $_SESSION['albums']['total'], 'list' => $albums);
+
 			break;
 		case 'more':
 				if( isset($_SESSION['albums']) ){
 					$_SESSION['albums']['page']++;
 					$albums = array_slice( $_SESSION['albums']['list'], $_SESSION['albums']['numPerPage'] * $_SESSION['albums']['page'], $_SESSION['albums']['numPerPage'], false );
 					$type = 3;
+					$nb = $_SESSION['albums']['numPerPage'] * $_SESSION['albums']['page'] + count($albums);
 
-					include( LMS_PATH . '/list/album.php' );
-					die;
+					$response = array('nb' => $nb, 'total' => $_SESSION['albums']['total'], 'list' => $albums);
+
 				} else {
 					throw new Exception('Gestion des albums : pagination impossible, liste non disponible.');
 				}

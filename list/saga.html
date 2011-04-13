@@ -1,0 +1,36 @@
+<script id="sagaPaginateTemplate" type="text/x-jquery-tmpl">
+	{{if nb > 0}}
+		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
+			<span>
+				${nb} saga{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
+			</span>
+		</section>
+	{{else}}
+		<section class="paginate end">
+			<span>aucun saga trouvé</span>
+		</section>
+	{{/if}}
+</script>
+<script id="sagaListTemplate" type="text/x-jquery-tmpl">
+	<ul class="listContent new clearfix">
+		{{each(i, saga) list}}
+			<li>
+				<article class="block">
+					<dl class="info">
+						<dd>
+							${saga.sagaTitle}
+							{{if $saga.sagaSearchURL != null}}
+								<a class="button icon externalLink" data-icon="/" href="${saga.sagaSearchURL}" title="Rechercher les livres de la saga sur internet" target="_blank"></a>
+							{{/if}}
+
+							<a class="button icon update" data-icon="P" href="${saga.sagaID}" title="Mettre à jour les informations de cette saga" rel="saga"></a>
+							<a class="button icon delete" data-icon="t" href="${saga.sagaID}" title="Supprimer cette saga" rel="saga"></a>
+							<a class="button icon move" data-icon="b" href="${saga.sagaID}" title="Déplacer cette saga" rel="saga"></a>
+						</dd>
+					</dl>
+				</article>
+			</li>
+		{{/each}}
+	</ul>
+</script>

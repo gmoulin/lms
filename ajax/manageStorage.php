@@ -175,17 +175,26 @@ try {
 					$storages = array_slice( $storages, $_SESSION['storages']['numPerPage'] * $_SESSION['storages']['page'], $_SESSION['storages']['numPerPage'], false );
 				}
 
-				include( LMS_PATH . '/list/storage.php' );
-				die;
+				if( $type == 2 || ( $type == 0 && $_SESSION['storages']['page'] > 0 ) ){
+					$nb = count($storages);
+				} else {
+					$nb = $_SESSION['storages']['numPerPage'] * $_SESSION['storages']['page'] + count($storages);
+				}
+
+				if( $nb > $_SESSION['storages']['total'] ) $nb = $_SESSION['storages']['total'];
+
+				$response = array('nb' => $nb, 'total' => $_SESSION['storages']['total'], 'list' => $storages);
+
 			break;
 		case 'more':
 				if( isset($_SESSION['storages']) ){
 					$_SESSION['storages']['page']++;
 					$storages = array_slice( $_SESSION['storages']['list'], $_SESSION['storages']['numPerPage'] * $_SESSION['storages']['page'], $_SESSION['storages']['numPerPage'], false );
 					$type = 3;
+					$nb = $_SESSION['storages']['numPerPage'] * $_SESSION['storages']['page'] + count($storages);
 
-					include( LMS_PATH . '/list/storage.php' );
-					die;
+					$response = array('nb' => $nb, 'total' => $_SESSION['storages']['total'], 'list' => $storages);
+
 				} else {
 					throw new Exception('Gestion des rangements : pagination impossible, liste non disponible.');
 				}

@@ -1,13 +1,12 @@
 $(document).ready(function(){
 	//for .add_another positonning bug in firefox
-	if( $.browser.mozilla ) $('html').addClass('mozilla');
-	else if( $.browser.webkit ) $('html').addClass('webkit');
+		if( $.browser.mozilla ) $('html').addClass('mozilla');
+		else if( $.browser.webkit ) $('html').addClass('webkit');
 
 	//ajax global management
 		$('#ajax_loader').ajaxStart(function(){
 			console.log('ajaxStart');
 			$('#ajax_loader').addClass('loading');
-			$(this).empty(); //global error message deletion
 		})
 		.ajaxStop(function(){
 			console.log('ajaxStop');
@@ -37,7 +36,7 @@ $(document).ready(function(){
 			reset: 0,	// reset value
 		});
 
-	//author, band and artist list in forms
+	//author, band and artist inputs in forms
 		$('.add_another').click(function(event){
 			console.log('add_another click');
 			event.preventDefault();
@@ -45,15 +44,16 @@ $(document).ready(function(){
 			if( !$(this).is('button') ) return;
 
 			var $list = $(this).siblings('ol'),
-				$anotherBlock = $list.find('.anotherInfo:last').clone(true),
-				tmp = $anotherBlock.find('input').attr('id').split('_'),
+				$anotherBlock = $('.anotherInfo:last', $list).clone(true),
+				tmp = $('input', $anotherBlock).attr('id').split('_'),
 				indice = parseInt(tmp[1]);
 
-			$anotherBlock.find('input')
+			$anotherBlock.children('input')
 				.attr('id', function(index, attr){ return attr.replace(new RegExp(indice), indice + 1); })
 				.attr('name', function(index, attr){ return attr.replace(new RegExp(indice), indice + 1); })
 				.val('') //reseting the value
-				.siblings('label').attr('for', $anotherBlock.find('input').attr('id'));
+				.siblings('label').attr('for', $('input', $anotherBlock).attr('id'));
+
 
 			$list.append( $anotherBlock );
 		});
@@ -74,134 +74,117 @@ $(document).ready(function(){
 
 	//tabs filter section
 		$('.filterForm')
+			.each(function(){ //sort init if present
+				var $this = $(this),
+					$sortTypeField = $this.children('.sortTypeField');
+				if( $sortTypeField.length ){
+					var activeSort = $sortTypeField.val();
+					//set if empty
+					if( activeSort == '' ){
+						activeSort = $sortTypeField.val(0).val();
+					}
+					//each activeSort value is linked to a "ORDER BY" sentence in the php database tables classes
+					//each sort button has 2 arrows
+					//class "both" -> no arrow highlighted
+					//class "asc" -> top arrow highlighted
+					//class "desc" -> bottom arrow highlighted
+					if( activeSort % 2 == 0 ){ //even -> asc sort
+						$this.find('.listSort a[href=' + activeSort + ']').removeClass('both desc').addClass('asc');
+					} else { //odd -> desc sort
+						$this.find('.listSort a[href=' + activeSort + ']').removeClass('both asc').addClass('desc');
+					}
+				}
+			})
 			.delegate('.filterFormSwitch', 'click', function(e){
 				console.log('filterFormSwitch click');
 				e.preventDefault();
 
 				if( !$(this).is('a') ) return;
 
-				var $ul = $(this).closest('.listFilter');
-				if( !$ul.hasClass('deploy') ){
-					$ul.addClass('deploy');
+				var $ul = $(this).closest('.listFilter').toggleClass('deploy');
 
-					//load the filters values
-					$('datalist, select', $ul).loadList();
-
-				} else {
-					$ul.removeClass('deploy');
-				}
-			}).delegate('.search', 'click', function(e){
+				if( $ul.hasClass('deploy') ){ $ul.find('datalist, select').loadList(); }
+			})
+			.delegate('.search', 'click', function(e){
 				console.log('search click');
 				e.preventDefault();
-				hideInform();
 				getList(1);
-			}).delegate('.cancel', click, function(e){
+			})
+			.delegate('.cancel', 'click', function(e){
 				console.log('cancel click');
 				e.preventDefault();
-				$(':input', $(this).closest('.filterForm')).val(''); //filter form reset
-				hideInform();
+				$(this).closest('.filterForm').find(':input').val(''); //filter form reset
 				getList(0);
+			})
+			.delegate('.sort', 'click', function(e){
+				console.log('sort buttons click');
+				e.preventDefault();
+				var $this = $(this);
+
+				if( !$this.is('a') ) return;
+
+				//save clicked link current icon
+				var c = $this.attr('class'),
+					$form = $this.closest('.filterForm'),
+					h = $this.attr('href');
+
+				//reset all links icons
+				$('.sort', $form).removeClass('asc').removeClass('desc').addClass('both');
+
+				//set back clicked link icon
+				$this.attr('class', c);
+
+				//default state -> asc
+				if( $this.hasClass('both') ){
+					$this.toggleClass('both asc');
+
+				//asc state -> desc
+				} else if( $this.hasClass('asc') ){
+					$this.toggleClass('asc desc');
+					h++;
+
+				//desc state -> default
+				} else if( $this.hasClass('desc') ){
+					$this.toggleClass('desc both');
+
+					//reseting sort type to 0
+					$('.sort:first', $form).click();
+					return;
+				}
+
+				$form.children('.sortTypeField').val( h );
+
+				getList(1);
 			});
 
-	//sort result links
-		$('.sort').click(function(e){
-			console.log('sort buttons click');
-			e.preventDefault();
-			var t = $(this);
-
-			if( !t.is('a') ) return;
-
-			//save clicked link current icon
-			var tmp = t.attr('class');
-			var form = t.closest('.filterForm');
-
-			//each index correspond to a "ORDER BY" string in php database tables classes
-			var index = t.attr('href');
-
-			//reset all links icons
-			$('.sort', form).removeClass('asc').removeClass('desc').addClass('both');
-
-			//set back clicked link icon
-			t.attr('class', tmp);
-
-			//default state -> asc
-			if( t.hasClass('both') ){
-				t.toggleClass('both asc');
-
-			//asc state -> desc
-			} else if( t.hasClass('asc') ){
-				t.toggleClass('asc desc');
-				index++;
-
-			//desc state -> default
-			} else if( t.hasClass('desc') ){
-				t.toggleClass('desc both');
-
-				//reseting sort type to 0
-				$('.sort:first', form).click();
-				return;
-			}
-
-			$('.sortTypeField', form).val(index);
-
-			hideInform();
-			getList(1);
-		});
-
-	//result list filter icon links
-		$('.filter').live('click', function(e){
-			console.log('filter click');
-			e.preventDefault();
-
-			if( !$(this).is('a') ) return;
-
-			var rel = $(this).attr('rel');
-			if( !rel.length ) return;
-
-			rel = rel.charAt(0).toUpperCase() + rel.substr(1);
-
-			var t = $('#nav').data('activeTab');
-
-			$('#' + t + rel +'Filter').val( $(this).attr('href') );
-
-			$('#' + t + '_filter .listFilter').addClass('deploy');
-
-			hideInform();
-			getList(1);
-
-			$('#detailHide, #editHide, #previewHide, #storageHide, #confirmHide').attr('checked', 'checked');
-		});
-
-	//add, update, delete
+	//add, update, delete, relocate, move, addLoan
 		$('.add').click(function(e){
 			e.preventDefault();
 			console.log('add click');
 
 			if( !$(this).is('button') ) return;
 
-			var rel = $(this).attr('rel');
+			var rel = $(this).attr('rel'),
+				$manage = $('#manage_' + rel),
+				link = '',
+				text = 'Enregistrer ';
 
 			//raz
-			var link = '';
 			if( rel == 'book' ) link = 'bookAuthors';
-			else if( rel == 'album' ) link = 'albumGroups';
+			else if( rel == 'album' ) link = 'albumBands';
 			else if( rel == 'movie' ) link = 'movieArtists';
 			if( link != '' ){
-				$('.anotherInfo:gt(0)', '#' + link).remove();
+				$('#' + link).children('.anotherInfo:gt(0)').remove();
 
-				$('.anotherInfo input', '#' + link)
-					.attr('id', function(index, attr){ return attr.replace(new RegExp(attr.substr(-1)), 1); })
-					.attr('name', function(index, attr){ return attr.replace(new RegExp(attr.substr(-1)), 1); })
-					.siblings('label').attr('for', $('.anotherInfo input', '#' + link).attr('id'));
-
+				$('#' + link).find('input')
+					.attr('id', link + '_1')
+					.attr('name', link + '_1')
+					.siblings('label').attr('for', link + '_1');
 			}
-			$(':input', '#manage_' + rel).val('');
-			$('.coverStatus', '#manage_' + rel).html(function(){
+			$manage.find(':input').val('').change();
+			$manage.find('.coverStatus').html(function(){
 				var tmp = 'Déposer ';
-				if( rel == 'book' ) tmp += 'la couverture';
-				else if( rel == 'movie' ) tmp += 'l\'affiche';
-				else if( rel == 'album' ) tmp += 'la couverture';
-				else if( rel == 'storage' ) tmp += 'la photo';
+				rel == 'book' || rel == 'album' ? tmp += 'la couverture' : tmp += 'l\'affiche';
 			});
 			$('#editPreview').empty();
 			//setting action
@@ -210,28 +193,25 @@ $(document).ready(function(){
 			//hidding and emptying results
 			hideInform();
 
-			var text = '';
-			if( rel == 'book' ){
-				text = 'Enregistrer le nouveau livre';
-				$('#bookSagaTitle').change(); //fire the change event
-			} else if( rel == 'movie' ){
-				text = 'Enregistrer le nouveau film';
-				$('#movieSagaTitle').change(); //fire the change event
-			}
-			else if( rel == 'album' ) text = 'Enregistrer le nouvel album';
-			else if( rel == 'saga' ) text = 'Enregistrer la nouvelle saga';
-			else if( rel == 'author' ) text = 'Enregistrer le nouvel auteur';
-			else if( rel == 'artist' ) text = 'Enregistrer le nouvel artiste';
-			else if( rel == 'band' ) text = 'Enregistrer le nouveau groupe';
-			else if( rel == 'storage' ) text = 'Enregistrer le nouveau rangement';
+			//construct the popup title text
+			rel == 'book' || rel == 'movie' || rel == 'band' || rel == 'storage' ? text += ' le nouveau ' :
+			rel == 'album' || rel == 'author' || rel == 'artist' ? text += ' le nouvel ' : text += ' la nouvelle ';
+
+			if( rel == 'book' ) text += 'livre';
+			else if( rel == 'movie' ) text += 'film';
+			else if( rel == 'album' ) text += 'album';
+			else if( rel == 'saga' ) text += 'saga';
+			else if( rel == 'author' ) text += 'auteur';
+			else if( rel == 'artist' ) text += 'artiste';
+			else if( rel == 'band' ) text += 'groupe';
+			else if( rel == 'storage' ) text = 'rangement';
 
 			//place the form
-			$('#manage_' + rel)
-				.append( $('<button>', { 'class': 'button icon close', 'title': 'Fermer', 'data-icon': 'X' }).text('Fermer') )
+			$manage
 				.appendTo( $('#editForm .formWrapper').empty() );
 
 			//set the form title
-			$('#editForm .formTitle').html(text);
+			$('#editForm .formTitle').html( text );
 
 			//set the submit button text
 			$('#formSubmit').data('save_clicked', 0).attr('rel', 'add').text('Enregistrer');
@@ -246,50 +226,45 @@ $(document).ready(function(){
 
 			if( !$(this).is('a') ) return;
 
-			var rel = $(this).attr('rel');
-			var target = rel.charAt(0).toUpperCase() + rel.substr(1);
-			var link = '';
+			var $this = $(this),
+				rel = $this.attr('rel'),
+				target = rel.charAt(0).toUpperCase() + rel.substr(1),
+				$manage = $('#manage_' + rel),
+				link = '',
+				text = 'Modifier les informations ',
+				$editPreview = $('#editPreview').empty();
+
 			if( rel == 'book' ) link = 'bookAuthors';
 			else if( rel == 'movie' ) link = 'movieArtists';
-			else if( rel == 'album' ) link = 'albumGroups';
+			else if( rel == 'album' ) link = 'albumBands';
 
 			//raz
-			if( link != '' ) $('.anotherInfo:gt(0)', '#' + link).remove();
-			$(':input', '#manage_' + rel).val('');
-			$('.coverStatus', '#manage_' + rel).html(function(){
-				var tmp = 'Déposer ';
-				if( rel == 'book' ) tmp += 'la couverture';
-				else if( rel == 'album' ) tmp += 'la couverture';
-				else if( rel == 'movie' ) tmp += 'l\'affiche';
-				else if( rel == 'storage' ) tmp += 'la photo';
+			if( link != '' ) $('#' + link).children('.anotherInfo:gt(0)').remove();
+			$manage.find(':input').val('');
+			$manage.find('.coverStatus').html(function(){
+				return 'Déposer ' + ( rel == 'movie' ? 'l\'affiche' : 'la couverture' );
 			});
-			var editPreview = $('#editPreview').empty();
+
 			//setting action
 			$('#' + rel + 'Action').val('update');
 
 			//hidding and emptying results
 			hideInform();
 
-			var text = '';
-			if( rel == 'book' ){
-				text = 'Modifier les informations du livre';
-				$('#bookSagaTitle').change(); //fire the change event
-			}
-			if( rel == 'movie' ){
-				text = 'Modifier les informations du film';
-				$('#movieSagaTitle').change(); //fire the change event
-			}
-			if( rel == 'album' ) text = 'Modifier les informations de l\'album';
-			if( rel == 'saga' ) text = 'Modifier les informations de la saga';
-			if( rel == 'author' ) text = 'Modifier les informations de l\'auteur';
-			if( rel == 'artist' ) text = 'Modifier les informations de l\'artiste';
-			if( rel == 'band' ) text = 'Modifier les informations du groupe';
-			if( rel == 'storage' ) text = 'Modifier les informations du rangement';
+			//construct the popup title text
+			if( rel == 'book' ) text += 'du livre';
+			else if( rel == 'movie' ) text += 'du film';
+			else if( rel == 'album' ) text += 'du l\'album';
+			else if( rel == 'saga' ) text += 'de la saga';
+			else if( rel == 'author' ) text += 'de l\'auteur';
+			else if( rel == 'artist' ) text += 'de l\'artiste';
+			else if( rel == 'band' ) text += 'du groupe';
+			else if( rel == 'storage' ) text = 'du rangement';
 
 			//place the form
-			$('#manage_' + rel).appendTo( $('#editForm .formWrapper').empty() );
+			$manage.appendTo( $('#editForm .formWrapper').empty() );
 
-			$('#editForm .formTitle').html(text);
+			$('#editForm .formTitle').html( text );
 			$('#formSubmit').data('save_clicked', 0).attr('rel', 'update').text('Enregistrer');
 
 			//open the modal dialog
@@ -297,18 +272,18 @@ $(document).ready(function(){
 
 			var decoder = $('<textarea>');
 			//load the data and set the form fields with it
-			$.post('ajax/manage' + target + '.php', 'action=get&id=' + $(this).attr('href'), function(data){
+			$.post('ajax/manage' + target + '.php', 'action=get&id=' + $this.attr('href'), function(data){
 				switch( rel ){
 					case 'book':
 							$('#bookID').val(data.bookID);
-							$('#bookTitle').val(decoder.html(data.bookTitle).val());
+							$('#bookTitle').val(decoder.html(data.bookTitle).val()).change();
 							$('#bookSize').val(data.bookSize);
 							$('#bookCover').val(data.bookCover);
-							$('<img>', { src : 'image.php?cover=book&id=' + data.bookID }).appendTo( editPreview );
+							$('<img>', { src : 'image.php?cover=book&id=' + data.bookID }).appendTo( $editPreview );
 							$('#bookSagaTitle').val(decoder.html(data.sagaTitle).val()).change();
 							$('#bookSagaPosition').val(data.bookSagaPosition);
 
-							//options for this select are reseted by initBookFormList()
+							//options for this select are reseted by loadList()
 							//at this point the list can be empty
 							$('#bookStorage').data('selectedId', data.storageID);
 
@@ -321,12 +296,12 @@ $(document).ready(function(){
 						break;
 					case 'movie':
 							$('#movieID').val(data.movieID);
-							$('#movieTitle').val(decoder.html(data.movieTitle).val());
+							$('#movieTitle').val(decoder.html(data.movieTitle).val()).change();
 							$('#movieGenre').val(decoder.html(data.movieGenre).val());
 							$('#movieMediaType').val(decoder.html(data.movieMediaType).val());
 							$('#movieLength').val(data.movieLength);
 							$('#movieCover').val(data.movieCover);
-							$('<img>', { src : 'image.php?cover=movie&id=' + data.movieID }).appendTo( editPreview );
+							$('<img>', { src : 'image.php?cover=movie&id=' + data.movieID }).appendTo( $editPreview );
 							$('#movieSagaTitle').val(decoder.html(data.sagaTitle).val()).change();
 							$('#movieSagaPosition').val(data.movieSagaPosition);
 
@@ -343,10 +318,10 @@ $(document).ready(function(){
 						break;
 					case 'album':
 							$('#albumID').val(data.albumID);
-							$('#albumTitle').val(decoder.html(data.albumTitle).val());
+							$('#albumTitle').val(decoder.html(data.albumTitle).val()).change();
 							$('#albumType').val(data.albumType);
 							$('#albumCover').val(data.albumCover);
-							$('<img>', { src : 'image.php?cover=album&id=' + data.albumID }).appendTo( editPreview );
+							$('<img>', { src : 'image.php?cover=album&id=' + data.albumID }).appendTo( $editPreview );
 
 							//options for this select are reseted by initAlbumFormList()
 							//at this point the list can be empty
@@ -368,7 +343,7 @@ $(document).ready(function(){
 						break;
 					case 'band':
 							$('#bandID').val(data.bandID);
-							$('#bandName').val(decoder.html(data.bandName).val());
+							$('#bandName').val(decoder.html(data.bandName).val()).change();
 							$('#bandGenre').val(decoder.html(data.bandGenre).val());
 							$('#bandWebSite').val(data.bandWebSite);
 						break;
@@ -376,8 +351,6 @@ $(document).ready(function(){
 							$('#artistID').val(data.artistID);
 							$('#artistFirstName').val(decoder.html(data.artistFirstName).val());
 							$('#artistLastName').val(decoder.html(data.artistLastName).val());
-							//$('#artistPhoto').val(data.artistPhoto);
-							//$('<img>', { src : 'image.php?cover=artist&id=' + data.artistID }).appendTo( editPreview );
 						break;
 					case 'saga':
 							$('#sagaID').val(data.sagaID);
@@ -390,7 +363,7 @@ $(document).ready(function(){
 							$('#storageType').val(data.storageType);
 							$('#storageColumn').val(data.storageColumn);
 							$('#storageLine').val(data.storageLine);
-							$('<img>', { src : 'image.php?cover=storage&id=' + data.storageID }).appendTo( editPreview );
+							$('<img>', { src : 'image.php?cover=storage&id=' + data.storageID }).appendTo( $editPreview );
 						break;
 				}
 			});
@@ -405,31 +378,34 @@ $(document).ready(function(){
 			//hidding and emptying results
 			hideInform();
 
-			var id = $(this).attr('href');
-			var rel = $(this).attr('rel');
-			var target = rel.charAt(0).toUpperCase() + rel.substr(1);
+			var $this = $(this),
+				id = $this.attr('href'),
+				rel = $this.attr('rel'),
+				target = rel.charAt(0).toUpperCase() + rel.substr(1),
+				text = 'Etes-vous sûr de vouloir supprimer ',
+				$formWrapper = $('#confirmForm .formWrapper'),
+				$confirmSubmit = $('#confirmSubmit').data('save_clicked', 0);
 
-			var text = '';
-			if( rel == 'book' ) text = 'Etes-vous sûr de vouloir supprimer ce livre ?';
-			else if( rel == 'album' ) text = 'Etes-vous sûr de vouloir supprimer cet album ?';
-			else if( rel == 'movie' ) text = 'Etes-vous sûr de vouloir supprimer ce film ?';
-			else if( rel == 'saga' ) text = 'Etes-vous sûr de vouloir supprimer cette saga ?<br />Tous les livres et films listés ci-dessous seront également supprimés !';
-			else if( rel == 'author' ) text = 'Etes-vous sûr de vouloir supprimer cet auteur ?<br />Tous les livres listés ci-dessous seront également supprimés !';
-			else if( rel == 'artist' ) text = 'Etes-vous sûr de vouloir supprimer cet artiste ?<br />Tous les films listés ci-dessous seront également supprimés !';
-			else if( rel == 'band' ) text = 'Etes-vous sûr de vouloir supprimer ce groupe ?<br />Tous les albums listés ci-dessous seront également supprimés !';
-			else if( rel == 'storage' ) text = 'Etes-vous sûr de vouloir supprimer ce rangement ?';
-			else if( rel == 'loan' ) text = 'Etes-vous sûr de vouloir supprimer ce prêt ?';
+			if( rel == 'book' ) text += 'ce livre ?';
+			else if( rel == 'album' ) text += 'cet album ?';
+			else if( rel == 'movie' ) text += 'ce film ?';
+			else if( rel == 'saga' ) text += 'cette saga ?<br />Tous les livres et films listés ci-dessous seront également supprimés !';
+			else if( rel == 'author' ) text += 'cet auteur ?<br />Tous les livres listés ci-dessous seront également supprimés !';
+			else if( rel == 'artist' ) text += 'cet artiste ?<br />Tous les films listés ci-dessous seront également supprimés !';
+			else if( rel == 'band' ) text += 'ce groupe ?<br />Tous les albums listés ci-dessous seront également supprimés !';
+			else if( rel == 'storage' ) text += 'ce rangement ?';
+			else if( rel == 'loan' ) text += 'ce prêt ?';
 
-			var formWrapper = $('#confirmForm .formWrapper').html( $('<span class="confirmation">').append(text) );
+			$formWrapper.html( $('<span>', { 'class': 'confirmation' }).append( text ) );
 
 			//set the submit button text
-			$('#confirmSubmit').data('save_clicked', 0);
+			$confirmSubmit.data('save_clicked', 0);
 
 			//open the modal dialog
 			$('#confirmShow').attr('rel', rel).data('id', id).click();
 
 			if( rel == 'saga' || rel == 'author' || rel == 'artist' || rel == 'band' ){
-				//chargement de la liste des livres ou films impactés
+				//chargement de la liste des livres ou films ou albums impactés
 				$.ajax({
 					url: 'ajax/manage' + target + '.php',
 					type: 'POST',
@@ -437,7 +413,7 @@ $(document).ready(function(){
 					async: false,
 					dataType: 'html',
 					success: function(data){
-						formWrapper.append(data);
+						$formWrapper.append(data);
 					}
 				});
 			}
@@ -451,10 +427,8 @@ $(document).ready(function(){
 					async: false,
 					dataType: 'html',
 					success: function(data){
-						formWrapper.append(data);
-						$('select', formWrapper).loadList();
-
-						$('#confirmSubmit').attr("disabled", "disabled");
+						$formWrapper.append(data);
+						$confirmSubmit.attr("disabled", "disabled");
 					}
 				});
 			}
@@ -471,15 +445,19 @@ $(document).ready(function(){
 			if( $('#storageList').val() == '' ){
 				formErrors([['storageList', 'Le nouveau rangement est requis.', 'required']]);
 			} else {
-				$.post('ajax/manageStorage.php', 'action=relocate&' + $.param( $('input:checked, select', '#impactStorage'), true ), function(data){
+				var $impactStorage = $('#impactStorage');
+				$.post('ajax/manageStorage.php', 'action=relocate&' + $.param( $impactStorage.find('input:checked, select'), true ), function(data){
 					if( data == 'ok' ){
 						//inform user
 						inform('Nouvelle allocation effectuée', 'success');
 
-						$(':input:checked', '#impactStorage').parent().remove();
-						if( !$('input', '#impactStorage').length ){
-							$('#impactStorage').remove();
-							$('#formSubmit').attr("disabled", "");
+						//clean the relocated items
+						$impactStorage.find(':input:checked').parent().remove();
+
+						//activate the confirm button when all items have been relocated
+						if( !$impactStorage.find('input').length ){
+							$impactStorage.remove();
+							$('#confirmSubmit').attr("disabled", "");
 						}
 					}
 				});
@@ -495,13 +473,12 @@ $(document).ready(function(){
 			//hidding and emptying results
 			hideInform();
 
-			var id = $(this).attr('href');
-			var rel = $(this).attr('rel');
-			var target = rel.charAt(0).toUpperCase() + rel.substr(1);
-
-			var text = 'Etes-vous sûr de vouloir changer le rangement de cette saga ?';
-
-			var formWrapper = $('#editForm .formWrapper').empty();
+			var $this = $(this),
+				id = $this.attr('href'),
+				rel = $this.attr('rel'),
+				target = rel.charAt(0).toUpperCase() + rel.substr(1),
+				text = 'Etes-vous sûr de vouloir changer le rangement de cette saga ?',
+				$formWrapper = $('#editForm .formWrapper').empty();
 
 			$('#editForm .formTitle').html('Modification du rangement');
 
@@ -510,7 +487,7 @@ $(document).ready(function(){
 
 			$('#editPreview').empty();
 
-			//chargement de la liste des livres ou films concernés
+			//chargement de la liste des livres ou films ou albums concernés
 			$.ajax({
 				url: 'ajax/manage' + target + '.php',
 				type: 'POST',
@@ -518,7 +495,7 @@ $(document).ready(function(){
 				async: false,
 				dataType: 'html',
 				success: function(data){
-					formWrapper.append(data);
+					$formWrapper.append(data);
 				}
 			});
 
@@ -532,25 +509,27 @@ $(document).ready(function(){
 
 			if( !$(this).is('a') ) return;
 
-			$(':input', '#manage_loan').val('');
+			var $this = $(this),
+				$manage = $('#manage_loan'),
+				text = 'Enregistrer le nouveau prêt',
+				$editForm = $('#editForm');
+
+			$manage.find(':input').val('');
 			$('#editPreview').empty();
 			//setting action
 			$('#loanAction').val('add');
-			$('#loanFor').val( $(this).attr('rel') );
-			$('#itemID').val( $(this).attr('href') );
+			$('#loanFor').val( $this.attr('rel') );
+			$('#itemID').val( $this.attr('href') );
 
 			//hidding and emptying results
 			hideInform();
 
-			var text = 'Enregistrer le nouveau prêt';
-
 			//place the form
-			$('#manage_loan')
-				.append( $('<button>', { 'class': 'button icon close', 'title': 'Fermer', 'data-icon': 'X' }).text('Fermer') )
-				.appendTo( $('#editForm .formWrapper').empty() );
+			$manage
+				.appendTo( $editForm.find('.formWrapper').empty() );
 
 			//set the form title
-			$('#editForm .formTitle').html(text);
+			$editForm.find('.formTitle').html( text );
 
 			//set the submit button text
 			$('#formSubmit').data('save_clicked', 0).attr('rel', 'add').text('Enregistrer');
@@ -559,64 +538,85 @@ $(document).ready(function(){
 			$('#editShow').attr('rel', 'loan').click();
 		});
 
-	//list and detail actions
-		$('.storage').live('click', function(e){
-			console.log('storage click');
-			e.preventDefault();
+	//list actions (storage, detail, filter)
+		$('.list')
+			.delegate('.storage', 'click', function(e){
+				console.log('storage click');
+				e.preventDefault();
+				var $this = $(this);
 
-			if( !$(this).is('a') ) return;
+				if( !$this.is('a') ) return;
 
-			//storage list case
-			if( $(this).closest('#list_storage').length ){
+				//storage list case
+				if( $this.closest('#list_storage').length ){
+					var $detailBox = $('#detailBox'),
+						$detail = $('#detail');
+
+					//saving for detail display after list refresh if needed
+					$detailBox.data('link', $this.attr('href'))
+						.data('tab', $('#nav').data('activeTab'));
+
+					$detail.html( $this.parent().find('.block').clone(true) );
+
+					$('#detailShow').click();
+
+					//remove src then add it with new value to avoid flicker
+					$('#storageImg').removeAttr('src').attr('src', $this.attr('href') );
+
+					$('#storageShow').click();
+
+				//in detailBox case
+				} else {
+					//toggle storage image show
+					if( $('#storageShow:checked').length ) $('#storageHide').click();
+					else {
+						$('#storageImg').attr('src', $this.attr('href') );
+						$('#storageShow').click();
+					}
+				}
+			})
+			.delegate('.detail', 'click', function(e){
+				console.log('detail click');
+				e.preventDefault();
+				var $this = $(this);
+
+				if( !$this.is('a') ) return;
+
+				var $detailBox = $('#detailBox'),
+					$detail = $('#detail');
+
 				//saving for detail display after list refresh if needed
-				$('#detailBox').data('link', $(this).attr('href'));
-				$('#detailBox').data('tab', $('#nav').data('activeTab'));
+				$detailBox.data('link', $this.attr('href'))
+					.data('tab', $('#nav').data('activeTab'));
 
-				$('#detail').html(
-					$('.block', $(this).parent()).clone(true)
-						.append( $('<button>', { 'class': 'button icon close', 'title': 'Fermer', 'data-icon': 'X' }).text('Fermer') )
-				);
-
-				$('<dd>',{ 'class': 'formTitle'}).text('Détail')
-					.prependTo( $('#detail .info') );
+				$('#storageHide').attr('checked', 'checked');
+				$detail.html( $this.parent().find('.block').clone(true) );
 
 				$('#detailShow').click();
+			})
+			.delegate('.filter', 'click', function(e){
+				console.log('filter click');
+				e.preventDefault();
+				var $this = $(this);
 
-				$('#storageImg').attr('src', $(this).attr('href') );
-				$('#storageShow').click();
+				if( !$this.is('a') ) return;
 
-			//in detailBox case
-			} else {
-				if( $('#storageShow:checked').length ) $('#storageHide').click();
-				else {
-					$('#storageImg').attr('src', $(this).attr('href') );
-					$('#storageShow').click();
-				}
-			}
-		});
+				var rel = $this.attr('rel');
+				if( !rel ) return;
 
-		$('.detail').live('click', function(e){
-			console.log('detail click');
-			e.preventDefault();
+				rel = rel.charAt(0).toUpperCase() + rel.substr(1);
 
-			if( !$(this).is('a') ) return;
+				var tab = $('#nav').data('activeTab');
 
-			//saving for detail display after list refresh if needed
-			$('#detailBox').data('link', $(this).attr('href'));
-			$('#detailBox').data('tab', $('#nav').data('activeTab'));
+				$('#' + tab + rel +'Filter').val( $this.attr('href') );
 
-			$('#storageHide').attr('checked', 'checked');
-			$('#detail').html(
-				$('.block', $(this).parent()).clone(true)
-					.append( $('<button>', { 'class': 'button icon close', 'title': 'Fermer', 'data-icon': 'X' }).text('Fermer') )
-			);
-			$('<dd>',{ 'class': 'formTitle'}).text('Détail')
-				.prependTo( $('#detail .info') );
+				$('#' + tab + '_filter .listFilter').addClass('deploy');
 
-			$('#detailBox .cover').attr('src', function(){ return this.src + '&ts=' + e.timeStamp; });
+				getList(1);
 
-			$('#detailShow').click();
-		});
+				//hide all popup
+				$('#detailHide, #editHide, #previewHide, #storageHide, #confirmHide').attr('checked', 'checked');
+			});
 
 	//forms actions
 		$('.form').each(function(){
@@ -625,6 +625,7 @@ $(document).ready(function(){
 			this.addEventListener("blur", checkField, true);
 			this.addEventListener("input", checkField, true);
 
+			//on key press "enter", do a submit button click
 			$(this).keypress(function(e){
 				if( e.keyCode == 13 ){
 					e.preventDefault();
@@ -638,18 +639,19 @@ $(document).ready(function(){
 		$('#formSubmit').click(function(e){
 			console.log('formSubmit click');
 			e.preventDefault();
-			var button = $(this);
+			var $this = $(this),
+				$section = $this.closest('.wrapper').find('.form'); //#manage_xxx
 
-			var section = button.closest('.wrapper').find('.form'); //#manage_xxx
 			if( !section.length ){
 				return;
 			}
-			var rel = $('#editBox .form').attr('rel');
-			var target = rel.charAt(0).toUpperCase() + rel.substr(1);
+
+			var rel = $('#editBox .form').attr('rel'),
+				target = rel.charAt(0).toUpperCase() + rel.substr(1);
 
 			//multiple call protection
-			if( button.data('save_clicked') != 1 ){
-				button.data('save_clicked', 1);
+			if( $this.data('save_clicked') != 1 ){
+				$this.data('save_clicked', 1);
 
 				//hidding and emptying results
 				hideInform();
@@ -657,14 +659,15 @@ $(document).ready(function(){
 				if( rel != 'move' ){
 					$.ajax({
 						url: 'ajax/manage' + target + '.php',
-						data: $(':input', section).serialize(),
+						data: $section.find(':input').serialize(),
 						type: 'POST',
 						dataType: 'json',
 						complete: function(){
-							button.data('save_clicked', 0);
+							$this.data('save_clicked', 0);
 						},
 						success: function(data){
 							if( data == 'ok' ){
+								var $confirmForm = $('#confirmForm');
 								//inform user
 								inform( ( $('#' + rel + 'Action').val() == 'add' ? 'Ajout effectué' : 'Mise à jour effectuée' ), 'success' );
 
@@ -682,14 +685,12 @@ $(document).ready(function(){
 											async: false,
 											dataType: 'html',
 											success: function(data){
-												$('#confirmForm .impact').remove();
-												$('#confirmForm .formWrapper').append(data);
+												$confirmForm.find('.impact').remove();
+												$confirmForm.find('.formWrapper').append(data);
 											}
 										});
-									}
-
-									if( rel == 'storage' ){
-										//chargement de la liste des livres impactés
+									} else if( rel == 'storage' ){
+										//chargement de la liste des rangements impactés
 										$.ajax({
 											url: 'ajax/manage' + target + '.php',
 											type: 'POST',
@@ -698,8 +699,7 @@ $(document).ready(function(){
 											dataType: 'html',
 											success: function(data){
 												$('#impactStorage').remove();
-												$('#confirmForm .formWrapper').append(data);
-												$('select', formWrapper).loadList();
+												$confirmForm.find('.formWrapper').append(data);
 
 												$('#confirmSubmit').attr("disabled", "disabled");
 											}
@@ -720,17 +720,16 @@ $(document).ready(function(){
 						}
 					});
 				} else {
-					//send storage change
+					//send storage change for the saga
 					$.post('ajax/manageSaga.php', 'action=move&id=' + $('#editShow').data('id') + '&' + $('#moveSaga').serialize(), function(data){
 						if( data == 'ok' ){
+							//refresh list
+							getList(2);
 							//inform user
 							inform('Modification effectuée', 'success');
-
 							//modal close
 							$('#editHide').click();
 
-							//refresh list
-							getList(2);
 						} else {
 							//inform user
 							inform('Erreur durant la modification', 'error');
@@ -752,15 +751,14 @@ $(document).ready(function(){
 		$('#confirmSubmit').click(function(e){
 			console.log('confirmSubmit');
 			e.preventDefault();
-			var button = $(this);
-
-			var section = button.closest('.wrapper');
-			var rel = $('#confirmShow').attr('rel');
-			var target = rel.charAt(0).toUpperCase() + rel.substr(1);
+			var $this = $(this),
+				$section = $this.closest('.wrapper'),
+				rel = $('#confirmShow').attr('rel'),
+				target = rel.charAt(0).toUpperCase() + rel.substr(1);
 
 			//multiple call protection
-			if( button.data('save_clicked') != 1 ){
-				button.data('save_clicked', 1);
+			if( $this.data('save_clicked') != 1 ){
+				$this.data('save_clicked', 1);
 
 				//hidding and emptying results
 				hideInform();
@@ -768,14 +766,12 @@ $(document).ready(function(){
 				//send delete
 				$.post('ajax/manage' + target + '.php', 'action=delete&id=' + $('#confirmShow').data('id'), function(data){
 					if( data == 'ok' ){
-						//inform user
-						inform('Suppression effectuée', 'success');
-
-						//modal close
-						$('#confirmHide').click();
-
 						//refresh list
 						getList(2);
+						//inform user
+						inform('Suppression effectuée', 'success');
+						//modal close
+						$('#confirmHide').click();
 					} else {
 						//inform user
 						inform('Erreur durant la suppression', 'error');
@@ -792,37 +788,26 @@ $(document).ready(function(){
 			$('#confirmHide').click();
 		});
 
-	//sort init
-		$('.tab').each(function(){
-			if( $('.sortTypeField', this).length ){
-				var activeSort = $('.sortTypeField', this).val();
-				if( activeSort == '' ){
-					activeSort = $('.sortTypeField', this).val(0).val();
-				}
-				if( activeSort % 2 == 0 ){
-					$('.listSort a[href=' + activeSort + ']', this).removeClass('both desc').addClass('asc');
-				} else {
-					$('.listSort a[href=' + activeSort + ']', this).removeClass('both asc').addClass('desc');
-				}
-			}
-		});
-
 	//modals toggle
 		$('#editHide').click(function(e){
 			console.log('editHide click');
+			var $editBox = $('#editBox');
 
-			if( $('.form', '#editBox').length ){
-				var rel = $('.form', '#editBox').attr('rel');
+			if( $editBox.find('.form').length ){
+				var rel = $editBox.find('.form').attr('rel');
 
-				if( $('.coverStatus', '#editBox').length ){
+				if( $editBox.find('.coverStatus').length ){
 					//event listeners cleaning
-					$('html, #drop_overlay').unbind('dragenter').unbind('dragover').unbind('dragleave').unbind('dragend');
+					$('html, #drop_overlay')
+						.unbind('dragenter')
+						.unbind('dragover')
+						.unbind('dragleave')
+						.unbind('dragend');
 
 					$('html').get(0).removeEventListener("drop", dropCover, true);
 				}
 
 				//replace the form
-				$('.close', '#editBox').remove();
 				$('#manage_' + rel).appendTo( $('body') );
 			}
 		});
@@ -830,38 +815,31 @@ $(document).ready(function(){
 		$('#editShow').click(function(e){
 			console.log('editShow click');
 
-			var rel = $(this).attr('rel');
-			var target = rel.charAt(0).toUpperCase() + rel.substr(1);
-			var section = $('#editBox .formWrapper');
+			var rel = $(this).attr('rel'),
+				target = rel.charAt(0).toUpperCase() + rel.substr(1),
+				$section = $('#editBox .formWrapper');
 
-			if( $('img', '#editPreview') .length ){
+			if( $('img', '#editPreview').length ){
 				$('#previewShow').click();
 			} else {
 				$('#previewHide').click();
 			}
 
 			//reset validation visual infos
-			$(':input, .coverStatus', section).removeClass('required valid error upload');
+			$section.find(':input, .coverStatus').removeClass('required valid error upload');
 
-			if( $('.coverStatus', section).length ){
-				$('html, #drop_overlay').bind('dragenter', dragEnter).bind('dragover', dragOver).bind('dragleave', dragLeave);
+			if( $section.find('.coverStatus').length ){
+				$('html, #drop_overlay')
+					.bind('dragenter', dragEnter)
+					.bind('dragover', dragOver)
+					.bind('dragleave', dragLeave);
+
 				$('html').get(0).addEventListener("drop", dropCover, true);
 			}
 
-			$('.block', '#editBox').append( $('<button>', { 'class': 'button icon close', 'title': 'Fermer', 'data-icon': 'X' }).text('Fermer') );
+			if( $('#editPreview').find('img').length ) $('#previewShow').attr('checked', 'checked');
 
-			//$('#detailHide, #storageHide').click();
-
-			if( $('img', '#editPreview').length ) $('#previewShow').attr('checked', 'checked');
-
-			$('datalist, select', section).loadList();
-		});
-
-		$('#detailHide, #editHide, #confirmHide').click(function(e){
-			console.log('#detailHide, #editHide, #confirmHide click');
-			if( !$('#detailShow:checked, #editShow:checked, #confirmShow:checked').length ){
-				$('html').unbind('keypress'); //remove escape support
-			}
+			$('datalist, select', $section).loadList();
 		});
 
 		$('.close').live('click', function(e){
@@ -874,13 +852,24 @@ $(document).ready(function(){
 
 			if( id == 'editBox' ){
 				$('#editHide, #previewHide').click();
+
 			} else if( id == 'detailBox' ){
 				$('#detailHide, #storageHide').click();
+
 			} else if( id == 'confirmBox' ){
 				$('#confirmHide').click();
+
 			} else {
 				$('#detailHide, #editHide, #previewHide, #storageHide, #confirmHide').click();
 			}
+		});
+
+		$('#editShow, #detailShow, #storageShow, #previewShow, #confirmShow').click(function(e){
+			addShortcutsSupport();
+		});
+
+		$('#editHide, #detailHide, #storageHide, #previewHide, #confirmHide').click(function(e){
+			$(document).unbind('keydown');
 		});
 
 	//menu link
@@ -890,60 +879,89 @@ $(document).ready(function(){
 			var target = $(this).attr('href').substr(1);
 			if( target == $('#nav').data('activeTab') ){
 				e.preventDefault();
-				hideInform();
 				getList(0);
 			}
-			//else window.addEventListener('hashchange', tabSwitch, false);
 		});
 
-	//internet links for title in form
+	//help
+		$('#helpSwitch').click(function(e){
+			e.preventDefault();
+
+			$('#help').toggleClass('deploy');
+		});
+
+	//add keyboard shortcuts and escape support
+		addShortcutsSupport();
+		addEscapeSupport();
+
+	//button blur for link (:active ok but no :focus...)
+		$('a.button').live('click', function(e){
+			$(this).blur();
+		});
+
+	//list display switch
+		$('.listDisplaySwitch a').click(function(e){
+			console.log('listDisplaySwitch click');
+			e.preventDefault();
+			var $this = $(this),
+				listDisplay = $this.closest('.listDisplaySwitch').find('a').map(function(){ return $(this).attr('rel'); }).get().join(' '),
+				$wrapper = $this.closest('.list'),
+				switchTo = $this.attr('rel');
+
+			if( !$wrapper.hasClass( switchTo ) ){
+				$this.addClass('disabled').siblings().removeClass('disabled');
+
+				//css3 animation with overflow rules by .animDone for better look
+				$wrapper.removeClass( listDisplay + ' animDone' ).addClass( switchTo );
+
+				window.setTimeout(function(){ $wrapper.addClass('animDone'); }, 1000);
+			}
+		});
+
+	//band last check date
+		$('.externalLink', '#list_band').live('click', function(e){
+			console.log('list_band externalLink click');
+			//update the date on band web site link click
+			$.post('ajax/manageBand.php', {action: 'updateLastCheckDate', id: $(this).attr('rel')});
+
+			//date sort active
+			if( $('#bandSortType').val() >= 2 ){
+				var $li = $(this).closest('li');
+				var $ul = $li.parent();
+
+				if( $('#bandSortType').val() == 2 ){
+					//asc sort, oldest first, moving the li at the list end
+					$li.appendTo($ul);
+				} else {
+					//desc sort, newest first, moving the li at the list start
+					$li.prependTo($ul);
+				}
+			}
+		});
+
+	//quick links for title in form
+		var $quickLink = $('<a>', { 'class': 'button icon externalLink small quickLink', 'target': '_blank', 'data-icon': '/' });
 		$('#movieTitle').change(function(){
 			$(this).siblings('label')
 				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append(
-					$('<a>', {
-						'class': 'button icon externalLink small',
-						'title': 'Rechercher sur Google Image',
-						'href': 'http://www.google.com/images?q=' + $(this).val() + ' movie',
-						'target': '_blank',
-						'style': 'margin-left: 5px',
-						'data-icon': '/'
-					})
-				)
-				.append(
-					$('<a>', {
-						'class': 'button icon externalLink small',
-						'title': 'Rechercher sur IMDB',
-						'href': 'http://www.imdb.com/find?s=all&q=' + $(this).val() ,
-						'target': '_blank',
-						'style': 'margin-left: 5px',
-						'data-icon': '/'
-					})
-				);
+				.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' movie') )
+				.append( $quickLink.clone().attr('title', 'Rechercher sur IMDB').attr('href', 'http://www.imdb.com/find?s=all&q=' + $(this).val() ) );
 		});
 		$('#bookTitle').change(function(){
 			$(this).siblings('label')
 				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append(
-					$('<a>', {
-						'class': 'button icon externalLink small',
-						'title': 'Rechercher sur Google Image',
-						'href': 'http://www.google.com/images?q=' + $(this).val() + ' book',
-						'target': '_blank',
-						'style': 'margin-left: 5px',
-						'data-icon': '/'
-					})
-				)
-				.append(
-					$('<a>', {
-						'class': 'button icon externalLink small',
-						'title': 'Rechercher sur Fantastic Fiction',
-						'href': 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val() ,
-						'target': '_blank',
-						'style': 'margin-left: 5px',
-						'data-icon': '/'
-					})
-				);
+				.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' book') )
+				.append( $quickLink.clone().attr('title', 'Rechercher sur Fantastic Fiction').attr('href', 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val()) );
+		});
+		$('#albumTitle').change(function(){
+			$(this).siblings('label')
+				.html(function(){ return $(this).text() }) //clean the label of any html tag
+				.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' music album') );
+		});
+		$('#bandName').change(function(){
+			$(this).siblings('label')
+				.html(function(){ return $(this).text() }) //clean the label of any html tag
+				.append( $quickLink.clone().attr('title', 'Rechercher sur Wikipedia').attr('href', 'http://en.wikipedia.org/w/index.php?search=' + $(this).val()) );
 		});
 		$('#albumTitle').change(function(){
 			$(this).siblings('label')
@@ -997,20 +1015,21 @@ $(document).ready(function(){
 	//saga title in form
 		$('#bookSagaTitle, #movieSagaTitle').change(function(){
 			console.log('sagaTitle change');
-			var field = $(this);
-			var form = field.closest('.form');
-			var rel = form.attr('rel');
+			var $this = $(this);
+			var $form = $this.closest('.form');
+			var rel = $form.attr('rel');
 			var target = rel.charAt(0).toUpperCase() + rel.substr(1);
-			var dl = field.siblings('datalist');
+			var $dl = $this.siblings('datalist');
 			var decoder = $('<textarea>');
-			if( field.val() != '' && $('option[value="'+field.val()+'"]', dl).length ){
-				//var rel = $(this).closest('.form').attr('rel');
-				$.post('ajax/manageSaga.php', 'action=getByTitleFor'+target+'&title='+field.val(), function(saga){
-					if( !jQuery.isEmptyObject(saga) ){
+
+			//is the saga present in the database
+			$this.siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
+			if( $this.val() != '' && $('option[value="'+$this.val()+'"]', $dl).length ){
+				$.post('ajax/manageSaga.php', 'action=getByTitleFor'+target+'&title='+$this.val(), function(saga){
+					if( !$.isEmptyObject(saga) ){
 						if( saga.sagaSearchURL != '' && saga.sagaSearchURL != null ){
-							field.siblings('label')
-								.html(function(){ return $(this).text() }) //clean the label of any html tag
-								.append( $('<a>', { 'class': 'button icon externalLink small', 'title': 'Détail de cette saga sur internet', 'href': decoder.html(saga.sagaSearchURL).val(), 'target': '_blank', 'style': 'margin-left: 5px', 'data-icon': '/' }) );
+							$this.siblings('label')
+								.append( $quickLink.clone().attr('title', 'Détail de cette saga sur internet').attr('href', decoder.html(saga.sagaSearchURL).val()) );
 						}
 
 						//setting fields only if in add mode
@@ -1027,9 +1046,7 @@ $(document).ready(function(){
 									$('#bookAuthor_'+indice).val(decoder.html(a).val()).trigger('blur');
 									indice++;
 								});
-							}
-
-							if( rel == 'movie' ){
+							} else if( rel == 'movie' ){
 								var indice = 1;
 								$('.anotherInfo:gt(0)', '#movieArtists').remove();
 								$.each( saga.artists, function(i, a){
@@ -1043,89 +1060,6 @@ $(document).ready(function(){
 						$('#'+rel+'SagaPosition').focus().select();
 					}
 				});
-			} else {
-				field.siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
-			}
-		});
-
-	//help
-		$('.help').click(function(e){
-			e.preventDefault();
-
-			$('#help').toggleClass('deploy');
-		});
-
-	//add form shortcut and escape support
-		var isAlt = false;
-		$(document).keyup(function(e){
-			if( e.which == 18 ) isAlt = false;
-		}).keydown(function(e){
-			if( e.which == 18 ){
-				isAlt = true;
-				window.setTimeout(function(){ isAlt = false;}, 500); //cancel Alt after 500ms
-			}
-			if( e.which == 9 ) isAlt = false; //alt+tab does not fire keyup...
-			else if( e.which == 65 && isAlt ){
-				e.preventDefault();
-				e.stopPropagation();
-				isAlt = false;
-				$('.add', '#'+$('#nav').data('activeTab')).click();
-			} else if( e.which == 70 && isAlt ){
-				e.preventDefault();
-				e.stopPropagation();
-				isAlt = false;
-				$('.filterFormSwitch', '#'+$('#nav').data('activeTab')).click();
-			} else if( e.which == 86 && isAlt ){
-				e.preventDefault();
-				e.stopPropagation();
-				isAlt = false;
-				$('.listDisplaySwitch', '#'+$('#nav').data('activeTab')).find('.disabled').siblings().first().click();
-			}
-		});
-
-		addEscapeSupport();
-
-	//button blur for link (:active ok but no :focus...)
-		$('a.button').live('click', function(e){
-			$(this).blur();
-		});
-
-	//list display switch
-		$('a', '.listDisplaySwitch').click(function(e){
-			console.log('listDisplaySwitch click');
-			e.preventDefault();
-
-			var listDisplay = $(this).closest('.listDisplaySwitch').find('a').map(function(){ return $(this).attr('rel'); }).get().join(' ');
-			console.log(listDisplay);
-
-			var wrapper = $(this).closest('.list');
-
-			var switchTo = $(this).attr('rel');
-
-			if( !wrapper.hasClass( switchTo ) ){
-				$(this).addClass('disabled').siblings().removeClass('disabled');
-				wrapper.removeClass( listDisplay + ' animDone' ).addClass(switchTo).delay(1000).addClass('animDone');
-			}
-		});
-
-	//band last check date
-		$('.externalLink', '#list_band').live('click', function(e){
-			console.log('list_band externalLink click');
-			//update the date on band web site link click
-			$.post('ajax/manageBand.php', {action: 'updateLastCheckDate', id: $(this).attr('rel')});
-
-			//date sort active
-			if( $('#bandSortType').val() >= 2 ){
-				var $li = $(this).closest('li');
-				var $ul = $li.parent();
-
-				if( $('#bandSortType').val() == 2 ){
-					//asc sort, oldest first, so we paste the li at the end
-					$li.appendTo($ul);
-				} else {
-					//desc sort, newest first, so we paste the li at the start
-					$li.prependTo($ul);
-				}
 			}
 		});
 });
@@ -1138,24 +1072,15 @@ function tabSwitch(){
 
 	var target = window.location.hash.substr(1) || $('.tab:first').attr('id');
 
-	// We have to remove it to prevent multiple calls to goto messing up
-	// our current item (and there's no point either, so we save on performance)
-	//window.removeEventListener('hashchange', tabSwitch, false);
-
 	$('#nav a').removeClass('active');
 	$('a[href$=' + target +']', '#nav').addClass('active');
 
 	if( $('#'+target).length ){ // Argument is a valid tab name
 		window.location.hash = '#' + target; //security if hash empty
 		$('#nav').data('activeTab', target);
-		hideInform();
 		$('#nav').data('updating', 0); //remove multiple call protection since it's a new tab
 		getList(0);
 	}
-
-	// If you attach the listener immediately again then it will catch the event
-	// We have to do it asynchronously
-	//setTimeout(function(){ window.addEventListener('hashchange', tabSwitch, false); }, 1000);
 }
 
 /**
@@ -1165,40 +1090,59 @@ $.fn.loadList = function(){
 	console.log('loadList');
 	return this.each(function(){
 		console.log('loadList inner');
-		var list = $(this);
+		var $this = $(this);
 
 		var forceUpdate = 0;
-		if( list.children().length <= 1 ) forceUpdate = 1;
+		if( $this.children().length <= 1 ) forceUpdate = 1;
 
 		//ask the list values to the server and create the <option>s with it
 		var decoder = $('<textarea>');
-		$.get( 'ajax/loadList.php?field=' + list.attr('id') + '&forceUpdate=' + forceUpdate, function(data, textStatus, jqXHR){
+		$.get( 'ajax/loadList.php?field=' + $this.attr('id') + '&forceUpdate=' + forceUpdate, function(data, textStatus, jqXHR){
 			//server will send a 304 status if the list has not changed and forceUpdate != 1
 			if( jqXHR.status == 200 ){
-				if( list.is('datalist') ) list.empty();
+				if( $this.is('datalist') ) $this.empty();
 				else {
-					var filter = false;
-					if( list.attr('id').search(/Filter/) != -1 && list.val() != '' ){
-						list.data('sav', list.val());
-						filter = true;
+					var isFilter = false;
+					if( $this.attr('id').search(/Filter/) != -1 && $this.val() != '' ){
+						$this.data('sav', $this.val());
+						isFilter = true;
 					}
-					list.find('option:gt(0)').remove(); //keep the first option aka "placeholder"
+					$this.find('option:gt(0)').remove(); //keep the first option aka "placeholder"
 				}
 
 				$.each(data, function(i, obj){
 					obj.value = decoder.html(obj.value).val();
-					$('<option>', { "value": ( obj.id ? obj.id : obj.value ), text: obj.value }).appendTo( list );
+					$('<option>', { "value": ( obj.id ? obj.id : obj.value ), text: obj.value }).appendTo( $this );
 				});
 
-				if( filter ) list.val(list.data('sav'));
+				if( isFilter ) $this.val(list.data('sav'));
 
-				if( list.data('selectedId') ){
-					list.val( list.data('selectedId') );
-					list.removeData('selectedId');
+				if( $this.data('selectedId') ){
+					$this.val( $this.data('selectedId') );
+					$this.removeData('selectedId');
 				}
 			}
 		});
 	});
+}
+
+String.prototype.urlify = function(){
+	var s = this,
+		accent = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž ',
+		without = ['A','A','A','A','A','A','a','a','a','a','a','a','O','O','O','O','O','O','O','o','o','o','o','o','o','E','E','E','E','e','e','e','e','e','C','c','D','I','I','I','I','i','i','i','i','U','U','U','U','u','u','u','u','N','n','S','s','Y','y','y','Z','z','_'],
+		result = [];
+
+	s = s.split('');
+	len = s.length;
+	for (var i = 0; i < len; i++){
+		var j = accent.indexOf(s[i]);
+		if( j != -1 ){
+			result[i] = without[j];
+		} else {
+			result[i] = s[i];
+		}
+	}
+	return result.join('');
 }
 
 /**
@@ -1254,6 +1198,46 @@ function addEscapeSupport(){
 }
 
 /**
+ * add keyboard shortcuts support when no modal popul are visible
+ */
+var isShortcut = false;
+function addShortcutsSupport(){
+	$(document).unbind('keydown').keydown(function(e){
+		//"t" pressed
+		if( e.which == 84 ){
+			isShortcut = true;
+			return;
+		}
+		if( !isShortcut ) return;
+
+		//"a" pressed for add
+		if( e.which == 65 ){
+			$('.add', '#'+$('#nav').data('activeTab')).click();
+
+		//"f" pressed for filter
+		} else if( e.which == 70 ){
+			$('.filterFormSwitch', '#'+$('#nav').data('activeTab')).click();
+
+		//"v" pressed for switch view
+		} else if( e.which == 86 ){
+			$('.listDisplaySwitch', '#'+$('#nav').data('activeTab')).find('.disabled').siblings().first().click();
+
+		//tab index for switching tab
+		} else {
+			var index = parseInt( String.fromCharCode( e.which ) );
+			if( !isNaN(index) ){
+				if( $('.tab').eq( index-1 ).length ){
+					var newHash = $('.tab').eq( index-1 ).attr('id');
+					if( $('#nav').data('activeTab') == newHash ) getList(0); //tab already active, refresh it
+					else window.location.hash = '#' + newHash;
+				}
+			}
+		}
+		isShortcut = false;
+	});
+}
+
+/**
  * display the form errors
  * use ".class + .validation-icon" css rules
  * use ".class ~ .tip" css rules
@@ -1262,11 +1246,11 @@ function addEscapeSupport(){
 function formErrors( data ) {
 	console.log('formErrors');
 	$.each(data, function(index, error){
-		if( error[0] != 'global' ){
-			$('#' + error[0]).addClass(error[2]).siblings('.tip').remove(); //remove previous error message if present
+		//remove previous error message if present
+		$('#' + error[0]).addClass(error[2]).siblings('.tip').remove();
 
-			$('#' + error[0]).parent().append( $('<span>', { 'class': 'tip', 'text': error[1] }) ); //add error message
-		}
+		//add error message
+		$('#' + error[0]).parent().append( $('<span>', { 'class': 'tip', 'text': error[1] }) );
 	});
 }
 
@@ -1343,10 +1327,11 @@ function dropCover(event){
 
 	$('#drop_overlay').hide();
 
-	var section = $('#editBox').find('.form'); //#manage_xxx
-	var rel = section.attr('rel');
-	var coverStatus = $('.coverStatus', section).removeClass('required valid error upload'); //reset validation visual infos
-	coverStatus.data('oldText', coverStatus.html());
+	var $section = $('#editBox').find('.form'),
+		rel = $section.attr('rel'),
+		$coverStatus = $('.coverStatus', $section).removeClass('required valid error upload'); //reset validation visual infos
+
+	$coverStatus.data('oldText', $coverStatus.html());
 
 	var dt = event.dataTransfer;
 	var files = dt.files;
@@ -1355,22 +1340,22 @@ function dropCover(event){
 	if( files.length == 0 && dt.types.contains("application/x-moz-file-promise-url") ){
 		url = dt.getData("application/x-moz-file-promise-url");
 
-		coverStatus.addClass('upload');
+		$coverStatus.addClass('upload');
 		$.ajax({
 			url: 'ajax/manageCover.php?rel='+rel,
 			data: 'url='+dt.getData("application/x-moz-file-promise-url"),
 			complete: function(e){
-				coverStatus.removeClass('upload');
+				$coverStatus.removeClass('upload');
 			},
 			success: function(result){
 				var timestamp = new Date().getTime();
-				$('#editPreview').empty().append( $('<img>', { src: ( rel == 'storage' ? 'storage' : 'covers' ) + '/' + ( rel == 'storage' ? 'tmp_storage.png' : result )  + '?' + timestamp }) );
-				$('#' + rel + 'Cover').val(result);
-				coverStatus.html(coverStatus.data('oldText')).addClass('valid');
+				$('#editPreview').empty().append( $('<img>', { src: 'covers/' + result + '?' + timestamp }) );
+				$('#' + rel + 'Cover').val( result );
+				$coverStatus.html( $coverStatus.data('oldText') ).addClass('valid');
 				if( !$('#previewShow:checked').length ) $('#previewShow').click();
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown){
-				coverStatus.html(errorThrown).addClass('error');
+				$coverStatus.html( errorThrown ).addClass('error');
 			}
 		});
 		return;
@@ -1384,7 +1369,7 @@ function dropCover(event){
 	//if it's not a remote image
 	var file = files[0];
 	if(file.type.match(/image.(jpe?g|png|gif)/)) {
-		upload(file, rel, coverStatus);
+		upload(file, rel, $coverStatus);
 	} else {
 		formErrors([[rel+'CoverStatus', 'Seule les images .jpg, .jpeg, .png or .gif sont permises.', 'error']]);
 	}
@@ -1394,7 +1379,7 @@ function dropCover(event){
  * Upload files to the server using HTML5 File API and sendAsBinary method
  * @param object file
  */
-function upload(file, rel, coverStatus){
+function upload(file, rel, $coverStatus){
 	console.log('upload');
 	if( window.FileReader ){
 		hideInform();
@@ -1409,20 +1394,20 @@ function upload(file, rel, coverStatus){
 				xhr.setRequestHeader('UP-SIZE', file.size);
 				xhr.setRequestHeader('UP-TYPE', file.type);
 				xhr.send(window.btoa(reader.result));
-				coverStatus.addClass('upload');
+				$coverStatus.addClass('upload');
 
 
 				xhr.onreadystatechange = function(){
 					if( xhr.readyState == 4 ){
-						coverStatus.removeClass('upload');
+						$coverStatus.removeClass('upload');
 						if( xhr.status == 200 ){
-							coverStatus.html( coverStatus.data('oldText') ).addClass('valid');
+							$coverStatus.html( coverStatus.data('oldText') ).addClass('valid');
 							var timestamp = new Date().getTime();
-							$('#editPreview').empty().append( $('<img>', { src: ( rel == 'storage' ? 'storage' : 'covers' ) + '/' + ( rel == 'storage' ? 'tmp_storage.png' : file.name ) + '?' + timestamp }) );
+							$('#editPreview').empty().append( $('<img>', { src: 'covers/' + file.name + '?' + timestamp }) );
 							if( !$('#previewShow:checked').length ) $('#previewShow').click();
-							$('#' + rel + 'Cover').val(file.name);
+							$('#' + rel + 'Cover').val( file.name );
 						} else {
-							coverStatus.html(xhr.responseText).addClass('error');
+							$coverStatus.html( xhr.responseText ).addClass('error');
 						}
 					}
 				};
@@ -1431,27 +1416,27 @@ function upload(file, rel, coverStatus){
 			reader.addEventListener('error', function(event){
 				switch(event.target.error.code){
 					case event.target.error.NOT_FOUND_ERR:
-						coverStatus.html('Fichier non trouvé!').removeClass('upload').addClass('error');
+						$coverStatus.html('Fichier non trouvé!').removeClass('upload').addClass('error');
 					break;
 					case event.target.error.NOT_READABLE_ERR:
-						coverStatus.html('Fichier non lisible!').removeClass('upload').addClass('error');
+						$coverStatus.html('Fichier non lisible!').removeClass('upload').addClass('error');
 					break;
 					case event.target.error.ABORT_ERR:
 					break;
 					default:
-						coverStatus.html('Erreur de lecture.').removeClass('upload').addClass('error');
+						$coverStatus.html('Erreur de lecture.').removeClass('upload').addClass('error');
 				}
 			}, true);
 
 			reader.addEventListener('progress', function(event){
 				if (event.lengthComputable) {
-					coverStatus.html('Chargement : '+ Math.round((event.loaded * 100) / event.total) +'%');
+					$coverStatus.html('Chargement : '+ Math.round((event.loaded * 100) / event.total) +'%');
 				}
 			}, true);
 
 			reader.addEventListener('loadProgress', function(event){
 				if (event.lengthComputable) {
-					coverStatus.html('Chargement : '+ Math.round((event.loaded * 100) / event.total) +'%');
+					$coverStatus.html('Chargement : '+ Math.round((event.loaded * 100) / event.total) +'%');
 				}
 			}, true);
 
@@ -1465,22 +1450,22 @@ function upload(file, rel, coverStatus){
 				xhr.setRequestHeader('UP-SIZE', file.size);
 				xhr.setRequestHeader('UP-TYPE', file.type);
 				xhr.send(window.btoa(reader.result));
-				coverStatus.addClass('upload');
+				$coverStatus.addClass('upload');
 
 
 				xhr.onload = function(){
 					if( xhr.readyState == 4 ){
-						coverStatus.removeClass('upload');
+						$coverStatus.removeClass('upload');
 						if( xhr.status == 200 ){
-							coverStatus.html( coverStatus.data('oldText') ).addClass('valid');
+							$coverStatus.html( coverStatus.data('oldText') ).addClass('valid');
 							var timestamp = new Date().getTime();
-							$('#editPreview').empty().append( $('<img>', { src: ( rel == 'storage' ? 'storage' : 'covers' ) + '/' + file.name + '?' + timestamp }) );
+							$('#editPreview').empty().append( $('<img>', { src: 'covers/' + file.name + '?' + timestamp }) );
 							if( !$('#previewShow:checked').length ){
 								$('#previewShow').click();
 							}
 							$('#' + rel + 'Cover').val(file.name);
 						} else {
-							coverStatus.html(xhr.responseText).addClass('error');
+							$coverStatus.html( xhr.responseText ).addClass('error');
 						}
 					}
 				};
@@ -1490,7 +1475,7 @@ function upload(file, rel, coverStatus){
 		// The function that starts reading the file as a binary string
 		reader.readAsBinaryString(file);
 	} else {
-		coverStatus.removeClass('upload').addClass('error')
+		$coverStatus.removeClass('upload').addClass('error')
 		inform('upload non supporté', 'error');
 	}
 }
@@ -1503,25 +1488,21 @@ function upload(file, rel, coverStatus){
  * @param object event
  */
 function checkField(event){
-	console.log('checkField');
-	var el = $(event.target);
+	console.log('checkField ' + event.type );
+	var $el = $(event.target);
 
-	if( el[0].validity ){
-		if( el[0].validity.valid ){
-			if( el.val() != '' ) el.removeClass('required error upload').addClass('valid');
+	if( $el[0].validity ){
+		if( $el[0].validity.valid ){
+			if( $el.val() != '' ) $el.removeClass('required error upload').addClass('valid');
 		} else if( event.type != "input" ){
-			if( el[0].validity.valueMissing ){ // User hasn't typed anything
-				el.removeClass('error valid upload').addClass('required');
+			if( $el[0].validity.valueMissing ){ // User hasn't typed anything
+				$el.removeClass('error valid upload').addClass('required');
 			} else {
-				el.removeClass('required valid upload').addClass('error');
+				$el.removeClass('required valid upload').addClass('error');
 			}
-		} else if( el[0].validity.valueMissing ){
-			el.removeClass('required valid error upload');
+		} else if( $el[0].validity.valueMissing ){
+			$el.removeClass('required valid error upload');
 		}
-	//for browsers with no forum validation API support
-	} else {
-		if( el.val() != '' ) el.removeClass('required error upload').addClass('valid');
-		else el.removeClass('error valid upload').addClass('required');
 	}
 }
 
@@ -1530,99 +1511,109 @@ function checkField(event){
  * @param integer type : 0 no filter, 1 filter from form, 2 use filter if present in session, 3 endless scroll pagination
  */
 function getList( type ){
-	console.log('getList '+type);
+	console.log('getList ' + type);
 
-	var tab = $('#nav').data('activeTab');
-
-	var t = tab.charAt(0).toUpperCase() + tab.substr(1);
-	var list = '#list_'+tab;
-	var filter = '#'+tab+'_filter';
+	hideInform();
+	var $nav = $('#nav');
 
 	//multiple call protection
-	if( $('#nav').data('updating') != 1 ){
-		$('#nav').data('updating', 1);
+	if( $nav.data('updating') != 1 ){
+		$nav.data('updating', 1);
 
-		$('body').css('cursor', 'progress');
+		var tab = $('#nav').data('activeTab'),
+			t = tab.charAt(0).toUpperCase() + tab.substr(1),
+			$list = $('#list_' + tab),
+			$filter = $('#' + tab + '_filter'),
+			$body = $('body');
+
+		//prepare jQuery Template
+		if( !$('#' + tab + 'PaginateTemplate').data('tmpl') ){
+			$('#' + tab + 'PaginateTemplate').template( tab + 'Paginate' );
+		}
+		if( !$('#' + tab + 'ListTemplate').data('tmpl') ){
+			$('#' + tab + 'ListTemplate').template( tab + 'List' );
+		}
+
+		$body.css('cursor', 'progress');
 
 		$.ajax({
-			url: 'ajax/manage'+t+'.php',
-			data: 'action=' + ( type == 3 ? 'more' : 'list&type=' + type + '&' + $(':input', filter).serialize() ),
+			url: 'ajax/manage'+ t +'.php',
+			data: 'action=' + ( type == 3 ? 'more' : 'list&type=' + type + '&' + $(':input', $filter).serialize() ),
 			type: 'POST',
-			dataType: 'html',
+			dataType: 'json',
 			complete: function(){
-				$('#nav').data('updating', 0);
-				$('body').css('cursor', '');
+				$nav.data('updating', 0);
+				$body.css('cursor', '');
 			},
 			success: function(data){
-				//append updated list
-				$(list).append( data );
-
 				if( type != 3 ){
 					//remove old list
-					$('.listContent:not(.new)', list).remove();
-					$('.listDisplaySwitch', list).hide();
+					$list.children('.paginate, .listContent').remove();
 
-					if( $('.paginate', list).length == 2 ){
-						$('.paginate:first', list).remove();
-					}
+					$.tmpl( tab + 'Paginate', data).appendTo( $list );
+					$.tmpl( tab + 'List', data).appendTo( $list );
 
-					//show new list
-					$('.listContent.new', list).removeClass('new').show();
-
-					$('.paginate', list).show();
-					$('.listDisplaySwitch', list).show();
+					var $paginate = $list.children('.paginate');
 
 					//pagination on scroll
-					if( $('.paginate', list).hasClass('begin') ){
+					if( $paginate.hasClass('begin') ){
 						$(window).unbind('scroll').scroll(function(e){
-							if( $('.listContent li:last', list).length
+							var last = $list.find('.listContent li:last');
+							if( last.length
 								&& !$('#detailShow:checked, #editShow:checked').length
-								&& ($(this).scrollTop() + $(this).height() + 50) >= $('.listContent li:last', list).offset().top
+								&& ($(this).scrollTop() + $(this).height() + 50) >= last.offset().top
 							){
 								getList(3);
 							}
 						});
-					} else {
+					} else if( $paginate.hasClass('end') ){
 						$(window).unbind('scroll');
 					}
 
 					//hide detail
 					if( type == 2 && $('#detailShow:checked').length ){
 						$('#detailHide').click();
-						var b = $('#detailBox');
+						var $box = $('#detailBox');
 						//display "refreshed" detail
-						if( b.data('link') && b.data('tab') == tab ){
-							var i = b.data('link');
+						if( $box.data('link') && $box.data('tab') == tab ){
+							var i = $box.data('link');
 							var timestamp = new Date().getTime();
 
 							if( tab != 'storage' ){
-								var di = $('.detail[href='+i+']', list);
+								var $detailIcon = $list.find('.detail[href='+i+']');
 							} else {
-								var di = $('.storage[href='+i+']', list);
+								var $detailIcon = $list.find('.storage[href='+i+']');
 							}
 
-							//force cover refresh by modifying the source url
-							//@todo test with cache modifications
-							//di.closest('li').css({ 'background-image' : 'ulr(' + this.src + '&' + timestamp + ')' })
-							//	.find('.cover').attr('src', function(){ return this.src + '&' + timestamp; });
+							//force cover update by adding a timestamp to the url
+							//remove src then add it with new value to avoid flicker
+							var timestamp = new Date().getTime(),
+								$cover = $detailIcon.parent().find('.cover'),
+								src = $cover.attr('src') + '&ts=' + timestamp;
+							$cover.removeAttr('src').attr('src', src);
 
-							di.click();
+							$detailIcon.click();
 						}
 					} else if( type == 0 ){
 						$(window).scrollTop(0);
 					}
 
-					//if filters are visible, update them
-					$('datalist, select', filter + ' .listFilter.deploy').loadList();
+					//if filters are visible (.deploy), update them
+					$filter.children('.listFilter.deploy').find('datalist, select').loadList();
 				} else {
-					$('.listContent:not(.new)', list).append( $('.listContent.new li', list) );
+					//remove old paginate
+					$list.children('.paginate').remove();
+					//add new templated paginate
+					$.tmpl( tab + 'Paginate', data).appendTo( $list );
 
-					if( $('.paginate', list).hasClass('end') ){
+					//get new list
+					var newList = $.tmpl( tab + 'List', data);
+					//append new list <li> to old one
+					$list.children('.listContent').append( newList.children() );
+
+					if( $list.children('.paginate').hasClass('end') ){
 						$(window).unbind('scroll');
 					}
-
-					$('.paginate:first', list).replaceWith( $('.paginate:last', list).show() );
-					$('.listContent.new', list).remove();
 				}
 			}
 		});
