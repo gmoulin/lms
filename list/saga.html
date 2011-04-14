@@ -13,14 +13,14 @@
 	{{/if}}
 </script>
 <script id="sagaListTemplate" type="text/x-jquery-tmpl">
-	<ul class="listContent new clearfix">
+	<ul class="listContent clearfix">
 		{{each(i, saga) list}}
 			<li>
 				<article class="block">
 					<dl class="info">
 						<dd>
 							${saga.sagaTitle}
-							{{if $saga.sagaSearchURL != null}}
+							{{if saga.sagaSearchURL != null}}
 								<a class="button icon externalLink" data-icon="/" href="${saga.sagaSearchURL}" title="Rechercher les livres de la saga sur internet" target="_blank"></a>
 							{{/if}}
 

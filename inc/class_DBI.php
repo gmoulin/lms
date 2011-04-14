@@ -24,7 +24,7 @@ class DBI extends PDO {
 	public function prepare( $sql, $options=NULL ){
 		$statement = parent::prepare($sql);
 
-		if( stripos($sql, 'SELECT') <= 5 ) { //requête "SELECT"
+		if( stripos($sql, 'SELECT') !== false ) { //requête "SELECT"
 			$statement->setFetchMode( PDO::FETCH_ASSOC );
 		}
 

@@ -868,7 +868,7 @@ class album extends commun {
 				}
 
 				if( !$atLeastOneBand ){
-					$errors[] = array('albumBand_1', 'Au moins un groupe est requis.', 'required');
+					$errors[] = array('albumBands_1', 'Au moins un groupe est requis.', 'required');
 				} else {
 					$formData['bands'] = $bands;
 				}

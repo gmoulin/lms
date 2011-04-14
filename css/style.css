@@ -1240,7 +1240,8 @@
 
 		/* paginate, inform and list style zone */
 			.listDisplaySwitch,
-			.paginate {
+			.paginate,
+			#inform {
 				position: fixed;
 				text-align: center;
 			}

@@ -2,18 +2,18 @@
 	{{if nb > 0}}
 		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
 			<span>
-				${nb} artiste{{if nb > 1}}s{{/if}} sur ${total}
+				${nb} auteur{{if nb > 1}}s{{/if}} sur ${total}
 				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
 			</span>
 		</section>
 	{{else}}
 		<section class="paginate end">
-			<span>aucun artiste trouvé</span>
+			<span>aucun auteur trouvé</span>
 		</section>
 	{{/if}}
 </script>
 <script id="authorListTemplate" type="text/x-jquery-tmpl">
-	<ul class="listContent new clearfix">
+	<ul class="listContent clearfix">
 		{{each(i, author) list}}
 			<li>
 				<article class="block">
@@ -28,11 +28,9 @@
 								<a class="button icon externalLink" data-icon="/" href="${author.authorSearchURL}" title="Rechercher les livres de l'auteur sur internet" target="_blank"></a>
 							{{/if}}
 
-							<a class="button icon update" data-icon="P" href="${author.authorID}" title="Mettre à jour les informations de cet auteur" rel="author">
-							</a>
+							<a class="button icon update" data-icon="P" href="${author.authorID}" title="Mettre à jour les informations de cet auteur" rel="author"></a>
 
-							<a class="button icon delete" data-icon="t" href="${author.authorID}" title="Supprimer cet auteur" rel="author">
-							</a>
+							<a class="button icon delete" data-icon="t" href="${author.authorID}" title="Supprimer cet auteur" rel="author"></a>
 						</dd>
 					</dl>
 				</article>

@@ -13,19 +13,15 @@
 	{{/if}}
 </script>
 <script id="storageListTemplate" type="text/x-jquery-tmpl">
-	<ul class="listContent new clearfix">
-		${var currentStorage = ''}
+	<ul class="listContent clearfix">
 		{{each(i, storage) list}}
-			{{if currentStorage != storage.storageRoom + storage.storageType && storage.storageColumn != null}}
-				{{if currentStorage != '' || i > 0}}
+			{{if isStorageChanged(i)}}
+				{{if i > 0}}
 					</ul>
 					<ul class="listContent clearfix">
 				{{/if}}
-					${currentStorage = storage.storageRoom + storage.storageType}
 
-					${var currentStorageURL = 'storage/' + storage.storageRoom.urlify() + '_' + storage.storageType.urlify() + '.png'}
-
-					<li style="background-image: url(storage/${currentStorageURL);">
+					<li style="background-image: url(${currentStorageURL});">
 						<article class="block">
 							<dl class="info">
 								<dt class="listHidden">Pièce</dt>
@@ -43,9 +39,7 @@
 					</li>
 			{{/if}}
 
-			${var storageCodeURL = 'storage/' + storage.storageRoom.urlify() + '_' + storage.storageType.urlify() + ( storage.storageColumn != null || storage.storageLine != null ? '_' : '' ) + ${storage.storageColumn} + ${storage.storageLine} + '.png'}
-
-			<li style="background-image: url(${storageCodeURL});">
+			<li style="background-image: url(${storage.storageURL});">
 				<article class="block">
 					<dl class="info">
 						<dt class="listHidden">Pièce</dt>
@@ -70,11 +64,11 @@
 						<dt class="listHidden actions">
 							<a class="button icon update" data-icon="P" href="${storage.storageID}" title="Mettre à jour les informations de ce rangement" rel="storage"></a>
 							<a class="button icon delete" data-icon="t" href="${storage.storageID}" title="Supprimer ce rangement" rel="storage"></a>
-							<a class="button icon storage" data-icon="}" href="${storageCodeURL}"></a>
+							<a class="button icon storage" data-icon="}" href="${storage.storageURL}"></a>
 						</dt>
 					</dl>
 				</article>
-				<a class="button icon storage" data-icon="}" href="${storageCodeURL}"></a>
+				<a class="button icon storage" data-icon="}" href="${storage.storageURL}"></a>
 			</li>
 		{{/each}}
 	</ul>

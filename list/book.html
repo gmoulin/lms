@@ -62,9 +62,9 @@
 
 						<dt class="listHidden">Rangement</dt>
 						<dd class="listHidden">
-							${book.storageRoom} - ${book.storageType}{{if book.storageColumn != null}} - ${book.storageColumn}{{/if}}{{if book.storageLine != null}}${book.storageLine}{{/if}}
+							${book.storageRoom} - ${book.storageType}{{if book.storageColumn != null || book.storageLine != null}} - ${book.storageColumn}${book.storageLine}{{/if}}
 							<a class="listHidden button icon update" data-icon="P" href="${book.storageID}" title="Mettre à jour les informations de ce rangement" rel="storage"></a>
-							<a class="listHidden button icon storage" data-icon="}" href="storage/${book.storageRoom.urlify()}_${book.storageType.urlify()}_${book.storageColumn}_${book.storageLine}"></a>
+							<a class="listHidden button icon storage" data-icon="}" href="storage/${book.storageRoom.urlify()}_${book.storageType.urlify()}{{if book.storageColumn != null || book.storageLine != null}}_${book.storageColumn}${book.storageLine}{{/if}}.png"></a>
 							<a class="listHidden button icon filter" data-icon="f" rel="storage" href="${book.storageID}" title="Filtrer la liste pour n'afficher que les livres de ce rangement"></a>
 						</dd>
 

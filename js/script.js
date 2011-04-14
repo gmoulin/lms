@@ -166,20 +166,29 @@ $(document).ready(function(){
 
 			var rel = $(this).attr('rel'),
 				$manage = $('#manage_' + rel),
-				link = '',
+				idLink = '',
+				nameLink = '',
 				text = 'Enregistrer ';
 
 			//raz
-			if( rel == 'book' ) link = 'bookAuthors';
-			else if( rel == 'album' ) link = 'albumBands';
-			else if( rel == 'movie' ) link = 'movieArtists';
-			if( link != '' ){
-				$('#' + link).children('.anotherInfo:gt(0)').remove();
+			if( rel == 'book' ){
+				idLink = 'bookAuthors';
+				nameLink = 'author';
+			} else if( rel == 'album' ){
+				idLink = 'albumBands';
+				nameLink = 'band';
+			} else if( rel == 'movie' ){
+				idLink = 'movieArtists';
+				nameLink = 'artist';
+			}
 
-				$('#' + link).find('input')
-					.attr('id', link + '_1')
-					.attr('name', link + '_1')
-					.siblings('label').attr('for', link + '_1');
+			if( idLink != '' ){
+				$('#' + idLink).children('.anotherInfo:gt(0)').remove();
+
+				$('#' + idLink).find('input')
+					.attr('id', idLink + '_1')
+					.attr('name', nameLink + '_1')
+					.siblings('label').attr('for', idLink + '_1');
 			}
 			$manage.find(':input').val('').change();
 			$manage.find('.coverStatus').html(function(){
@@ -642,7 +651,7 @@ $(document).ready(function(){
 			var $this = $(this),
 				$section = $this.closest('.wrapper').find('.form'); //#manage_xxx
 
-			if( !section.length ){
+			if( !$section.length ){
 				return;
 			}
 
@@ -865,11 +874,11 @@ $(document).ready(function(){
 		});
 
 		$('#editShow, #detailShow, #storageShow, #previewShow, #confirmShow').click(function(e){
-			addShortcutsSupport();
+			$(document).unbind('keydown');
 		});
 
 		$('#editHide, #detailHide, #storageHide, #previewHide, #confirmHide').click(function(e){
-			$(document).unbind('keydown');
+			addShortcutsSupport();
 		});
 
 	//menu link
@@ -944,72 +953,24 @@ $(document).ready(function(){
 		$('#movieTitle').change(function(){
 			$(this).siblings('label')
 				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' movie') )
-				.append( $quickLink.clone().attr('title', 'Rechercher sur IMDB').attr('href', 'http://www.imdb.com/find?s=all&q=' + $(this).val() ) );
+				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' movie') : '' )
+				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur IMDB').attr('href', 'http://www.imdb.com/find?s=all&q=' + $(this).val() ) : '' );
 		});
 		$('#bookTitle').change(function(){
 			$(this).siblings('label')
 				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' book') )
-				.append( $quickLink.clone().attr('title', 'Rechercher sur Fantastic Fiction').attr('href', 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val()) );
+				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' book') : '' )
+				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur Fantastic Fiction').attr('href', 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val()) : '' );
 		});
 		$('#albumTitle').change(function(){
 			$(this).siblings('label')
 				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' music album') );
+				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' music album') : '' );
 		});
 		$('#bandName').change(function(){
 			$(this).siblings('label')
 				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append( $quickLink.clone().attr('title', 'Rechercher sur Wikipedia').attr('href', 'http://en.wikipedia.org/w/index.php?search=' + $(this).val()) );
-		});
-		$('#albumTitle').change(function(){
-			$(this).siblings('label')
-				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append(
-					$('<a>', {
-						'class': 'button icon externalLink small',
-						'title': 'Rechercher sur Google Image',
-						'href': 'http://www.google.com/images?q=' + $(this).val() + ' album',
-						'target': '_blank',
-						'style': 'margin-left: 5px',
-						'data-icon': '/'
-					})
-				);
-		});
-		$('#bandName').change(function(){
-			$(this).siblings('label')
-				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append(
-					$('<a>', {
-						'class': 'button icon externalLink small',
-						'title': 'Rechercher sur Google',
-						'href': 'http://www.google.com/search?q=' + $(this).val() + ' music band',
-						'target': '_blank',
-						'style': 'margin-left: 5px',
-						'data-icon': '/'
-					})
-				)
-				.append(
-					$('<a>', {
-						'class': 'button icon externalLink small',
-						'title': 'Rechercher sur Wikipedia',
-						'href': 'http://en.wikipedia.org/w/index.php?search=' + $(this).val() + ' music band',
-						'target': '_blank',
-						'style': 'margin-left: 5px',
-						'data-icon': '/'
-					})
-				)
-				.append(
-					$('<a>', {
-						'class': 'button icon externalLink small',
-						'title': 'Rechercher sur Google Image',
-						'href': 'http://www.google.com/images?q=' + $(this).val() + ' music band',
-						'target': '_blank',
-						'style': 'margin-left: 5px',
-						'data-icon': '/'
-					})
-				);
+				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur Wikipedia').attr('href', 'http://en.wikipedia.org/w/index.php?search=' + $(this).val()) : '' );
 		});
 
 	//saga title in form
@@ -1126,10 +1087,14 @@ $.fn.loadList = function(){
 	});
 }
 
+/**
+ * replace accentued characters by non accentued counterpart
+ * and remove spaces
+ */
 String.prototype.urlify = function(){
 	var s = this,
 		accent = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž ',
-		without = ['A','A','A','A','A','A','a','a','a','a','a','a','O','O','O','O','O','O','O','o','o','o','o','o','o','E','E','E','E','e','e','e','e','e','C','c','D','I','I','I','I','i','i','i','i','U','U','U','U','u','u','u','u','N','n','S','s','Y','y','y','Z','z','_'],
+		without = ['A','A','A','A','A','A','a','a','a','a','a','a','O','O','O','O','O','O','O','o','o','o','o','o','o','E','E','E','E','e','e','e','e','e','C','c','D','I','I','I','I','i','i','i','i','U','U','U','U','u','u','u','u','N','n','S','s','Y','y','y','Z','z',''],
 		result = [];
 
 	s = s.split('');
@@ -1143,6 +1108,21 @@ String.prototype.urlify = function(){
 		}
 	}
 	return result.join('');
+}
+
+/**
+ * storage list function to separate storages rooms and types
+ */
+function isStorageChanged(i){
+	var item = this.data.list[i],
+		check = item.storageColumn != null && i > 0 && (this.data.list[i-1].storageRoom != item.storageRoom || this.data.list[i-1].storageType != item.storageType);
+
+	if( check ){
+		this.data.currentStorageURL = 'storage/' + item.storageRoom.urlify() + '_' + item.storageType.urlify() + '.png';
+	}
+	this.data.list[i].storageURL = 'storage/' + item.storageRoom.urlify() + '_' + item.storageType.urlify() + (item.storageColumn != null || item.storageLine != null ? '_' + item.storageColumn + item.storageLine : '' ) + '.png';
+
+	return check;
 }
 
 /**

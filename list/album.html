@@ -44,9 +44,9 @@
 
 						<dt class="listHidden">Rangement</dt>
 						<dd class="listHidden">
-							${$album.storageRoom} - ${$album.storageType}{{if $album.storageColumn != null}} - ${$album.storageColumn}{{/if}}{{if $album.storageLine != null}}${$album.storageLine}{{/if}}
+							${album.storageRoom} - ${album.storageType}{{if album.storageColumn != null || album.storageLine != null}} - ${album.storageColumn}${album.storageLine}{{/if}}
 							<a class="listHidden button icon update" data-icon="P" href="${album.storageID}" title="Mettre à jour les informations de ce rangement" rel="storage"></a>
-							<a class="listHidden button icon storage" data-icon="}" href="storage/${album.storageRoom.urlify()}_${album.storageType.urlify()}_${album.storageColumn}_${album.storageLine}"></a>
+							<a class="listHidden button icon storage" data-icon="}" href="storage/${album.storageRoom.urlify()}_${album.storageType.urlify()}{{if album.storageColumn != null || album.storageLine != null}}_${album.storageColumn}${album.storageLine}{{/if}}.png"></a>
 							<a class="listHidden button icon filter" data-icon="f" rel="storage" href="${album.storageID}" title="Filtrer la liste pour n'afficher que les albums de ce rangement"></a>
 						</dd>
 
@@ -57,7 +57,7 @@
 								<a class="button icon delete" data-icon="t" href="${album.loanID}" title="Supprimer ce prêt" rel="loan"></a>
 								<a class="button icon filter" data-icon="f" rel="loan" href="${album.loanHolder}" title="Filtrer la liste pour n'afficher que les albums prêtés à cette personne"></a>
 							</dd>
-							{{/if}}
+						{{/if}}
 
 						<dt class="listHidden actions">
 							<a class="button icon update" data-icon="P" href="${album.albumID}" title="Mettre à jour les informations de cet album" rel="album"></a>

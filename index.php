@@ -72,15 +72,17 @@ try {
 		<?php include( LMS_PATH . '/tabs/bands.php' ); ?>
 	</section>
 
-	<?php include( LMS_PATH . '/forms/book.html' ); ?>
-	<?php include( LMS_PATH . '/forms/movie.html' ); ?>
-	<?php include( LMS_PATH . '/forms/album.html' ); ?>
-	<?php include( LMS_PATH . '/forms/author.html' ); ?>
-	<?php include( LMS_PATH . '/forms/artist.html' ); ?>
-	<?php include( LMS_PATH . '/forms/band.html' ); ?>
-	<?php include( LMS_PATH . '/forms/saga.html' ); ?>
-	<?php include( LMS_PATH . '/forms/loan.html' ); ?>
-	<?php include( LMS_PATH . '/forms/storage.html' ); ?>
+	<?php
+		include( LMS_PATH . '/forms/book.html' );
+		include( LMS_PATH . '/forms/movie.html' );
+		include( LMS_PATH . '/forms/album.html' );
+		include( LMS_PATH . '/forms/author.html' );
+		include( LMS_PATH . '/forms/artist.html' );
+		include( LMS_PATH . '/forms/band.html' );
+		include( LMS_PATH . '/forms/saga.html' );
+		include( LMS_PATH . '/forms/loan.html' );
+		include( LMS_PATH . '/forms/storage.html' );
+	?>
 
 	<div id="drop_overlay">
 		<h1>Déposer</h1>
@@ -131,6 +133,7 @@ try {
 						<button type="submit" id="formSubmit" name="formSubmit" class="button formButton" data-icon="y" rel="">Enregistrer</button>
 						<button type="reset" id="formCancel" name="formCancel" class="button formButton" data-icon="x" rel="cancel">Annuler</button>
 					</div>
+					<button class="button icon close" data-icon="X" title="Fermer">Fermer</button>
 				</div>
 			</div>
 			<div id="editPreview" class="wrapper image">
@@ -141,13 +144,15 @@ try {
 	<input type="radio" id="editHide" name="toggleEdit" class="boxToggleInput" autocomplete="off" />
 	<input type="radio" id="previewHide" name="togglePreview" class="boxToggleInput" autocomplete="off" />
 
-	<?php include( LMS_PATH . '/list/book.html' ); ?>
-	<?php include( LMS_PATH . '/list/movie.html' ); ?>
-	<?php include( LMS_PATH . '/list/album.html' ); ?>
-	<?php include( LMS_PATH . '/list/author.html' ); ?>
-	<?php include( LMS_PATH . '/list/artist.html' ); ?>
-	<?php include( LMS_PATH . '/list/band.html' ); ?>
-	<?php include( LMS_PATH . '/list/saga.html' ); ?>
-	<?php include( LMS_PATH . '/list/loan.html' ); ?>
-	<?php include( LMS_PATH . '/list/storage.html' ); ?>
+	<?php
+		include( LMS_PATH . '/list/book.html' );
+		include( LMS_PATH . '/list/movie.html' );
+		include( LMS_PATH . '/list/album.html' );
+		include( LMS_PATH . '/list/author.html' );
+		include( LMS_PATH . '/list/artist.html' );
+		include( LMS_PATH . '/list/band.html' );
+		include( LMS_PATH . '/list/saga.html' );
+		include( LMS_PATH . '/list/storage.html' );
+	?>
+
 <?php include('html_footer.php'); ?>

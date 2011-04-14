@@ -13,7 +13,7 @@
 	{{/if}}
 </script>
 <script id="movieListTemplate" type="text/x-jquery-tmpl">
-	<ul class="listContent new clearfix">
+	<ul class="listContent clearfix">
 		{{each(i, movie) list}}
 			<li style="background-image:url(image.php?cover=movie&id=${movie.movieID});">
 				<a class="button icon detail" data-icon="}" href="${movie.movieID}" title="voir le détail"></a>
@@ -36,7 +36,7 @@
 							</dd>
 						{{/each}}
 
-						{{if movie.sagaTitle}}
+						{{if movie.sagaTitle != null}}
 							<dt class="listHidden">Saga</dt>
 							<dd class="saga">
 								${movie.sagaTitle} - ${movie.movieSagaPosition} / ${movie.movieSagaSize}
@@ -56,13 +56,13 @@
 						<dd class="listHidden">${movie.movieMediaType}</dd>
 
 						<dt class="listHidden">Durée</dt>
-						<dd class="listHidden">${movie.movieLength}{{if $movie.movieLength != null}} minutes{{/if}}</dd>
+						<dd class="listHidden">${movie.movieLength}{{if movie.movieLength != null}} minutes{{/if}}</dd>
 
 						<dt class="listHidden">Rangement</dt>
 						<dd class="listHidden">
-							${$movie.storageRoom} - ${$movie.storageType}{{if $movie.storageColumn != null}} - ${$movie.storageColumn}{{/if}}{{if $movie.storageLine != null}}${$movie.storageLine}{{/if}}
+							${movie.storageRoom} - ${movie.storageType}{{if movie.storageColumn != null || movie.storageLine != null}} - ${movie.storageColumn}${movie.storageLine}{{/if}}
 							<a class="button icon update" data-icon="P" href="${movie.storageID}" title="Mettre à jour les informations de ce rangement" rel="storage"></a>
-							<a class="button icon storage" data-icon="}" href="storage/${movie.storageRoom.urlify()}_${movie.storageType.urlify()}_${movie.storageColumn}_${movie.storageLine}"></a>
+							<a class="button icon storage" data-icon="}" href="storage/${movie.storageRoom.urlify()}_${movie.storageType.urlify()}{{if movie.storageColumn != null || movie.storageLine != null}}_${movie.storageColumn}${movie.storageLine}{{/if}}.png"></a>
 							<a class="button icon filter" data-icon="f" rel="storage" href="${movie.storageID}" title="Filtrer la liste pour n'afficher que les films de ce rangement"></a>
 						</dd>
 
