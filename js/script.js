@@ -592,14 +592,16 @@ $(document).ready(function(){
 				if( !$this.is('a') ) return;
 
 				var $detailBox = $('#detailBox'),
-					$detail = $('#detail');
+					$detail = $('#detail'),
+					$closeButton = $detail.find('.close').clone();
 
 				//saving for detail display after list refresh if needed
 				$detailBox.data('link', $this.attr('href'))
 					.data('tab', $('#nav').data('activeTab'));
 
 				$('#storageHide').attr('checked', 'checked');
-				$detail.html( $this.parent().find('.block').clone(true) );
+
+				$detail.html( $this.parent().find('.block').clone(true).append( $closeButton ) );
 
 				$('#detailShow').click();
 			})
@@ -1180,16 +1182,8 @@ function addEscapeSupport(){
 /**
  * add keyboard shortcuts support when no modal popul are visible
  */
-var isShortcut = false;
 function addShortcutsSupport(){
 	$(document).unbind('keydown').keydown(function(e){
-		//"t" pressed
-		if( e.which == 84 ){
-			isShortcut = true;
-			return;
-		}
-		if( !isShortcut ) return;
-
 		//"a" pressed for add
 		if( e.which == 65 ){
 			$('.add', '#'+$('#nav').data('activeTab')).click();
@@ -1213,7 +1207,6 @@ function addShortcutsSupport(){
 				}
 			}
 		}
-		isShortcut = false;
 	});
 }
 
@@ -1311,7 +1304,7 @@ function dropCover(event){
 		rel = $section.attr('rel'),
 		$coverStatus = $('.coverStatus', $section).removeClass('required valid error upload'); //reset validation visual infos
 
-	$coverStatus.data('oldText', $coverStatus.html());
+	if( !$coverStatus.data('oldText') ) $coverStatus.data('oldText', $coverStatus.html());
 
 	var dt = event.dataTransfer;
 	var files = dt.files;
@@ -1379,13 +1372,16 @@ function upload(file, rel, $coverStatus){
 
 				xhr.onreadystatechange = function(){
 					if( xhr.readyState == 4 ){
+						console.log('readyState');
 						$coverStatus.removeClass('upload');
 						if( xhr.status == 200 ){
-							$coverStatus.html( coverStatus.data('oldText') ).addClass('valid');
+							$coverStatus.html( $coverStatus.data('oldText') ).addClass('valid');
 							var timestamp = new Date().getTime();
 							$('#editPreview').empty().append( $('<img>', { src: 'covers/' + file.name + '?' + timestamp }) );
-							if( !$('#previewShow:checked').length ) $('#previewShow').click();
 							$('#' + rel + 'Cover').val( file.name );
+							if( !$('#previewShow:checked').length ){
+								$('#previewShow').click();
+							}
 						} else {
 							$coverStatus.html( xhr.responseText ).addClass('error');
 						}
@@ -1437,13 +1433,13 @@ function upload(file, rel, $coverStatus){
 					if( xhr.readyState == 4 ){
 						$coverStatus.removeClass('upload');
 						if( xhr.status == 200 ){
-							$coverStatus.html( coverStatus.data('oldText') ).addClass('valid');
+							$coverStatus.html( $coverStatus.data('oldText') ).addClass('valid');
 							var timestamp = new Date().getTime();
 							$('#editPreview').empty().append( $('<img>', { src: 'covers/' + file.name + '?' + timestamp }) );
+							$('#' + rel + 'Cover').val(file.name);
 							if( !$('#previewShow:checked').length ){
 								$('#previewShow').click();
 							}
-							$('#' + rel + 'Cover').val(file.name);
 						} else {
 							$coverStatus.html( xhr.responseText ).addClass('error');
 						}
@@ -1571,6 +1567,7 @@ function getList( type ){
 								$cover = $detailIcon.parent().find('.cover'),
 								src = $cover.attr('src') + '&ts=' + timestamp;
 							$cover.removeAttr('src').attr('src', src);
+							$detailIcon.parent().css('background-image', 'url(' + src + ')');
 
 							$detailIcon.click();
 						}

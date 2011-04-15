@@ -662,7 +662,8 @@ class movie extends commun {
 					movieLength = :length,
 					movieSagaFK = :saga,
 					movieSagaPosition = :position,
-					movieStorageFK = :storage
+					movieStorageFK = :storage,
+					movieDate = NOW()
 				WHERE movieID = :id
 			");
 

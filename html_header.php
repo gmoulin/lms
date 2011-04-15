@@ -4,9 +4,9 @@
 <!--[if IE 7 ]><html lang="<?php echo $lang; ?>" class="no-js ie7 ie ielt9 ielt8"><![endif]-->
 <!--[if IE 8 ]><html lang="<?php echo $lang; ?>" class="no-js ie8 ie ielt9"><![endif]-->
 <!--[if IE 9 ]><html lang="<?php echo $lang; ?>" class="no-js ie9 ie"><![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--><html lang="<?php echo $lang; ?>" class="no-js"><!--<![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html lang="<?php echo $lang; ?>" class="no-js iegt9"><!--<![endif]-->
 <head>
-		<title>LMS</title>
+		<title>Gestionnaire de Médiathèque</title>
 		<!--<base href="" />-->
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="Content-Script-Type" content="text/javascript" />
@@ -24,8 +24,6 @@
 		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
 			Remove this if you use the .htaccess -->
 		<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
-
-		<title>Gestionnaire de Médiathèque</title>
 
 		<!--  Mobile Viewport Fix
 			j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag

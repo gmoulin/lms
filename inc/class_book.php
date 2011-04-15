@@ -624,7 +624,8 @@ class book extends commun {
 					bookSize = :size,
 					bookSagaFK = :saga,
 					bookSagaPosition = :position,
-					bookStorageFK = :storage
+					bookStorageFK = :storage,
+					bookDate = NOW()
 				WHERE bookID = :id
 			");
 

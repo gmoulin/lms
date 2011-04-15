@@ -8,7 +8,6 @@ try {
 
 		$type = filter_input(INPUT_GET, 'cover', FILTER_SANITIZE_STRING);
 
-
 		if( !is_null($id) && $id !== false && !is_null($type) && $type !== false ){
 			$request_headers = apache_request_headers();
 
@@ -80,7 +79,6 @@ try {
 				header('Cache-Control: max-age=' . $expires.', must-revalidate');
 				if( $lastModified != 0 ) header("Last-Modified: " . gmdate("D, d M Y H:i:s", $lastModified) . " GMT");
 				header('Content-Type: image/jpg');
-
 				echo $cover;
 
 				die;

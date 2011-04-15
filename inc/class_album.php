@@ -570,7 +570,8 @@ class album extends commun {
 				SET albumTitle = :title,
 					".( isset($data['cover']) && !empty($data['cover']) ? "albumCover = :cover," : "")."
 					albumType = :type,
-					albumStorageFK = :storage
+					albumStorageFK = :storage,
+					albumDate = NOW()
 				WHERE albumID = :id
 			");
 

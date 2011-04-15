@@ -93,6 +93,7 @@ try {
 		<div id="detailOverlay" class="overlay">
 			<input type="radio" id="storageShow" name="toggleStorage" class="boxToggleInput" autocomplete="off" />
 			<div id="detail" class="wrapper data">
+				<button class="button icon close" data-icon="X" title="Fermer">Fermer</button>
 			</div>
 			<div id="storage" class="wrapper image">
 				<img id="storageImg" src="" class="boxImg" />
