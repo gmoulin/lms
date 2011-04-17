@@ -1486,6 +1486,8 @@ function checkField(event){
  * get the list
  * @param integer type : 0 no filter, 1 filter from form, 2 use filter if present in session, 3 endless scroll pagination
  */
+var didScroll = false,
+	interval = null;
 function getList( type ){
 	console.log('getList ' + type);
 
@@ -1522,6 +1524,9 @@ function getList( type ){
 				$body.css('cursor', '');
 			},
 			success: function(data){
+				if( type == 0 ){
+					$(window).scrollTop(0);
+				}
 				if( type != 3 ){
 					//remove old list
 					$list.children('.paginate, .listContent').remove();
@@ -1533,17 +1538,28 @@ function getList( type ){
 
 					//pagination on scroll
 					if( $paginate.hasClass('begin') ){
+						if( interval ) clearInterval( interval );
 						$(window).unbind('scroll').scroll(function(e){
-							var last = $list.find('.listContent li:last');
-							if( last.length
-								&& !$('#detailShow:checked, #editShow:checked').length
-								&& ($(this).scrollTop() + $(this).height() + 50) >= last.offset().top
-							){
-								getList(3);
-							}
+							didScroll = true;
 						});
+
+						interval = setInterval(function(){
+							if( didScroll ){
+								didScroll = false;
+								var $last = $list.find('.listContent li:last');
+								if( $last.length
+									&& !$('#detailShow:checked, #editShow:checked').length
+									&& ($(window).scrollTop() + $(window).height() + 50) >= $last.offset().top
+								){
+									getList(3);
+								}
+							}
+						}, 250);
+
+
 					} else if( $paginate.hasClass('end') ){
 						$(window).unbind('scroll');
+						clearInterval(interval);
 					}
 
 					//hide detail
@@ -1571,8 +1587,6 @@ function getList( type ){
 
 							$detailIcon.click();
 						}
-					} else if( type == 0 ){
-						$(window).scrollTop(0);
 					}
 
 					//if filters are visible (.deploy), update them
