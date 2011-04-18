@@ -402,7 +402,7 @@ class band extends commun {
 				UPDATE band
 				SET bandName = :name,
 					bandGenre = :genre,
-					bandWebSite = :webSite,
+					bandWebSite = :webSite
 				WHERE bandID = :id
 			");
 

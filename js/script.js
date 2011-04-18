@@ -679,8 +679,6 @@ $(document).ready(function(){
 						success: function(data){
 							if( data == 'ok' ){
 								var $confirmForm = $('#confirmForm');
-								//inform user
-								inform( ( $('#' + rel + 'Action').val() == 'add' ? 'Ajout effectué' : 'Mise à jour effectuée' ), 'success' );
 
 								//modal close
 								$('#editHide').click();
@@ -721,6 +719,10 @@ $(document).ready(function(){
 									//refresh list
 									getList(2);
 								}
+
+								//inform user
+								inform( ( $('#' + rel + 'Action').val() == 'add' ? 'Ajout effectué' : 'Mise à jour effectuée' ), 'success' );
+
 							} else {
 								//inform user
 								inform( 'Erreur durant la validation du formulaire', 'error' );
