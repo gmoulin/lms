@@ -172,20 +172,23 @@ $(document).ready(function(){
 
 			//raz
 			if( rel == 'book' ){
-				idLink = 'bookAuthors';
+				another = 'bookAuthors';
+				idLink = 'bookAuthor';
 				nameLink = 'author';
 			} else if( rel == 'album' ){
-				idLink = 'albumBands';
+				another = 'albumBands';
+				idLink = 'albumBand';
 				nameLink = 'band';
 			} else if( rel == 'movie' ){
-				idLink = 'movieArtists';
+				another = 'movieArtists';
+				idLink = 'movieArtist';
 				nameLink = 'artist';
 			}
 
 			if( idLink != '' ){
-				$('#' + idLink).children('.anotherInfo:gt(0)').remove();
+				$('#' + another).children('.anotherInfo:gt(0)').remove();
 
-				$('#' + idLink).find('input')
+				$('#' + another).find('input')
 					.attr('id', idLink + '_1')
 					.attr('name', nameLink + '_1')
 					.siblings('label').attr('for', idLink + '_1');
