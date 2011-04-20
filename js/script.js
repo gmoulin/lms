@@ -639,14 +639,9 @@ $(document).ready(function(){
 			this.addEventListener("blur", checkField, true);
 			this.addEventListener("input", checkField, true);
 
-			//on key press "enter", do a submit button click
-			$(this).keypress(function(e){
-				if( e.keyCode == 13 ){
-					e.preventDefault();
-					e.stopPropagation();
-					$('#formSubmit').click();
-				}
-			});
+		}).submit(function(e){
+			e.preventDefault();
+			$('#formSubmit').click();
 		});
 
 		//add and update
@@ -1316,6 +1311,7 @@ function dropCover(event){
 
 	// manage remote image
 	if( files.length == 0 && dt.types.contains("application/x-moz-file-promise-url") ){
+		hideInform();
 		url = dt.getData("application/x-moz-file-promise-url");
 
 		$coverStatus.addClass('upload');
