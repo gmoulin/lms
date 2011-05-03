@@ -305,19 +305,6 @@ COMMENT = 'liaison entre les albums et les groupes';
 
 
 -- -----------------------------------------------------
--- Table `lms`.`list_timestamp`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `lms`.`list_timestamp` ;
-
-CREATE  TABLE IF NOT EXISTS `lms`.`list_timestamp` (
-  `list_name` VARCHAR(255) NOT NULL ,
-  `list_timestamp` TIMESTAMP NOT NULL ,
-  PRIMARY KEY (`list_name`) )
-ENGINE = InnoDB
-COMMENT = 'utilisée pour gérer le cache des listes';
-
-
--- -----------------------------------------------------
 -- Placeholder table for view `lms`.`books_view`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `lms`.`books_view` (`bookID` INT, `bookTitle` INT, `bookSize` INT, `bookCover` INT, `bookDate` INT, `sagaID` INT, `sagaTitle` INT, `bookSagaPosition` INT, `bookSagaSize` INT, `sagaSearchURL` INT, `storageID` INT, `storageRoom` INT, `storageType` INT, `storageColumn` INT, `storageLine` INT, `loanID` INT, `loanHolder` INT, `loanDate` INT);

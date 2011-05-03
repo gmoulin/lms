@@ -5,15 +5,12 @@ $(document).ready(function(){
 
 	//ajax global management
 		$('#ajax_loader').ajaxStart(function(){
-			console.log('ajaxStart');
 			$('#ajax_loader').addClass('loading');
 		})
 		.ajaxStop(function(){
-			console.log('ajaxStop');
 			$('#ajax_loader').removeClass('loading');
 		})
 		.ajaxError(function(event, xhr, settings, exception){
-			console.log('ajaxError');
 			if( xhr.responseText != '' ) inform("Error requesting page " + settings.url + ", error : " + xhr.responseText, 'error');
 		});
 
@@ -38,7 +35,6 @@ $(document).ready(function(){
 
 	//author, band and artist inputs in forms
 		$('.add_another').click(function(event){
-			console.log('add_another click');
 			event.preventDefault();
 
 			if( !$(this).is('button') ) return;
@@ -59,7 +55,6 @@ $(document).ready(function(){
 		});
 
 		$('.delete_another').click(function(event){
-			console.log('delete_another click');
 			event.preventDefault();
 
 			if( !$(this).is('button') ) return;
@@ -96,7 +91,6 @@ $(document).ready(function(){
 				}
 			})
 			.delegate('.filterFormSwitch', 'click', function(e){
-				console.log('filterFormSwitch click');
 				e.preventDefault();
 
 				if( !$(this).is('a') ) return;
@@ -106,18 +100,15 @@ $(document).ready(function(){
 				if( $ul.hasClass('deploy') ){ $ul.find('datalist, select').loadList(); }
 			})
 			.delegate('.search', 'click', function(e){
-				console.log('search click');
 				e.preventDefault();
 				getList(1);
 			})
 			.delegate('.cancel', 'click', function(e){
-				console.log('cancel click');
 				e.preventDefault();
 				$(this).closest('.filterForm').find(':input').val(''); //filter form reset
 				getList(0);
 			})
 			.delegate('.sort', 'click', function(e){
-				console.log('sort buttons click');
 				e.preventDefault();
 				var $this = $(this);
 
@@ -160,7 +151,6 @@ $(document).ready(function(){
 	//add, update, delete, relocate, move, addLoan
 		$('.add').click(function(e){
 			e.preventDefault();
-			console.log('add click');
 
 			if( !$(this).is('button') ) return;
 
@@ -233,7 +223,6 @@ $(document).ready(function(){
 		});
 
 		$('.update').live('click', function(e){
-			console.log('update click');
 			e.preventDefault();
 
 			if( !$(this).is('a') ) return;
@@ -382,7 +371,6 @@ $(document).ready(function(){
 		});
 
 		$('.delete').live('click', function(e){
-			console.log('delete click');
 			e.preventDefault();
 
 			if( !$(this).is('a') ) return;
@@ -447,7 +435,6 @@ $(document).ready(function(){
 		});
 
 		$('#relocate').live('click', function(e){
-			console.log('relocate click');
 			e.preventDefault();
 
 			if( !$(this).is('button') ) return;
@@ -477,7 +464,6 @@ $(document).ready(function(){
 		});
 
 		$('.move').live('click', function(e){
-			console.log('move click');
 			e.preventDefault();
 
 			if( !$(this).is('a') ) return;
@@ -517,7 +503,6 @@ $(document).ready(function(){
 
 		$('.addLoan').live('click', function(e){
 			e.preventDefault();
-			console.log('addLoan click');
 
 			if( !$(this).is('a') ) return;
 
@@ -553,7 +538,6 @@ $(document).ready(function(){
 	//list actions (storage, detail, filter)
 		$('.list')
 			.delegate('.storage', 'click', function(e){
-				console.log('storage click');
 				e.preventDefault();
 				var $this = $(this);
 
@@ -588,7 +572,6 @@ $(document).ready(function(){
 				}
 			})
 			.delegate('.detail', 'click', function(e){
-				console.log('detail click');
 				e.preventDefault();
 				var $this = $(this);
 
@@ -609,7 +592,6 @@ $(document).ready(function(){
 				$('#detailShow').click();
 			})
 			.delegate('.filter', 'click', function(e){
-				console.log('filter click');
 				e.preventDefault();
 				var $this = $(this);
 
@@ -646,7 +628,6 @@ $(document).ready(function(){
 
 		//add and update
 		$('#formSubmit').click(function(e){
-			console.log('formSubmit click');
 			e.preventDefault();
 			var $this = $(this),
 				$section = $this.closest('.wrapper').find('.form'); //#manage_xxx
@@ -760,7 +741,6 @@ $(document).ready(function(){
 
 		//delete
 		$('#confirmSubmit').click(function(e){
-			console.log('confirmSubmit');
 			e.preventDefault();
 			var $this = $(this),
 				$section = $this.closest('.wrapper'),
@@ -801,7 +781,6 @@ $(document).ready(function(){
 
 	//modals toggle
 		$('#editHide').click(function(e){
-			console.log('editHide click');
 			var $editBox = $('#editBox');
 
 			if( $editBox.find('.form').length ){
@@ -824,8 +803,6 @@ $(document).ready(function(){
 		});
 
 		$('#editShow').click(function(e){
-			console.log('editShow click');
-
 			var rel = $(this).attr('rel'),
 				target = rel.charAt(0).toUpperCase() + rel.substr(1),
 				$section = $('#editBox .formWrapper');
@@ -854,7 +831,6 @@ $(document).ready(function(){
 		});
 
 		$('.close').live('click', function(e){
-			console.log('close click');
 			e.preventDefault();
 
 			if( !$(this).is('button') ) return;
@@ -885,7 +861,6 @@ $(document).ready(function(){
 
 	//menu link
 		$('#nav a').click(function(e){
-			console.log('menu link click');
 			//refresh current tab if already active (url#hash will not change)
 			var target = $(this).attr('href').substr(1);
 			if( target == $('#nav').data('activeTab') ){
@@ -912,7 +887,6 @@ $(document).ready(function(){
 
 	//list display switch
 		$('.listDisplaySwitch a').click(function(e){
-			console.log('listDisplaySwitch click');
 			e.preventDefault();
 			var $this = $(this),
 				listDisplay = $this.closest('.listDisplaySwitch').find('a').map(function(){ return $(this).attr('rel'); }).get().join(' '),
@@ -931,7 +905,6 @@ $(document).ready(function(){
 
 	//band last check date
 		$('.externalLink', '#list_band').live('click', function(e){
-			console.log('list_band externalLink click');
 			//update the date on band web site link click
 			$.post('ajax/manageBand.php', {action: 'updateLastCheckDate', id: $(this).attr('rel')});
 
@@ -977,7 +950,6 @@ $(document).ready(function(){
 
 	//saga title in form
 		$('#bookSagaTitle, #movieSagaTitle').change(function(){
-			console.log('sagaTitle change');
 			var $this = $(this);
 			var $form = $this.closest('.form');
 			var rel = $form.attr('rel');
@@ -1031,8 +1003,6 @@ $(document).ready(function(){
  * change the current tab
  */
 function tabSwitch(){
-	console.log('tabSwitch');
-
 	var target = window.location.hash.substr(1) || $('.tab:first').attr('id');
 
 	$('#nav a').removeClass('active');
@@ -1050,19 +1020,51 @@ function tabSwitch(){
  * ajax load <datalist> and <select> content
  */
 $.fn.loadList = function(){
-	console.log('loadList');
 	return this.each(function(){
-		console.log('loadList inner');
-		var $this = $(this);
+		var $this = $(this),
+			key = $this.attr('id'),
+			decoder = $('<textarea>'),
+			cachedData,
+			lastModified = 0;
 
-		var forceUpdate = 0;
-		if( $this.children().length <= 1 ) forceUpdate = 1;
+		//if( $this.children().length <= 1 ) forceUpdate = 1;
+
+		try {
+			cachedData = localStorage.getObject(key);
+			if( cachedData ){
+				lastModified = cachedData.lastModified;
+			}
+		} catch( e ){
+			alert(e);
+		}
 
 		//ask the list values to the server and create the <option>s with it
-		var decoder = $('<textarea>');
-		$.get( 'ajax/loadList.php?field=' + $this.attr('id') + '&forceUpdate=' + forceUpdate, function(data, textStatus, jqXHR){
-			//server will send a 304 status if the list has not changed and forceUpdate != 1
-			if( jqXHR.status == 200 ){
+		$.ajax('ajax/loadList.php', {
+			data: 'field=' + $this.attr('id'),
+			dataType: 'json',
+			headers: {
+				'If-Modified-Since': lastModified
+			},
+			success: function(data, textStatus, jqXHR){
+				//server will send a 304 status if the list has not changed
+				if( jqXHR.status == 200 ){
+					try {
+						lastModified = jqXHR.getResponseHeader('Last-Modified');
+
+						localStorage.setObject(key, {'lastModified': lastModified, 'data': data});
+					} catch( e ){
+						alert(e);
+					}
+
+				} else { //304
+					data = cachedData.data;
+
+					if( $this.find('option:gt(0)').length ){
+						//options already present, no need to fill the field
+						return;
+					}
+				}
+
 				if( $this.is('datalist') ) $this.empty();
 				else {
 					var isFilter = false;
@@ -1092,6 +1094,7 @@ $.fn.loadList = function(){
 /**
  * replace accentued characters by non accentued counterpart
  * and remove spaces
+ * used in jquery template
  */
 String.prototype.urlify = function(){
 	var s = this,
@@ -1113,7 +1116,19 @@ String.prototype.urlify = function(){
 }
 
 /**
+ * localStorage method for caching javascript objects
+ */
+Storage.prototype.setObject = function(key, value){
+	this.setItem(key, JSON.stringify(value));
+}
+
+Storage.prototype.getObject = function(key){
+	return this.getItem(key) && JSON.parse( this.getItem(key) );
+}
+
+/**
  * storage list function to separate storages rooms and types
+ * used in jquery template
  */
 function isStorageChanged(i){
 	var item = this.data.list[i],
@@ -1134,7 +1149,6 @@ function addEscapeSupport(){
 	$('html').unbind('keypress').keypress(function(e){
 		// ESCAPE key pressed
 		if( e.keyCode == 27 ){
-			console.log('escape pressed');
 
 			//inform visible ?
 			if( $('#inform span:visible').length ){
@@ -1142,37 +1156,30 @@ function addEscapeSupport(){
 
 			//help visible ?
 			} else if( $('#help').hasClass('deploy') ){
-				console.log('help');
 				$('.help').click();
 
 			//drag and drop active ?
 			} else if( $('#drop_overlay:visible').length ){
-				console.log('drop_overlay');
 				$('#drop_overlay').hide()
 
 			//storage image visible ?
 			} else if( $('#storageShow:checked').length ){
-				console.log('storageHide');
 				$('#storageHide').click();
 
 			//storage image visible ?
 			} else if( $('#previewShow:checked').length ){
-				console.log('previewHide');
 				$('#previewHide').click();
 
 			//edit modal visible ?
 			} else if( $('#editShow:checked').length ){
-				console.log('editHide');
 				$('#editHide').click();
 
 			//confirm modal visible ?
 			} else if( $('#confirmShow:checked').length ){
-				console.log('confirmHide');
 				$('#confirmHide').click();
 
 			//detail modal visible ?
 			} else if( $('#detailShow:checked').length ){
-				console.log('detailHide');
 				$('#detailHide').click();
 			}
 		}
@@ -1217,7 +1224,6 @@ function addShortcutsSupport(){
  * @param array [[field id, message, error type]]
  */
 function formErrors( data ) {
-	console.log('formErrors');
 	$.each(data, function(index, error){
 		//remove previous error message if present
 		$('#' + error[0]).addClass(error[2]).siblings('.tip').remove();
@@ -1233,7 +1239,6 @@ function formErrors( data ) {
  * @param string cssClass
  */
 function inform( msg, cssClass ){
-	console.log('inform');
 	$('#inform span').addClass( cssClass ).text( msg ).parent().show();
 }
 
@@ -1241,7 +1246,6 @@ function inform( msg, cssClass ){
  * Empty and hide the user information message
  */
 function hideInform(){
-	console.log('hideInform');
 	$('#inform span').attr('class', '').empty().parent().hide();
 }
 
@@ -1251,7 +1255,6 @@ var dropTimeout = 0;
  * @param object event
  */
 function dragEnter(event){
-	console.log('dragEnter');
 	event.preventDefault();
 	$('#drop_overlay').show();
 	if( event.dataTransfer ){
@@ -1270,7 +1273,6 @@ function dragEnter(event){
  * @param object event
  */
 function dragOver(event){
-	console.log('dragOver');
 	event.preventDefault();
 	if( $('#drop_overlay:hidden').length ) $('#drop_overlay').show();
 
@@ -1283,7 +1285,6 @@ function dragOver(event){
  * @param object event
  */
 function dragLeave(event){
-	console.log('dragLeave');
 	event.stopPropagation();
 }
 
@@ -1295,7 +1296,6 @@ function dragLeave(event){
  * @param object event
  */
 function dropCover(event){
-	console.log('dropCover');
 	event.preventDefault();
 
 	$('#drop_overlay').hide();
@@ -1354,7 +1354,6 @@ function dropCover(event){
  * @param object file
  */
 function upload(file, rel, $coverStatus){
-	console.log('upload');
 	if( window.FileReader ){
 		hideInform();
 
@@ -1373,7 +1372,6 @@ function upload(file, rel, $coverStatus){
 
 				xhr.onreadystatechange = function(){
 					if( xhr.readyState == 4 ){
-						console.log('readyState');
 						$coverStatus.removeClass('upload');
 						if( xhr.status == 200 ){
 							$coverStatus.html( $coverStatus.data('oldText') ).addClass('valid');
@@ -1465,7 +1463,6 @@ function upload(file, rel, $coverStatus){
  * @param object event
  */
 function checkField(event){
-	console.log('checkField ' + event.type );
 	var $el = $(event.target);
 
 	if( $el[0].validity ){
@@ -1490,8 +1487,6 @@ function checkField(event){
 var didScroll = false,
 	interval = null;
 function getList( type ){
-	console.log('getList ' + type);
-
 	hideInform();
 	var $nav = $('#nav');
 

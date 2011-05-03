@@ -207,9 +207,39 @@
 		width: 24px;
 		border-width: 1px 1px 1px 0;
 
-		-webkit-transition: width 0.5s linear 0s, border-width 0s linear 0s, background-position 120s linear 0s;
-		-moz-transition:	width 0.5s linear 0s, border-width 0s linear 0s, background-position 120s linear 0s;
-		transition:			width 0.5s linear 0s, border-width 0s linear 0s, background-position 120s linear 0s;
+		-webkit-transition: width 0.5s linear 0s, border-width 0s linear 0s;
+		-moz-transition:	width 0.5s linear 0s, border-width 0s linear 0s;
+		transition:			width 0.5s linear 0s, border-width 0s linear 0s;
+
+		-webkit-animation-name: loader;
+		-webkit-animation-duration: 1s;
+		-webkit-animation-iteration-count: infinite;
+		-webkit-animation-direction: linear;
+
+		-moz-animation-name: loader;
+		-moz-animation-duration: 1s;
+		-moz-animation-iteration-count: infinite;
+		-moz-animation-direction: linear;
+
+		animation-name: loader;
+		animation-duration: 1s;
+		animation-iteration-count: infinite;
+		animation-direction: linear;
+	}
+
+	@-webkit-keyframes loader {
+		from { background-position: 0  0px; }
+		to   { background-position: 0 15px; }
+	}
+
+	@-moz-keyframes loader {
+		from { background-position: 0  0px; }
+		to   { background-position: 0 15px; }
+	}
+
+	@keyframes loader {
+		from { background-position: 0  0px; }
+		to   { background-position: 0 15px; }
 	}
 
 	/** drop overlay **/
@@ -1028,6 +1058,13 @@
 			-webkit-transition: background-position .25s ease-in-out .25s, width .3s ease-out 0s, height .3s ease-in .25s;
 			-moz-transition:	background-position .25s ease-in-out .25s, width .3s ease-out 0s, height .3s ease-in .25s;
 			transition:			background-position .25s ease-in-out .25s, width .3s ease-out 0s, height .3s ease-in .25s;
+
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: auto 100%;
+
+			width: 280px;
+			height: 200px;
 		}
 
 		.list:not(.hasCovers) .block {
@@ -1070,14 +1107,6 @@
 				padding: 2px 3px;
 			}
 
-			.smallBoxes.hasCovers li {
-				background-position: center center;
-				background-repeat: no-repeat;
-				background-size: auto 100%;
-				width: 280px;
-				height: 200px;
-			}
-
 			.smallBoxes .cover {
 				display: none;
 			}
@@ -1088,7 +1117,6 @@
 				text-align: center;
 			}
 
-			/* put the infos at the base of each block */
 			.smallBoxes.hasCovers .info {
 				position: absolute;
 				bottom: 0;
@@ -1116,20 +1144,19 @@
 				margin: 5px; /*Creates the 10px gap between each column and each line*/
 				overflow: hidden;
 
+				padding: 0;
+			}
+
+			.rectangleBoxes.hasCovers li {
+				background-position: left top;
+				background-size: 39% auto;
+
 				width: 50%;
 				width: -o-calc(50% - 30px);
 				width: -webkit-calc(50% - 30px);
 				width: -moz-calc(50% - 30px);
 
 				height: 500px;
-
-				padding: 0;
-			}
-
-			.rectangleBoxes.hasCovers li {
-				background-position: left top;
-				background-repeat: no-repeat;
-				background-size: 39% auto;
 			}
 
 			.rectangleBoxes .cover {

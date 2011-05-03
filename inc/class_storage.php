@@ -74,9 +74,11 @@ class storage extends commun {
 
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[][]
 	 */
-	public function getStoragesForDropDownList() {
+	public function getStoragesForDropDownList( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -84,7 +86,18 @@ class storage extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getStorages = $this->db->prepare("
 					SELECT storageID as id, CONCAT(storageRoom, ' - ', storageType, IF(storageColumn IS NULL, '', ' - '), IFNULL(storageColumn, ''), IFNULL(storageLine, '')) AS value
@@ -96,10 +109,17 @@ class storage extends commun {
 
 				$results = $getStorages->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ) {
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -107,9 +127,11 @@ class storage extends commun {
 	}
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[][]
 	 */
-	public function getStoragesRoomsList() {
+	public function getStoragesRoomsList( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -117,7 +139,18 @@ class storage extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getStoragesRoomsList = $this->db->prepare("
 					SELECT storageRoom AS value
@@ -130,10 +163,17 @@ class storage extends commun {
 
 				$results = $getStoragesRoomsList->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ) {
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -141,9 +181,11 @@ class storage extends commun {
 	}
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[][]
 	 */
-	public function getStoragesTypesList() {
+	public function getStoragesTypesList( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -151,7 +193,18 @@ class storage extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getStoragesTypesList = $this->db->prepare("
 					SELECT storageType AS value
@@ -164,10 +217,17 @@ class storage extends commun {
 
 				$results = $getStoragesTypesList->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ) {
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -175,9 +235,11 @@ class storage extends commun {
 	}
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[][]
 	 */
-	public function getStoragesForFilterList() {
+	public function getStoragesForFilterList( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -185,7 +247,18 @@ class storage extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getStoragesForFilterList = $this->db->prepare("
 					SELECT storageID AS id, CONCAT(storageRoom, ' ', storageType, ' ', IFNULL(storageColumn, ''), IFNULL(storageLine, '')) AS value
@@ -198,10 +271,17 @@ class storage extends commun {
 
 				$results = $getStoragesForFilterList->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ) {
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -216,15 +296,10 @@ class storage extends commun {
 		$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
 		$stash = new Stash($stashFileSystem);
 
-		//update caches timestamps
-		$ts = new list_timestamp();
-
 		$toClean = array('book', 'album', 'movie', 'storage');
 		foreach( $toClean as $t ){
 			$stash->setupKey($t);
 			$stash->clear();
-
-			$ts->updateByName($t);
 
 			if( isset($_SESSION[$t.'s']) ) unset($_SESSION[$t.'s']['list']);
 		}

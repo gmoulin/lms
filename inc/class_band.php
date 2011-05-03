@@ -175,9 +175,11 @@ class band extends commun {
 	}
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[][]
 	 */
-	public function getBandsForDropDownList() {
+	public function getBandsForDropDownList( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -185,7 +187,18 @@ class band extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getBands = $this->db->prepare("
 					SELECT bandName AS value
@@ -197,10 +210,17 @@ class band extends commun {
 
 				$results = $getBands->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ) {
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -208,9 +228,11 @@ class band extends commun {
 	}
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[]
 	 */
-	public function getBandsForFilterList(){
+	public function getBandsForFilterList( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -218,7 +240,18 @@ class band extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getBandsForFilterList = $this->db->prepare("
 					SELECT bandName as value
@@ -231,10 +264,17 @@ class band extends commun {
 
 				$results = $getBandsForFilterList->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ){
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -242,9 +282,11 @@ class band extends commun {
 	}
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[]
 	 */
-	public function getBandsNameForFilterList(){
+	public function getBandsNameForFilterList( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -252,7 +294,18 @@ class band extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getBandsNameForFilterList = $this->db->prepare("
 					SELECT bandName as value
@@ -264,10 +317,17 @@ class band extends commun {
 
 				$results = $getBandsNameForFilterList->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ){
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -275,9 +335,11 @@ class band extends commun {
 	}
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[]
 	 */
-	public function getBandsGenreForFilterList(){
+	public function getBandsGenreForFilterList( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -285,7 +347,18 @@ class band extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getBandsGenreForFilterList = $this->db->prepare("
 					SELECT bandGenre as value
@@ -297,10 +370,17 @@ class band extends commun {
 
 				$results = $getBandsGenreForFilterList->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ){
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -308,9 +388,11 @@ class band extends commun {
 	}
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[]
 	 */
-	public function getBandsGenres(){
+	public function getBandsGenres( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -318,7 +400,18 @@ class band extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getBandsGenres = $this->db->prepare("
 					SELECT bandGenre as value
@@ -331,10 +424,17 @@ class band extends commun {
 
 				$results = $getBandsGenres->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ){
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -349,15 +449,10 @@ class band extends commun {
 		$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
 		$stash = new Stash($stashFileSystem);
 
-		//update caches timestamps
-		$ts = new list_timestamp();
-
 		$toClean = array('album', 'band', 'storage', 'loan');
 		foreach( $toClean as $t ){
 			$stash->setupKey($t);
 			$stash->clear();
-
-			$ts->updateByName($t);
 
 			if( isset($_SESSION[$t.'s']) ) unset($_SESSION[$t.'s']['list']);
 		}

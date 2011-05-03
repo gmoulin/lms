@@ -449,6 +449,56 @@ class Stash
 	}
 
 	/**
+	 * Returns the createdOn retrieved from the cache.
+	 *
+	 * @return integer|null
+	 */
+	public function getTimestamp()
+	{
+		if((defined('STASH_DISABLE_CACHE') && STASH_DISABLE_CACHE) || self::$runtimeDisable || !$this->cacheEnabled)
+			return null;
+
+		try
+		{
+			if(isset(self::$memStore[$this->group][$this->keyString])
+			   && is_array(self::$memStore[$this->group][$this->keyString]))
+			{
+				$record = self::$memStore[$this->group][$this->keyString];
+			}elseif(!$this->memOnly){
+
+				$handler = $this->getHandler();
+				if(!$handler)
+					return null;
+
+				$record = $handler->getData($this->key);
+
+				if(!is_array($record))
+					return null;
+
+				// This is to keep the array from getting out of hand, particularly during long running processes
+				// as this would otherwise grow to huge amounts. Totally niave approach, will redo
+				if(isset(self::$memStore[$this->group]) && count(self::$memStore[$this->group]) > 900)
+					foreach(array_rand(self::$memStore[$this->group], 600) as $removalKey)
+						unset(self::$memStore[$this->group][$removalKey]);
+
+				if($this->storeMemory)
+					self::$memStore[$this->group][$this->keyString] = $record;
+
+			}else{
+				return null;
+			}
+
+			$this->isHit = (isset($record['expiration']) && $record['expiration'] - microtime(true) > 0);
+
+			return $record['data']['createdOn'];
+
+		}catch(Exception $e){
+			$this->cache_enabled = false;
+			return null;
+		}
+	}
+
+	/**
 	 * Returns true if the cached item needs to be refreshed.
 	 *
 	 * @return bool

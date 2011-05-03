@@ -8,7 +8,7 @@ try {
 	header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT'); //always send else the next request will not have "If-Modified-Since" header
 	header('Cache-Control: max-age=' . $expires.', must-revalidate'); //must-revalidate to force browser to used the cache control rules sended
 
-	if( !filter_has_var(INPUT_GET, 'field') || !filter_has_var(INPUT_GET, 'forceUpdate') ){
+	if( !filter_has_var(INPUT_GET, 'field') ){
 		throw new Exception('Chargement des listes déroulantes : paramètre manquante.');
 	} else {
 		$field = filter_input(INPUT_GET, 'field', FILTER_SANITIZE_STRING);
@@ -16,23 +16,11 @@ try {
 			throw new Exception('Chargement des listes déroulantes : liste incorrecte.');
 		}
 
-		//use to force a HTTP 200 response containing a fresh list (when browser has nothing in the <select> or <datalist> element)
-		$forceUpdate = filter_input(INPUT_GET, 'forceUpdate', FILTER_SANITIZE_NUMBER_INT);
-		if( is_null($forceUpdate) || $forceUpdate === false ){
-			throw new Exception('Chargement des listes déroulantes : paramètre incorrect.');
-		}
-		$forceUpdate = filter_var($forceUpdate, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-		if( is_null($forceUpdate) ){
-			throw new Exception('Chargement des listes déroulantes : paramètre incorrect.');
-		}
-
 		//multiple list call for the same function
 		if( stripos($field, 'storage') !== false && $field != 'storageTypeList' && $field != 'storageRoomList'){
 			if( stripos($field, 'filter') !== false ){
-				//movie_book_album in the name is used in _cleanSession functions
 				$field = 'movie_book_album_storagesForFilterList';
 			} else {
-				//movie_book_album in the name is used in _cleanSession functions
 				$field = 'movie_book_album_storagesForDropDownList';
 			}
 		}
@@ -46,165 +34,476 @@ try {
 
 		$lastModified = 0;
 		$target = ( strpos($field, 'List') !== false ? substr($field, 0, strlen($field)-4 ) : $field );
-		if( $browserHasCache ){
-			$oTimestamp = new list_timestamp();
-			$ts = $oTimestamp->getByName($target);
-			if( !empty($ts) && !empty($ts['name']) ){
-				$lastModified = strtotime($ts['stamp']);
-				//browser has list in cache and list was not modified
-				if( $modifiedSince == $lastModified ){
-					if( !$forceUpdate ){
-						header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
-						die;
-					}
-				}
-			}
-		}
-
-		//browser don't have list in cache, need to retrieve (or create if not found) the last modified date
-		if( $lastModified == 0 ){
-			$oTimestamp = new list_timestamp();
-			$ts = $oTimestamp->getByName($target);
-			if( empty($ts) ){
-				$oTimestamp->updateByName($target);
-				$ts = $oTimestamp->getByName($target);
-			}
-			$lastModified = strtotime($ts['stamp']);
-		}
-
-		if( $lastModified != 0 ) header("Last-Modified: " . gmdate("D, d M Y H:i:s", $lastModified) . " GMT");
 
 		switch ( $field ){
 			/* form fields */
 			case 'albumTypeList' :
 					$oAlbum = new album();
-					$list = $oAlbum->getAlbumsTypes();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oAlbum->getAlbumsTypes( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oAlbum->getAlbumsTypes( true );
 				break;
 			case 'bookSizeList' :
 					$oBook = new book();
-					$list = $oBook->getBooksSizes();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oBook->getBooksSizes( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oBook->getBooksSizes( true );
 				break;
 			case 'movieGenreList' :
 					$oMovie = new movie();
-					$list = $oMovie->getMoviesGenres();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oMovie->getMoviesGenres( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oMovie->getMoviesGenres( true );
 				break;
 			case 'movieMediaTypeList' :
 					$oMovie = new movie();
-					$list = $oMovie->getMoviesMediaTypes();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oMovie->getMoviesMediaTypes( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oMovie->getMoviesMediaTypes( true );
 				break;
 			case 'bandGenreList' :
 					$oBand = new band();
-					$list = $oBand->getBandsGenres();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oBand->getBandsGenres( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oBand->getBandsGenres( true );
 				break;
 			case 'bookSagaList' :
 					$oSaga = new saga();
-					$list = $oSaga->getSagasTitles('book');
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oSaga->getSagasTitles( 'book', null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oSaga->getSagasTitles( 'book', true );
 				break;
 			case 'movieSagaList' :
 					$oSaga = new saga();
-					$list = $oSaga->getSagasTitles('movie');
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oSaga->getSagasTitles( 'movie', null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oSaga->getSagasTitles( 'movie', true );
 				break;
 			case 'movie_book_album_storagesForDropDownList' :
 					$oStorage = new storage();
-					$list = $oStorage->getStoragesForDropDownList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oStorage->getStoragesForDropDownList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oStorage->getStoragesForDropDownList( true );
 				break;
 			case 'albumBandList' :
-					$oBand = new Band();
-					$list = $oBand->getBandsForDropDownList();
+					$oBand = new band();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oBand->getBandsForDropDownList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oBand->getBandsForDropDownList( true );
 				break;
 			case 'bookAuthorList' :
 					$oAuthor = new author();
-					$list = $oAuthor->getAuthorsForDropDownList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oAuthor->getAuthorsForDropDownList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oAuthor->getAuthorsForDropDownList( true );
 				break;
 			case 'movieArtistList' :
 					$oArtist = new artist();
-					$list = $oArtist->getArtistsForDropDownList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oArtist->getArtistsForDropDownList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oArtist->getArtistsForDropDownList( true );
 				break;
 			case 'storageTypeList' :
 					$oStorage = new storage();
-					$list = $oStorage->getStoragesTypesList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oStorage->getStoragesTypesList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oStorage->getStoragesTypesList( true );
 				break;
 			case 'storageRoomList' :
 					$oStorage = new storage();
-					$list = $oStorage->getStoragesRoomsList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oStorage->getStoragesRoomsList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oStorage->getStoragesRoomsList( true );
 				break;
 
 			/* common filters */
 			case 'movie_book_album_storagesForFilterList' :
 					$oStorage = new storage();
-					$list = $oStorage->getStoragesForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oStorage->getStoragesForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oStorage->getStoragesForFilterList( true );
 				break;
 
 			/* book filters */
 			case 'bookTitleFilterList' :
 					$oBook = new book();
-					$list = $oBook->getBooksTitleForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oBook->getBooksTitleForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oBook->getBooksTitleForFilterList( true );
 				break;
 			case 'bookSagaFilterList' :
 					$oSaga = new saga();
-					$list = $oSaga->getBooksSagasForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oSaga->getBooksSagasForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oSaga->getBooksSagasForFilterList( true );
 				break;
 			case 'bookAuthorFilterList' :
 					$oAuthor = new author();
-					$list = $oAuthor->getAuthorsForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oAuthor->getAuthorsForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oAuthor->getAuthorsForFilterList( true );
 				break;
 			case 'bookLoanFilterList' :
 					$oLoan = new loan();
-					$list = $oLoan->getBooksLoansForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oLoan->getBooksLoansForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oLoan->getBooksLoansForFilterList( true );
 				break;
 
 			/* movie filters */
 			case 'movieTitleFilterList' :
 					$oMovie = new movie();
-					$list = $oMovie->getMoviesTitleForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oMovie->getMoviesTitleForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oMovie->getMoviesTitleForFilterList( true );
 				break;
 			case 'movieSagaFilterList' :
 					$oSaga = new saga();
-					$list = $oSaga->getMoviesSagasForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oSaga->getMoviesSagasForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oSaga->getMoviesSagasForFilterList( true );
 				break;
 			case 'movieArtistFilterList' :
 					$oArtist = new artist();
-					$list = $oArtist->getArtistsForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oArtist->getArtistsForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oArtist->getArtistsForFilterList( true );
 				break;
 			case 'movieLoanFilterList' :
 					$oLoan = new loan();
-					$list = $oLoan->getMoviesLoansForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oLoan->getMoviesLoansForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oLoan->getMoviesLoansForFilterList( true );
 				break;
 
 			/* album filters */
 			case 'albumTitleFilterList' :
 					$oAlbum = new album();
-					$list = $oAlbum->getAlbumsTitleForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oAlbum->getAlbumsTitleForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oAlbum->getAlbumsTitleForFilterList( true );
 				break;
 			case 'albumBandFilterList' :
-					$oBand = new Band();
-					$list = $oBand->getBandsForFilterList();
+					$oBand = new band();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oBand->getBandsForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oBand->getBandsForFilterList( true );
 				break;
 			case 'albumLoanFilterList' :
 					$oLoan = new loan();
-					$list = $oLoan->getAlbumsLoansForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oLoan->getAlbumsLoansForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oLoan->getAlbumsLoansForFilterList( true );
 				break;
 
 			/* band filters */
 			case 'bandNameFilterList' :
-					$oAlbum = new band();
-					$list = $oAlbum->getBandsNameForFilterList();
+					$oBand = new band();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oBand->getBandsNameForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oBand->getBandsNameForFilterList( true );
 				break;
 			case 'bandGenreFilterList' :
-					$oAlbum = new band();
-					$list = $oAlbum->getBandsGenreForFilterList();
+					$oBand = new band();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oBand->getBandsGenreForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oBand->getBandsGenreForFilterList( true );
 				break;
 
 
 			/* saga filters */
 			case 'sagaTitleFilterList' :
 					$oSaga = new saga();
-					$list = $oSaga->getSagasForFilterList();
+
+					if( $browserHasCache && $modifiedSince != 0 ){
+						$ts = $oSaga->getSagasForFilterList( null, true );
+						if( !is_null($ts) ){
+							//browser has list in cache and list was not modified
+							if( $modifiedSince == $ts ){
+								header($_SERVER["SERVER_PROTOCOL"]." 304 Not Modified");
+								die;
+							}
+						}
+					}
+
+					list($lastModified, $list) = $oSaga->getSagasForFilterList( true );
 				break;
 
 			default:
 				throw new Exception('Chargement de liste : cible non reconnue.');
 		}
+
+		if( !empty($lastModified) ) header("Last-Modified: " . gmdate("D, d M Y H:i:s", $lastModified) . " GMT");
 
 		echo json_encode($list);
 

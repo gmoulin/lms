@@ -72,9 +72,11 @@ class author extends commun {
 	}
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[][]
 	 */
-	public function getAuthorsForDropDownList() {
+	public function getAuthorsForDropDownList( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -82,7 +84,18 @@ class author extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getAuthors = $this->db->prepare("
 					SELECT CONCAT(authorFirstName, ' ', authorLastName) AS value
@@ -94,10 +107,17 @@ class author extends commun {
 
 				$results = $getAuthors->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ) {
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -105,9 +125,11 @@ class author extends commun {
 	}
 
 	/**
+	 * @param boolean $returnTs : flag for the function to return the list and the ts or only the list
+	 * @param boolean $tsOnly : flag for the function to return the cache creation date timestamp only
 	 * @return array[]
 	 */
-	public function getAuthorsForFilterList(){
+	public function getAuthorsForFilterList( $returnTs = false, $tsOnly = false ){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -115,7 +137,18 @@ class author extends commun {
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
 			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+
+			if( $tsOnly ){
+				$ts = $stash->getTimestamp();
+				if( $stash->isMiss() ){
+					return null;
+				} else {
+					return $ts;
+				}
+			}
+
 			$results = $stash->get();
+			$ts = null;
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getAuthorsForFilterList = $this->db->prepare("
 					SELECT CONCAT(authorFirstName, ' ', authorLastName) as value
@@ -128,10 +161,17 @@ class author extends commun {
 
 				$results = $getAuthorsForFilterList->fetchAll();
 
-				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+				if( !empty($results) ){
+					$stash->store($results, STASH_EXPIRE);
+					$ts = $stash->getTimestamp();
+				}
 			}
 
-			return $results;
+			if( $returnTs ){
+				return array($ts, $results);
+			} else {
+				return $results;
+			}
 
 		} catch ( PDOException $e ){
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -146,15 +186,10 @@ class author extends commun {
 		$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
 		$stash = new Stash($stashFileSystem);
 
-		//update caches timestamps
-		$ts = new list_timestamp();
-
 		$toClean = array('author', 'book', 'saga', 'storage', 'loan');
 		foreach( $toClean as $t ){
 			$stash->setupKey($t);
 			$stash->clear();
-
-			$ts->updateByName($t);
 
 			if( isset($_SESSION[$t.'s']) ) unset($_SESSION[$t.'s']['list']);
 		}
