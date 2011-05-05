@@ -9,8 +9,13 @@ session_start();
 */
 define('LMS_PATH', dirname(__FILE__));
 
-if( strpos('_DEV', $_SERVER['LOCATION']) !== false ){
+
+if( !isset($_SERVER['LOCATION']) || empty($_SERVER['LOCATION']) ){
+	define( "SERVER_NAME", 'http://lms.kapok.x10.mx' );
+
+} elseif( strpos('_DEV', $_SERVER['LOCATION']) !== false ){
 	define( "SERVER_NAME", 'http://lms.dev' );
+
 } else {
 	define( "SERVER_NAME", 'http://lms' );
 }

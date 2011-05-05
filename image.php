@@ -78,9 +78,9 @@ try {
 				header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
 				header('Cache-Control: max-age=' . $expires.', must-revalidate');
 				if( $lastModified != 0 ) header("Last-Modified: " . gmdate("D, d M Y H:i:s", $lastModified) . " GMT");
-				header('Content-Type: image/jpg');
-				echo $cover;
+				header('Content-Type: image/png');
 
+				echo $cover;
 				die;
 			}
 		}

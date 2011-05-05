@@ -20,7 +20,7 @@ class storage extends commun {
 	/**
 	 * @return array[][]
 	 */
-	public function getStorages() {
+	public function getStorages(){
 		try {
 			//stash cache init
 			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
@@ -55,7 +55,7 @@ class storage extends commun {
 	 * @param integer $id : identifiant du rangement
 	 * @return array[][]
 	 */
-	public function getStorageById( $id ) {
+	public function getStorageById( $id ){
 		try {
 			$getStorageById = $this->db->prepare("
 				SELECT storageID, storageRoom, storageType, storageColumn, storageLine
@@ -65,7 +65,7 @@ class storage extends commun {
 
 			$getStorageById->execute( array( ':id' => $id ) );
 
-			return $getStorageById->fetchAll();
+			return $getStorageById->fetch();
 
 		} catch ( PDOException $e ) {
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
