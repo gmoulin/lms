@@ -1489,13 +1489,16 @@ var didScroll = false,
 function getList( type ){
 	hideInform();
 	var $nav = $('#nav');
+	if( !$nav.length ) return;
 
 	//multiple call protection
 	if( $nav.data('updating') != 1 ){
 		$nav.data('updating', 1);
 
-		var tab = $('#nav').data('activeTab'),
-			t = tab.charAt(0).toUpperCase() + tab.substr(1),
+		var tab = $('#nav').data('activeTab');
+		if( tab === undefined ) return;
+
+		var t = tab.charAt(0).toUpperCase() + tab.substr(1),
 			$list = $('#list_' + tab),
 			$filter = $('#' + tab + '_filter'),
 			$body = $('body');

@@ -634,17 +634,6 @@
 
 	/** primary "style" border, background-color and box shadow **/
 		/* border */
-			.slideMenu a,
-			.list li,
-			.paginate span,
-			.listDisplaySwitch,
-			#inform span,
-			.listFilter,
-			.listSort,
-			#help.deploy {
-				border: 1px solid rgba(0, 0, 0, 0.5);
-			}
-
 			.slideMenu a.active {
 				border: 1px solid rgba(255, 51, 0, 0.5);
 			}
@@ -1151,11 +1140,11 @@
 				background-position: left top;
 				background-size: 39% auto;
 
-				width: 50%;
-				width: -o-calc(50% - 30px);
-				width: -webkit-calc(50% - 30px);
-				width: -moz-calc(50% - 30px);
-
+				width: 48%;
+				width: -webkit-calc(50% - 20px);
+				width: -moz-calc(50% - 20px);
+				width: -o-calc(50% - 20px);
+				width: calc(50% - 20px);
 				height: 500px;
 			}
 
