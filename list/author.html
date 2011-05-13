@@ -2,7 +2,7 @@
 	{{if nb > 0}}
 		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
 			<span>
-				${nb} auteur{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb > total}}${total}{{else}}${nb}{{/if}} auteur{{if nb > 1}}s{{/if}} sur ${total}
 				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
 			</span>
 		</section>
@@ -13,10 +13,10 @@
 	{{/if}}
 </script>
 <script id="authorListTemplate" type="text/x-jquery-tmpl">
-	<ul class="listContent clearfix">
+	<section class="listContent clearfix">
 		{{each(i, author) list}}
-			<li>
-				<article class="block">
+			<article class="item">
+				<div class="block">
 					<dl class="info">
 						<dd>
 							${author.authorFirstName} ${author.authorLastName}
@@ -33,8 +33,8 @@
 							<a class="button icon delete" data-icon="t" href="${author.authorID}" title="Supprimer cet auteur" rel="author"></a>
 						</dd>
 					</dl>
-				</article>
-			</li>
+				</div>
+			</article>
 		{{/each}}
-	</ul>
+	</section>
 </script>

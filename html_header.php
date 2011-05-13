@@ -3,8 +3,8 @@
 <!--[if lt IE 7 ]><html lang="<?php echo $lang; ?>" class="no-js ie6 ie ielt9 ielt8 ielt7"><![endif]-->
 <!--[if IE 7 ]><html lang="<?php echo $lang; ?>" class="no-js ie7 ie ielt9 ielt8"><![endif]-->
 <!--[if IE 8 ]><html lang="<?php echo $lang; ?>" class="no-js ie8 ie ielt9"><![endif]-->
-<!--[if IE 9 ]><html lang="<?php echo $lang; ?>" class="no-js ie9 ie"><![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--><html lang="<?php echo $lang; ?>" class="no-js iegt9"><!--<![endif]-->
+<!--[if IE 9 ]><html lang="<?php echo $lang; ?>" class="no-js ie9 ie" manifest="site.manifest"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html lang="<?php echo $lang; ?>" class="no-js"  manifest="site.manifest"><!--<![endif]-->
 <head>
 		<title>Gestionnaire de Médiathèque</title>
 		<!--<base href="" />-->

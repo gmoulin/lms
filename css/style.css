@@ -1034,26 +1034,64 @@
 		.listContent {
 			padding: 0;
 			margin: 20px auto 4px;
-			width: 100%;
-			text-align: center;
+			/*height: 100%;*/
+			text-align: left;
+			visibility: hidden;
 		}
 
-		.list li {
-			display: inline-block;
-			position: relative;
+		.listContent .cover {
+			display: none;
 		}
 
-		.list.hasCovers li {
-			-webkit-transition: background-position .25s ease-in-out .25s, width .3s ease-out 0s, height .3s ease-in .25s;
-			-moz-transition:	background-position .25s ease-in-out .25s, width .3s ease-out 0s, height .3s ease-in .25s;
-			transition:			background-position .25s ease-in-out .25s, width .3s ease-out 0s, height .3s ease-in .25s;
+		.listContent .item {
+			  -webkit-transition-property: -webkit-transform, height, width;
+				 -moz-transition-property:    -moz-transform, height, width;
+				   -o-transition-property:    -moz-transform, height, width;
+					  transition-property:         transform, height, width;
 
+			  -webkit-transition-duration: 0.8s;
+				 -moz-transition-duration: 0.8s;
+				   -o-transition-duration: 0.8s;
+					  transition-duration: 0.8s;
+
+			  -webkit-transition-delay: 0, 0.4s, 0.8s;
+				 -moz-transition-delay: 0, 0.4s, 0.8s;
+				   -o-transition-delay: 0, 0.4s, 0.8s;
+					  transition-delay: 0, 0.4s, 0.8s;
+		}
+
+		.item.hidden {
+			z-index: 1;
+			pointeur-events: none;
+		}
+
+		.item {
+			height: 200px;
+			width:  280px;
+			z-index: 2;
+			margin: 5px; /*Creates the 10px gap between each column and each line*/
+			padding: 3px;
 			background-position: center center;
 			background-repeat: no-repeat;
 			background-size: auto 100%;
+			border-radius: 10px;
+			background-color: #000;
+			border: 1px solid #CCC;
 
-			width: 280px;
-			height: 200px;
+			-webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.3),
+								inset 0 10px 20px rgba(255, 255, 255, 0.25),
+								inset 0 -10px 10px rgba(0, 0, 0, 0.3);
+			box-shadow: inset 0 1px rgba(255, 255, 255, 0.3),
+						inset 0 10px 20px rgba(255, 255, 255, 0.25),
+						inset 0 -10px 10px rgba(0, 0, 0, 0.3);
+		}
+
+		.item .detail {
+			float: right;
+		}
+
+		.list:not(.hasCovers) .block {
+			height: auto;
 		}
 
 		.list:not(.hasCovers) .block {
@@ -1086,6 +1124,14 @@
 			margin: 0 2px;
 			padding: 0;
 			top: 0.5em;
+		}
+
+		#holder {
+			visibility: hidden;
+			height: 0;
+			overflow: hidden;
+			margin-top: 0;
+			margin-bottom: 0;
 		}
 
 		/* smallBoxes list display */
@@ -1128,35 +1174,28 @@
 				top: 0.25em;
 			}
 
-		/* rectangleBoxes list display */
-			.rectangleBoxes li {
-				margin: 5px; /*Creates the 10px gap between each column and each line*/
-				overflow: hidden;
-
-				padding: 0;
-			}
-
-			.rectangleBoxes.hasCovers li {
+		/* big boxes list display */
+			.bigBoxes .item {
 				background-position: left top;
 				background-size: 39% auto;
 
 				width: 48%;
-				width: -webkit-calc(50% - 20px);
-				width: -moz-calc(50% - 20px);
-				width: -o-calc(50% - 20px);
-				width: calc(50% - 20px);
+				width: -webkit-calc(50% - 26px);
+				width: -moz-calc(50% - 26px);
+				width: -o-calc(50% - 26px);
+				width: calc(50% - 26px);
 				height: 500px;
+
+				position: relative;
 			}
 
-			.rectangleBoxes .cover {
+			.bigBoxes .item .close,
+			.bigBoxes .item .detail {
 				display: none;
 			}
 
-			.rectangleBoxes .button.detail {
-				display: none;
-			}
 
-			.rectangleBoxes.hasCovers .info {
+			.bigBoxes .info {
 				display: block;
 				text-align: left;
 
@@ -1169,11 +1208,7 @@
 				max-height: 385px;
 			}
 
-			.rectangleBoxes.hasCovers:not(.animDone) .info {
-				display: none;
-			}
-
-			.rectangleBoxes dt {
+			.bigBoxes dt {
 				float: left;
 				clear: left;
 				width: 105px;
@@ -1181,7 +1216,7 @@
 				font-size: 1.1em;
 			}
 
-			.rectangleBoxes dd {
+			.bigBoxes dd {
 				display: block;
 				float: left;
 				margin-right: 7px;
@@ -1189,31 +1224,35 @@
 				position: relative;
 			}
 
-			.rectangleBoxes dd .button {
+			.bigBoxes dd .button {
 				display: none;
 			}
-			.rectangleBoxes dd:hover .button {
+			.bigBoxes dd:hover .button {
 				display: inline-block;
 				position: absolute;
 				left: 0;
 				top: 2.2em;
 			}
-			.rectangleBoxes dd .button:nth-child(2) {
+			.bigBoxes dd .button:nth-child(2) {
 				left: 1.7em;
 			}
-			.rectangleBoxes dd .button:nth-child(3) {
+			.bigBoxes dd .button:nth-child(3) {
 				left: 3.4em;
 			}
-			.rectangleBoxes dd .button:nth-child(4) {
+			.bigBoxes dd .button:nth-child(4) {
 				left: 5.1em;
 			}
 
-			.rectangleBoxes .actions {
+			.bigBoxes .actions {
 				position: absolute;
 				right: 7px;
 				top: -3px;
 				width: auto;
 				padding: 0;
+			}
+
+			.bigBoxes .formTitle {
+				font-size: 2em;
 			}
 
 		/* display on detail "view" */

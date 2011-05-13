@@ -2,7 +2,7 @@
 	{{if nb > 0}}
 		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
 			<span>
-				${nb} rangement{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb > total}}${total}{{else}}${nb}{{/if}} rangement{{if nb > 1}}s{{/if}} sur ${total}
 				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
 			</span>
 		</section>
@@ -13,16 +13,16 @@
 	{{/if}}
 </script>
 <script id="storageListTemplate" type="text/x-jquery-tmpl">
-	<ul class="listContent clearfix">
+	<section class="listContent">
 		{{each(i, storage) list}}
 			{{if isStorageChanged(i)}}
 				{{if i > 0}}
-					</ul>
-					<ul class="listContent clearfix">
+					</section>
+					<section class="listContent">
 				{{/if}}
 
-					<li style="background-image: url(${currentStorageURL});">
-						<article class="block">
+					<article class="item" style="background-image: url(${currentStorageURL});">
+						<div class="block">
 							<dl class="info">
 								<dt class="listHidden">Pièce</dt>
 								<dd class="title">
@@ -34,13 +34,13 @@
 								</dd>
 								<dd class="title">&nbsp;</dd>
 							</dl>
-						</article>
+						</div>
 						<a class="button icon storage" data-icon="}" href="${currentStorageURL}"></a>
-					</li>
+					</article>
 			{{/if}}
 
-			<li style="background-image: url(${storage.storageURL});">
-				<article class="block">
+			<article class="item" style="background-image: url(${storage.storageURL});">
+				<div class="block">
 					<dl class="info">
 						<dt class="listHidden">Pièce</dt>
 						<dd class="title">
@@ -67,9 +67,9 @@
 							<a class="button icon storage" data-icon="}" href="${storage.storageURL}"></a>
 						</dt>
 					</dl>
-				</article>
+				</div>
 				<a class="button icon storage" data-icon="}" href="${storage.storageURL}"></a>
-			</li>
+			</article>
 		{{/each}}
-	</ul>
+	</section>
 </script>

@@ -2,7 +2,7 @@
 	{{if nb > 0}}
 		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
 			<span>
-				${nb} groupe{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb > total}}${total}{{else}}${nb}{{/if}} groupe{{if nb > 1}}s{{/if}} sur ${total}
 				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
 			</span>
 		</section>
@@ -13,10 +13,10 @@
 	{{/if}}
 </script>
 <script id="bandListTemplate" type="text/x-jquery-tmpl">
-	<ul class="listContent clearfix">
+	<section class="listContent">
 		{{each(i, band) list}}
-			<li>
-				<article class="block">
+			<article class="item">
+				<div class="block">
 					<dl class="info">
 						<dd>
 							${band.bandName} (${band.bandGenre})
@@ -32,8 +32,8 @@
 							</a>
 						</dd>
 					</dl>
-				</article>
-			</li>
+				</div>
+			</article>
 		{{/each}}
-	</ul>
+	</section>
 </script>

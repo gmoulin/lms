@@ -2,7 +2,7 @@
 	{{if nb > 0}}
 		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
 			<span>
-				${nb} saga{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb > total}}${total}{{else}}${nb}{{/if}} saga{{if nb > 1}}s{{/if}} sur ${total}
 				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
 			</span>
 		</section>
@@ -13,10 +13,10 @@
 	{{/if}}
 </script>
 <script id="sagaListTemplate" type="text/x-jquery-tmpl">
-	<ul class="listContent clearfix">
+	<section class="listContent">
 		{{each(i, saga) list}}
-			<li>
-				<article class="block">
+			<article class="item">
+				<div class="block">
 					<dl class="info">
 						<dd>
 							${saga.sagaTitle}
@@ -29,8 +29,8 @@
 							<a class="button icon move" data-icon="b" href="${saga.sagaID}" title="Déplacer cette saga" rel="saga"></a>
 						</dd>
 					</dl>
-				</article>
-			</li>
+				</div>
+			</article>
 		{{/each}}
-	</ul>
+	</section>
 </script>

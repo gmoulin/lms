@@ -2,7 +2,7 @@
 	{{if nb > 0}}
 		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
 			<span>
-				${nb} album{{if nb > 1}}s{{/if}} sur ${total}
+				{{if nb > total}}${total}{{else}}${nb}{{/if}} album{{if nb > 1}}s{{/if}} sur ${total}
 				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}
 			</span>
 		</section>
@@ -13,14 +13,14 @@
 	{{/if}}
 </script>
 <script id="albumListTemplate" type="text/x-jquery-tmpl">
-	<ul class="listContent clearfix">
+	<section class="listContent">
 		{{each(i, album) list}}
-			<li style="background-image:url(image.php?cover=album&id=${album.albumID});">
+			<article class="item" style="background-image:url(image.php?cover=album&id=${album.albumID});">
 				<a class="button icon detail" data-icon="}" href="${album.albumID}" title="voir le détail"></a>
 				{{if album.loanHolder != null}}
 					<span class="button icon loan" data-icon="u" title="prêtè à ${album.loanHolder} - ${album.loanDate}"></span>
 				{{/if}}
-				<article class="block">
+				<div class="block">
 					<img src="image.php?cover=album&id=${album.albumID}" alt="" class="cover" />
 					<dl class="info">
 						<dt class="listHidden">Titre</dt>
@@ -67,8 +67,8 @@
 							{{/if}}
 						</dt>
 					</dl>
-				</article>
-			</li>
+				</div>
+			</article>
 		{{/each}}
-	</ul>
+	</section>
 </script>

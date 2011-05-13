@@ -77,9 +77,6 @@ try {
 		float: right;
 	}
 
-	.list:not(.hasCovers) .block {
-		height: auto;
-	}
 
 	.listContent:not(.big) .listHidden {
 		display: none;
@@ -544,16 +541,18 @@ try {
 		<!-- end scripts-->
 
 		<script>
+
 			$(document).ready(function(){
 				$('.listContent', '#list_book').render();
 
-				/*
+				setTimeout(function(){
 					$('#holder').addClass('big');
-					setTimeout(function(){ $('.listContent', '#list_book').addClass('big').render('relayout'); }, 100);
-
+					$('.listContent', '#list_book').addClass('big').render('relayout');
+				}, 10000);
+				setTimeout(function(){
 					$('#holder').removeClass('big');
-					setTimeout(function(){ $('.listContent', '#list_book').removeClass('big').render('relayout'); }, 100);
-				*/
+					$('.listContent', '#list_book').removeClass('big').render('relayout');
+				}, 10000);
 			});
 
 			(function( $ ){

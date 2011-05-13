@@ -343,3 +343,175 @@ window.log = function(){
 	};
 
 })(jQuery);
+
+
+
+/**
+ * list rendering
+ * inspired by isotope and masonry
+ */
+(function($){
+	$.fn.render = function( method ){
+		var cssRuleName = function () {
+			var vendors = ["Moz", "Webkit", "Khtml", "O", "Ms"],
+				prefixes = ["-moz-", "-webkit-", "-khtml-", "-o-", "-ms-"],
+				stamp = {};
+			return function( rule ){
+				el = document.documentElement;
+				var styles = el.style,
+					capitalRule, i, length;
+
+				if( arguments.length === 1 && typeof stamp[ rule ] === "string" ) return stamp[ rule ];
+				if( typeof styles[ rule ] === "string") return stamp[ rule ] = rule;
+				capitalRule = rule.charAt(0).toUpperCase() + rule.slice(1);
+
+				length = vendors.length;
+				for( i = 0; i < length; i++ ){
+					if( typeof styles[ vendors[i] + capitalRule ] === "string" ) return stamp[ rule ] = prefixes[i] + rule
+				}
+			}
+		}();
+
+		var self = this,
+			$container, $items, $holder,
+			defaults = {},
+			settings = {},
+			helper = {
+				translate: Modernizr.csstransforms3d ? function( pos ){
+					return "translate3d(" + pos[0] + "px, " + pos[1] + "px, 0)";
+				} : function( pos ){
+					return "translate(" + pos[0] + "px, " + pos[1] + "px)";
+				},
+				rules: function( rule, value ){
+					var style = {};
+					style[cssRuleName( rule )] = helper.translate(value);
+					return style;
+				},
+				initRow: function( h ){
+					settings.rows[ settings.currentRow ] = {
+						width: 0,
+						height: h,
+						elements: []
+					};
+				}
+			},
+			methods = {
+				init: function( options ){
+					settings = $.extend({}, defaults, options)
+
+					// iterate through all the DOM elements we are attaching the plugin to
+					return this.each(function(){
+
+						$container = $(this);
+						$items = $container.children();
+
+						methods.create();
+						methods.resetLayout();
+						methods.layout();
+					});
+				},
+				create: function(){
+					$('#holder').remove();
+					$holder = $('<div>', { id: 'holder', class: $container.parent().attr('class') }).removeClass('listContent').append( $items.eq(0).clone().css({'background-image': null}).empty() );
+					$holder.appendTo('body');
+
+					settings.styles = [];
+					$container.css({
+						position: "relative",
+					});
+					$items.css({
+						position: "absolute",
+						top: 0,
+						left: '50%'
+					});
+				},
+				relayout: function(){
+					return this.each(function(){
+						$container = $(this);
+						$items = $container.children().css({ position: "absolute", top: 0, left: '50%' });
+						$holder = $('#holder');
+
+						methods.resetLayout();
+						methods.layout();
+					});
+				},
+				layout: function(){
+					settings.styles.push({
+						$el: $container,
+						styles: {'visibility': 'visible'}
+					});
+
+					settings.width = $container.width();
+
+					settings.holderOuterWidth = $holder.children().outerWidth(true);
+					settings.holderOuterHeight = $holder.children().outerHeight(true);
+
+					//put each item in a row in order to get the combined row items width
+					$items.each(function(){
+						var $item = $(this);
+
+						if( settings.rows[ settings.currentRow ].width + settings.holderOuterWidth > settings.width ){
+							settings.currentRow++;
+							helper.initRow( settings.rows[ settings.currentRow - 1 ].height + settings.holderOuterHeight );
+						}
+
+						settings.rows[ settings.currentRow ].width += settings.holderOuterWidth;
+						settings.rows[ settings.currentRow ].elements.push( $item );
+					});
+
+					//for "centered" layout, calculate the left "margin" form the row width and the combined row items width
+					$.each(settings.rows, function(i, row){
+						settings.pos.x = (settings.width / 2) * -1 + (settings.width - row.width) / 2;
+						settings.pos.y = row.height;
+
+						//calculate the styles for the row items
+						$.each(row.elements, function(i, $item){
+							settings.styles.push({
+								$el: $item,
+								styles: helper.rules('transform', [ settings.pos.x, settings.pos.y ])
+							});
+
+							settings.pos.x += settings.holderOuterWidth;
+						});
+					});
+
+					//applying styles
+					$.each(settings.styles, function(i, couple){
+						couple.$el.css(couple.styles);
+					});
+
+					//memory cleanning
+					settings.rows = [];
+					settings.styles = [];
+				},
+				resetLayout: function(){
+					settings.pos = {
+						x: 0,
+						y: 0,
+						height: 0
+					};
+					settings.styles = [];
+					settings.rows = [];
+					settings.currentRow = 0;
+					helper.initRow( 0 );
+				}
+			};
+
+
+		// if a method as the given argument exists
+		if( methods[ method ] ){
+			// call the respective method
+			return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
+
+		// if an object is given as method OR nothing is given as argument
+		} else if( typeof method === 'object' || !method ){
+			// call the initialization method
+			return methods.init.apply(this, arguments);
+
+		// otherwise
+		} else {
+			// trigger an error
+			$.error( 'Method "' +  method + '" does not exist in render plugin!');
+		}
+	}
+})(jQuery);

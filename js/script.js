@@ -1,3 +1,48 @@
+var cacheStatusValues = [];
+cacheStatusValues[0] = 'uncached';
+cacheStatusValues[1] = 'idle';
+cacheStatusValues[2] = 'checking';
+cacheStatusValues[3] = 'downloading';
+cacheStatusValues[4] = 'updateready';
+cacheStatusValues[5] = 'obsolete';
+
+var cache = window.applicationCache;
+cache.addEventListener('cached', logEvent, false);
+cache.addEventListener('checking', logEvent, false);
+cache.addEventListener('downloading', logEvent, false);
+cache.addEventListener('error', logEvent, false);
+cache.addEventListener('noupdate', logEvent, false);
+cache.addEventListener('obsolete', logEvent, false);
+cache.addEventListener('progress', logEvent, false);
+cache.addEventListener('updateready', logEvent, false);
+
+function logEvent(e) {
+    var online, status, type, message;
+    online = (navigator.onLine) ? 'yes' : 'no';
+    status = cacheStatusValues[cache.status];
+    type = e.type;
+    message = 'online: ' + online;
+    message+= ', event: ' + type;
+    message+= ', status: ' + status;
+    if (type == 'error' && navigator.onLine) {
+        message+= ' (prolly a syntax error in manifest)';
+    }
+    console.log(message);
+}
+
+window.applicationCache.addEventListener(
+    'updateready',
+    function(){
+        window.applicationCache.swapCache();
+		window.location.reload();
+        console.log('swap cache has been called');
+    },
+    false
+);
+
+setInterval(function(){cache.update()}, 10000);
+
+
 $(document).ready(function(){
 	//for .add_another positonning bug in firefox
 		if( $.browser.mozilla ) $('html').addClass('mozilla');
@@ -896,10 +941,8 @@ $(document).ready(function(){
 			if( !$wrapper.hasClass( switchTo ) ){
 				$this.addClass('disabled').siblings().removeClass('disabled');
 
-				//css3 animation with overflow rules by .animDone for better look
-				$wrapper.removeClass( listDisplay + ' animDone' ).addClass( switchTo );
-
-				window.setTimeout(function(){ $wrapper.addClass('animDone'); }, 1000);
+				$('#holder').removeClass( listDisplay ).addClass( switchTo ); //to get the final .item dimensions without waiting the transition duration
+				$wrapper.removeClass( listDisplay ).addClass( switchTo ).children('.listContent').render('relayout');
 			}
 		});
 
@@ -996,6 +1039,15 @@ $(document).ready(function(){
 					}
 				});
 			}
+		});
+
+	//relayout the list on resize
+		var to = null;
+		$(window).resize(function(){
+			if( to ) clearTimeout(to);
+			to = window.setTimeout(function(){
+				$('#list_' + $('#nav').data('activeTab')).children('.listContent').render('relayout');
+			}, 100);
 		});
 });
 
@@ -1265,7 +1317,7 @@ function dragEnter(event){
 		event.originalEvent.dataTransfer.dropEffect = "copy";
 	}
 
-	dropTimeout = window.setTimeout("$('#drop_overlay').hide();", 3000);
+	dropTimeout = window.setTimeout(function(){ $('#drop_overlay').hide(); }, 3000);
 }
 
 /**
@@ -1277,7 +1329,7 @@ function dragOver(event){
 	if( $('#drop_overlay:hidden').length ) $('#drop_overlay').show();
 
 	clearTimeout(dropTimeout);
-	dropTimeout = window.setTimeout("$('#drop_overlay').hide();", 3000);
+	dropTimeout = window.setTimeout(function(){ $('#drop_overlay').hide(); }, 3000);
 }
 
 /**
@@ -1532,6 +1584,7 @@ function getList( type ){
 
 					$.tmpl( tab + 'Paginate', data).appendTo( $list );
 					$.tmpl( tab + 'List', data).appendTo( $list );
+					$list.children('.listContent').render();
 
 					var $paginate = $list.children('.paginate');
 
@@ -1545,7 +1598,7 @@ function getList( type ){
 						interval = setInterval(function(){
 							if( didScroll ){
 								didScroll = false;
-								var $last = $list.find('.listContent li:last');
+								var $last = $list.find('.item:last');
 								if( $last.length
 									&& !$('#detailShow:checked, #editShow:checked').length
 									&& ($(window).scrollTop() + $(window).height() + 50) >= $last.offset().top
@@ -1599,7 +1652,7 @@ function getList( type ){
 					//get new list
 					var newList = $.tmpl( tab + 'List', data);
 					//append new list <li> to old one
-					$list.children('.listContent').append( newList.children() );
+					$list.children('.listContent').append( newList.children() ).render('relayout');
 
 					if( $list.children('.paginate').hasClass('end') ){
 						$(window).unbind('scroll');
