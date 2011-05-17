@@ -1,29 +1,45 @@
 CACHE MANIFEST
 
-# v0.1
+# v0.4
 
 CACHE:
 # html files
-/index.php
+#/index.php
 
 # css files
-/css/style.css
+#/css/style.css
+
+#font files
+#/css/fonts/iconic/iconic_stroke.eot
+#/css/fonts/iconic/iconic_stroke.otf
+#/css/fonts/iconic/iconic_stroke.svg
+/css/fonts/iconic/iconic_stroke.ttf
+
+#/css/fonts/lobster/lobster.1.4.eot
+#/css/fonts/lobster/lobster.1.4.otf
+#/css/fonts/lobster/lobster.1.4.svg
+/css/fonts/lobster/lobster.1.4.ttf
+
+#/css/fonts/raleway/raleway_thin.eot
+#/css/fonts/raleway/raleway_thin.otf
+#/css/fonts/raleway/raleway_thin.svg
+/css/fonts/raleway/raleway_thin.ttf
 
 # js files
-/js/libs/modernizr-1.7.min.js
-/js/libs/jquery-1.6.min.js
-/js/libs/jquery.tmpl.min.js
-/js/plugins.js
-/js/script.js
+#/js/libs/modernizr-1.7.min.js
+#/js/libs/jquery-1.6.min.js
+#/js/libs/jquery.tmpl.min.js
+#/js/plugins.js
+#/js/script.js
 
 # images
-/img/FxLogo100x100black.png
-/img/html5-badge-h-css3-performance-semantics.png
-/img/logo_jquery_215x53.gif
-/img/mail.png
-/img/spinbox-sprite.png
-/img/sprite.png
-/img/twitter.png
+#/img/FxLogo100x100black.png
+#/img/html5-badge-h-css3-performance-semantics.png
+#/img/logo_jquery_215x53.gif
+#/img/mail.png
+#/img/spinbox-sprite.png
+#/img/sprite.png
+#/img/twitter.png
 
 FALLBACK:
 

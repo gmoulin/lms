@@ -1,47 +1,50 @@
-var cacheStatusValues = [];
-cacheStatusValues[0] = 'uncached';
-cacheStatusValues[1] = 'idle';
-cacheStatusValues[2] = 'checking';
-cacheStatusValues[3] = 'downloading';
-cacheStatusValues[4] = 'updateready';
-cacheStatusValues[5] = 'obsolete';
+var debugCacheManifest = 0;
 
-var cache = window.applicationCache;
-cache.addEventListener('cached', logEvent, false);
-cache.addEventListener('checking', logEvent, false);
-cache.addEventListener('downloading', logEvent, false);
-cache.addEventListener('error', logEvent, false);
-cache.addEventListener('noupdate', logEvent, false);
-cache.addEventListener('obsolete', logEvent, false);
-cache.addEventListener('progress', logEvent, false);
-cache.addEventListener('updateready', logEvent, false);
+if( debugCacheManifest ){
+	var cacheStatusValues = [];
+	cacheStatusValues[0] = 'uncached';
+	cacheStatusValues[1] = 'idle';
+	cacheStatusValues[2] = 'checking';
+	cacheStatusValues[3] = 'downloading';
+	cacheStatusValues[4] = 'updateready';
+	cacheStatusValues[5] = 'obsolete';
 
-function logEvent(e) {
-    var online, status, type, message;
-    online = (navigator.onLine) ? 'yes' : 'no';
-    status = cacheStatusValues[cache.status];
-    type = e.type;
-    message = 'online: ' + online;
-    message+= ', event: ' + type;
-    message+= ', status: ' + status;
-    if (type == 'error' && navigator.onLine) {
-        message+= ' (prolly a syntax error in manifest)';
-    }
-    console.log(message);
+	var cache = window.applicationCache;
+	cache.addEventListener('cached', logEvent, false);
+	cache.addEventListener('checking', logEvent, false);
+	cache.addEventListener('downloading', logEvent, false);
+	cache.addEventListener('error', logEvent, false);
+	cache.addEventListener('noupdate', logEvent, false);
+	cache.addEventListener('obsolete', logEvent, false);
+	cache.addEventListener('progress', logEvent, false);
+	cache.addEventListener('updateready', logEvent, false);
+
+	function logEvent(e) {
+		var online, status, type, message;
+		online = (navigator.onLine) ? 'yes' : 'no';
+		status = cacheStatusValues[cache.status];
+		type = e.type;
+		message = 'online: ' + online;
+		message+= ', event: ' + type;
+		message+= ', status: ' + status;
+		if (type == 'error' && navigator.onLine) {
+			message+= ' (prolly a syntax error in manifest)';
+		}
+		console.log(message);
+	}
+
+	window.applicationCache.addEventListener(
+		'updateready',
+		function(){
+			window.applicationCache.swapCache();
+			window.location.reload();
+			console.log('swap cache has been called');
+		},
+		false
+	);
+
+	setInterval(function(){cache.update()}, 10000);
 }
-
-window.applicationCache.addEventListener(
-    'updateready',
-    function(){
-        window.applicationCache.swapCache();
-		window.location.reload();
-        console.log('swap cache has been called');
-    },
-    false
-);
-
-setInterval(function(){cache.update()}, 10000);
-
 
 $(document).ready(function(){
 	//for .add_another positonning bug in firefox
@@ -938,12 +941,10 @@ $(document).ready(function(){
 				$wrapper = $this.closest('.list'),
 				switchTo = $this.attr('rel');
 
-			if( !$wrapper.hasClass( switchTo ) ){
-				$this.addClass('disabled').siblings().removeClass('disabled');
+			$this.addClass('disabled').siblings().removeClass('disabled');
 
-				$('#holder').removeClass( listDisplay ).addClass( switchTo ); //to get the final .item dimensions without waiting the transition duration
-				$wrapper.removeClass( listDisplay ).addClass( switchTo ).children('.listContent').render('relayout');
-			}
+			$('#holder').removeClass( listDisplay ).addClass( switchTo ); //to get the final .item dimensions without waiting the transition duration
+			$wrapper.removeClass( listDisplay ).addClass( switchTo ).children('.listContent').render('relayout');
 		});
 
 	//band last check date
@@ -1253,7 +1254,19 @@ function addShortcutsSupport(){
 
 		//"v" pressed for switch view
 		} else if( e.which == 86 ){
-			$('.listDisplaySwitch', '#'+$('#nav').data('activeTab')).find('.disabled').siblings().first().click();
+			//find the current view, get the next view and click() it
+			var switches = $('.listDisplaySwitch a', '#'+$('#nav').data('activeTab'));
+			if( !switches.length ) return; //no view switches in active Tab
+
+			var current = $('.listDisplaySwitch', '#'+$('#nav').data('activeTab')).find('.disabled');
+			if( !current.length ) return; //no active view, security
+
+
+			var index = switches.index(current);
+			index++;
+			if( index == switches.length ) index = 0;
+
+			switches.eq(index).click();
 
 		//tab index for switching tab
 		} else {
@@ -1584,6 +1597,12 @@ function getList( type ){
 
 					$.tmpl( tab + 'Paginate', data).appendTo( $list );
 					$.tmpl( tab + 'List', data).appendTo( $list );
+
+					//font load time on firefox cause width "bug" on items with width auto (will be text related)
+					if( $.browser.mozilla && !$list.hasClass('hasCovers') && !$list.hasClass('rendered') ){
+						//setTimeout(function(){ $list.children('.listContent').render('relayout'); }, 1500);
+					}
+
 					$list.children('.listContent').render();
 
 					var $paginate = $list.children('.paginate');

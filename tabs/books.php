@@ -71,9 +71,10 @@
 		</ol>
 	</aside>
 </form>
-<section id="list_book" class="list smallBoxes hasCovers">
+<section id="list_book" class="list thumbnails hasCovers">
 	<section class="listDisplaySwitch">
-		<a href="#" title="format vignette" rel="smallBoxes" class="button icon disabled" data-icon="c"></a>
+		<a href="#" title="format vignette" rel="thumbnails" class="button icon disabled" data-icon="2"></a>
+		<a href="#" title="format encart" rel="smallBoxes" class="button icon" data-icon="c"></a>
 		<a href="#" title="format demi page" rel="bigBoxes" class="button icon" data-icon="d"></a>
 	</section>
 </section>

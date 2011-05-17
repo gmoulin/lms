@@ -8,7 +8,7 @@ window.log = function(){
   if(this.console) console.log( Array.prototype.slice.call(arguments) );
 };
 // make it safe to use console.log always
-(function(b){function c(){}for(var d="assert,count,debug,dir,dirxml,error,exception,group,groupCollapsed,groupEnd,info,log,markTimeline,profile,profileEnd,time,timeEnd,trace,warn".split(","),a;a=d.pop();)b[a]=b[a]||c})(window.console=window.console||{});
+//(function(b){function c(){}for(var d="assert,count,debug,dir,dirxml,error,exception,group,groupCollapsed,groupEnd,info,log,markTimeline,profile,profileEnd,time,timeEnd,trace,warn".split(","),a;a=d.pop();)b[a]=b[a]||c})(window.console=window.console||{});
 
 
 // place any jQuery/helper plugins in here, instead of separate, slower script files.
@@ -373,7 +373,7 @@ window.log = function(){
 		}();
 
 		var self = this,
-			$container, $items, $holder,
+			$container, $items, $holder, $hasCover,
 			defaults = {},
 			settings = {},
 			helper = {
@@ -412,11 +412,14 @@ window.log = function(){
 				},
 				create: function(){
 					$('#holder').remove();
-					$holder = $('<div>', { id: 'holder', class: $container.parent().attr('class') }).removeClass('listContent').append( $items.eq(0).clone().css({'background-image': null}).empty() );
+					$holder = $('<div>', { id: 'holder', class: $container.parent().attr('class') }).removeClass('listContent');
+					var dupplicate = $items.eq(0).clone().css({'background-image': null}).empty();
+					dupplicate.append( $('<div>', { class: 'block' }) );
+					$holder.append( dupplicate );
 					$holder.appendTo('body');
 
 					settings.styles = [];
-					$container.css({
+					$container.addClass('rendered').css({
 						position: "relative",
 					});
 					$items.css({
@@ -440,6 +443,7 @@ window.log = function(){
 						$el: $container,
 						styles: {'visibility': 'visible'}
 					});
+					$hasCover = $container.parent().hasClass('hasCovers');
 
 					settings.width = $container.width();
 
@@ -449,6 +453,11 @@ window.log = function(){
 					//put each item in a row in order to get the combined row items width
 					$items.each(function(){
 						var $item = $(this);
+
+						//item with no covers have auto width and the "holder" trick does not work
+						if( !$hasCover ){
+							settings.holderOuterWidth = $item.outerWidth(true);
+						}
 
 						if( settings.rows[ settings.currentRow ].width + settings.holderOuterWidth > settings.width ){
 							settings.currentRow++;
@@ -471,7 +480,12 @@ window.log = function(){
 								styles: helper.rules('transform', [ settings.pos.x, settings.pos.y ])
 							});
 
-							settings.pos.x += settings.holderOuterWidth;
+							//item with no covers have auto width and the "holder" trick does not work
+							if( !$hasCover ){
+								settings.pos.x += $item.outerWidth(true);
+							} else {
+								settings.pos.x += settings.holderOuterWidth;
+							}
 						});
 					});
 

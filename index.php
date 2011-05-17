@@ -7,9 +7,10 @@ try {
 	$metadata['motscles'] = 'librairie, contenu, gestion, gestionnaire, bibliothèque, livre, roman, auteur, vidéothèque, film, acteur, musique, musicothèque, album, groupe';
 	$lang = 'fr';
 
-	$css = filemtime( LMS_PATH.'/css/style.css' );
+	$cssTS = filemtime( LMS_PATH.'/css/style.css' );
 
-	$js = filemtime( LMS_PATH.'/js/script.js' );
+	$scriptTS = filemtime( LMS_PATH.'/js/script.js' );
+	$pluginTS = filemtime( LMS_PATH.'/js/script.js' );
 } catch (Exception $e) {
 	echo $e->getMessage();
 	die;

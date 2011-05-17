@@ -10,8 +10,8 @@
 		<script src="js/libs/jquery.tmpl.min.js"></script>
 
 		<!-- scripts concatenated and minified via ant build script-->
-		<script src="js/plugins.js"></script>
-		<script src="js/script.js?v=<?php echo $js; ?>"></script>
+		<script src="js/plugins.js?v=<?php echo $pluginTS; ?>"></script>
+		<script src="js/script.js?v=<?php echo $scriptTS; ?>"></script>
 		<!-- end scripts-->
 	</body>
 </html>

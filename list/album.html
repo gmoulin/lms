@@ -28,8 +28,8 @@
 
 						<dt class="listHidden">Auteur{{if album.bands.length > 1}}s{{/if}}</dt>
 						{{each(j, band) album.bands}}
-							<dd class="listHidden">
-								${band.bandName} (${band.bandGenre})
+							<dd class="title listHidden">
+								${band.bandName}
 								<a class="listHidden button icon update" data-icon="P" href="${band.bandID}" title="Mettre à jour les informations de ce groupe" rel="band"></a>
 								<a class="listHidden button icon delete" data-icon="t" href="${band.bandID}" title="Supprimer ce groupe" rel="band"></a>
 								{{if band.bandWebSite != null}}
@@ -37,6 +37,9 @@
 								{{/if}}
 								<a class="button icon filter" data-icon="f" rel="band" href="${band.bandFirstName} ${band.bandLastName}" title="Filtrer la liste pour n'afficher que les albums de ce groupe"></a>
 							</dd>
+
+							<dt class="listHidden">Genre</dt>
+							<dd class="listHidden">${band.bandGenre}</dd>
 						{{/each}}
 
 						<dt class="listHidden">Type</dt>
