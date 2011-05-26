@@ -21,7 +21,7 @@
 					<section class="listContent">
 				{{/if}}
 
-					<article class="item" style="background-image: url(${currentStorageURL});">
+					<article class="item" style="background-image: url(${getFullUrl(currentStorageURL, '')});">
 						<div class="block">
 							<dl class="info">
 								<dt class="listHidden">Pièce</dt>
@@ -35,11 +35,11 @@
 								<dd class="title">&nbsp;</dd>
 							</dl>
 						</div>
-						<a class="button icon storage" data-icon="}" href="${currentStorageURL}"></a>
+						<a class="button icon storage" data-icon="}" href="${getFullUrl(currentStorageURL, '')}"></a>
 					</article>
 			{{/if}}
 
-			<article class="item" style="background-image: url(${storage.storageURL});">
+			<article class="item" style="background-image: url(${getFullUrl(storage.storageURL, '')});">
 				<div class="block">
 					<dl class="info">
 						<dt class="listHidden">Pièce</dt>
@@ -64,11 +64,11 @@
 						<dt class="listHidden actions">
 							<a class="button icon update" data-icon="P" href="${storage.storageID}" title="Mettre à jour les informations de ce rangement" rel="storage"></a>
 							<a class="button icon delete" data-icon="t" href="${storage.storageID}" title="Supprimer ce rangement" rel="storage"></a>
-							<a class="button icon storage" data-icon="}" href="${storage.storageURL}"></a>
+							<a class="button icon storage" data-icon="}" href="${getFullUrl(storage.storageURL, '')}"></a>
 						</dt>
 					</dl>
 				</div>
-				<a class="button icon storage" data-icon="}" href="${storage.storageURL}"></a>
+				<a class="button icon storage" data-icon="}" href="${getFullUrl(storage.storageURL, '')}"></a>
 			</article>
 		{{/each}}
 	</section>

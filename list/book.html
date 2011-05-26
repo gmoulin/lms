@@ -15,14 +15,14 @@
 <script id="bookListTemplate" type="text/x-jquery-tmpl">
 	<section class="listContent">
 		{{each(i, book) list}}
-			<article class="item" style="background-image: url(image.php?cover=book&id=${book.bookID});">
+			<article class="item" style="background-image: url(${getFullUrl('image.php?cover=book&id=', book.bookID)});">
 				<a class="button icon detail" data-icon="}" href="${book.bookID}" title="voir le détail"></a>
 				{{if book.loanHolder != null}}
 					<span class="button icon loan" data-icon="u" title="prêtè à ${book.loanHolder} - ${book.loanDate}"></span>
 				{{/if}}
 				<div class="block">
 					<button class="button icon close listHidden" title="Fermer" data-icon="X">Fermer</button>
-					<img src="image.php?cover=book&id=${book.bookID}" alt="" class="cover" />
+					<img src="${getFullUrl('image.php?cover=book&id=', book.bookID)}" alt="" class="cover" />
 					<dl class="info">
 						<dd class="listHidden formTitle">Détail</dd>
 						<dt class="listHidden">Titre</dt>
@@ -30,7 +30,7 @@
 
 						<dt class="listHidden">Auteur{{if book.authors.length > 1}}s{{/if}}</dt>
 						{{each(j, author) book.authors}}
-							<dd class="listHidden">
+							<dd class="title author">
 								${author.authorFirstName} ${author.authorLastName}
 								<a class="listHidden button icon update" data-icon="P" href="${author.authorID}" title="Mettre à jour les informations de cet auteur" rel="author"></a>
 								<a class="listHidden button icon delete" data-icon="t" href="${author.authorID}" title="Supprimer cet auteur" rel="author"></a>
@@ -46,7 +46,7 @@
 
 						{{if book.sagaTitle != null}}
 							<dt class="listHidden">Saga</dt>
-							<dd class="saga">
+							<dd class="title saga">
 								${book.sagaTitle} - ${book.bookSagaPosition} / ${book.bookSagaSize}
 								<a class="listHidden button icon update" data-icon="P" href="${book.sagaID}" title="Mettre à jour les informations de cette saga" rel="saga"></a>
 								<a class="listHidden button icon delete" data-icon="t" href="${book.sagaID}" title="Supprimer cette saga" rel="saga"></a>

@@ -11,7 +11,7 @@ define('LMS_PATH', dirname(__FILE__));
 
 
 if( !isset($_SERVER['LOCATION']) || empty($_SERVER['LOCATION']) ){
-	define( "SERVER_NAME", 'http://lms.kapok.x10.mx' );
+	define( "SERVER_NAME", 'http://kapok.hd.free.fr:5412/lms' );
 
 } elseif( strpos('_DEV', $_SERVER['LOCATION']) !== false ){
 	define( "SERVER_NAME", 'http://lms.dev' );

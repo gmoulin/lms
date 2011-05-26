@@ -1,4 +1,4 @@
-var debugCacheManifest = 0;
+var debugCacheManifest = 1;
 
 if( debugCacheManifest ){
 	var cacheStatusValues = [];
@@ -8,16 +8,6 @@ if( debugCacheManifest ){
 	cacheStatusValues[3] = 'downloading';
 	cacheStatusValues[4] = 'updateready';
 	cacheStatusValues[5] = 'obsolete';
-
-	var cache = window.applicationCache;
-	cache.addEventListener('cached', logEvent, false);
-	cache.addEventListener('checking', logEvent, false);
-	cache.addEventListener('downloading', logEvent, false);
-	cache.addEventListener('error', logEvent, false);
-	cache.addEventListener('noupdate', logEvent, false);
-	cache.addEventListener('obsolete', logEvent, false);
-	cache.addEventListener('progress', logEvent, false);
-	cache.addEventListener('updateready', logEvent, false);
 
 	function logEvent(e) {
 		var online, status, type, message;
@@ -33,6 +23,16 @@ if( debugCacheManifest ){
 		console.log(message);
 	}
 
+	var cache = window.applicationCache;
+	cache.addEventListener('cached', logEvent, false);
+	cache.addEventListener('checking', logEvent, false);
+	cache.addEventListener('downloading', logEvent, false);
+	cache.addEventListener('error', logEvent, false);
+	cache.addEventListener('noupdate', logEvent, false);
+	cache.addEventListener('obsolete', logEvent, false);
+	cache.addEventListener('progress', logEvent, false);
+	cache.addEventListener('updateready', logEvent, false);
+
 	window.applicationCache.addEventListener(
 		'updateready',
 		function(){
@@ -46,10 +46,20 @@ if( debugCacheManifest ){
 	setInterval(function(){cache.update()}, 10000);
 }
 
+var subDomains = ['s1', 's2'],
+	useSubDomains = false;
+
 $(document).ready(function(){
+	//improve image loading using subdomains
+	if( window.location.host == 'lms.dev' || window.location.host == 'lms' ){
+		useSubDomains = true;
+		for( var i = 0; i < subDomains.length; i++ ){
+			subDomains[ i ] = window.location.protocol + '//' + subDomains[ i ] + '.' + window.location.host + '/';
+		}
+	}
+
 	//for .add_another positonning bug in firefox
 		if( $.browser.mozilla ) $('html').addClass('mozilla');
-		else if( $.browser.webkit ) $('html').addClass('webkit');
 
 	//ajax global management
 		$('#ajax_loader').ajaxStart(function(){
@@ -1166,6 +1176,20 @@ String.prototype.urlify = function(){
 		}
 	}
 	return result.join('');
+}
+
+/**
+ * test if sub domains are available
+ * yes : return the full url
+ * no : return relative url
+ * used in jquery template
+ */
+function getFullUrl(partialUrl, id){
+	if( useSubDomains ){
+		return subDomains[ id % subDomains.length ] + partialUrl + id;
+	}
+
+	return partialUrl + id;
 }
 
 /**

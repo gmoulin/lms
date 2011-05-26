@@ -15,20 +15,20 @@
 <script id="albumListTemplate" type="text/x-jquery-tmpl">
 	<section class="listContent">
 		{{each(i, album) list}}
-			<article class="item" style="background-image:url(image.php?cover=album&id=${album.albumID});">
+			<article class="item" style="background-image:url(${getFullUrl('image.php?cover=album&id=', album.albumID)});">
 				<a class="button icon detail" data-icon="}" href="${album.albumID}" title="voir le détail"></a>
 				{{if album.loanHolder != null}}
 					<span class="button icon loan" data-icon="u" title="prêtè à ${album.loanHolder} - ${album.loanDate}"></span>
 				{{/if}}
 				<div class="block">
-					<img src="image.php?cover=album&id=${album.albumID}" alt="" class="cover" />
+					<img src="${getFullUrl('image.php?cover=album&id=', album.albumID)}" alt="" class="cover" />
 					<dl class="info">
 						<dt class="listHidden">Titre</dt>
 						<dd class="title">${album.albumTitle}</dd>
 
 						<dt class="listHidden">Auteur{{if album.bands.length > 1}}s{{/if}}</dt>
 						{{each(j, band) album.bands}}
-							<dd class="title listHidden">
+							<dd class="title band listHidden">
 								${band.bandName}
 								<a class="listHidden button icon update" data-icon="P" href="${band.bandID}" title="Mettre à jour les informations de ce groupe" rel="band"></a>
 								<a class="listHidden button icon delete" data-icon="t" href="${band.bandID}" title="Supprimer ce groupe" rel="band"></a>

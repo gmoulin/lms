@@ -58,9 +58,7 @@ window.log = function(){
  */
 
 (function($){
-
 	$.fn.spinbox = function(options){
-
 		// Tidy up when spinbox('destroy') is called:
 		if( options && typeof(options)==="String" && options==="destroy" )
 			return this.unbind(".spinbox")
@@ -71,15 +69,12 @@ window.log = function(){
 				.removeData("spinboxStep").removeData("spinboxBigStep")
 		;
 
-
 		// Apply specified options or defaults:
 		var undefined;
 		options = $.extend( {}, $.fn.spinbox.defaults, options );
 
-
 		// Store min, max & reset values for each element: (Reset defaults to element's initial value if option undefined)
 		this.each(function(){
-
 			var $box	= $(this),
 				min		= classData( "spinboxMin", this ),
 				max		= classData( "spinboxMax", this ),
@@ -104,19 +99,16 @@ window.log = function(){
 			$box.data( "spinboxBigStep", bigStep );
 			$box.data( "spinboxReset", reset );
 			$box.data( "spinboxScale", scale );
-
 		});
 
 
 		return this.each(function(){
-
 			// Flags used while mouse is being moved or pressed:
 			var hoverUp, hoverDown, delayId, repeatId;
 			var $box = $(this);
 
 			// Bind event handlers for the spinbox:
 			$box.bind("mousemove.spinbox",function(e){
-
 				// Change css class when mouse is over an up/down button:
 				var $box	= $(this);
 				var offset	= $box.offset();		// Calculate element left & top;
@@ -128,30 +120,21 @@ window.log = function(){
 				$box.toggleClass( options.upHoverClass, hoverUp )
 					.toggleClass( options.downHoverClass, hoverDown );
 				// TODO: Stop autorepeat when mouse moves away from button?
-
 			})
-
 			.bind("mouseout.spinbox",function(){
-
 				// Reset up/down buttons to their normal state when mouse moves away:
 				stopAutorepeat();
 				$(this).removeClass( [ options.upClass, options.downClass, options.upHoverClass, options.downHoverClass ].join(" ") );
 				hoverUp = hoverDown = null;
-
 			})
-
 			.bind("mousedown.spinbox",function(e){
-
 				// Update the spinbox value and set up autorepeat to start after a short delay:
 				if( hoverUp || hoverDown ){
-
 					$(this).toggleClass( options.upClass, hoverUp ).toggleClass( options.downClass, hoverDown );
 					adjustValue.apply( this, [e] );
 					startAutorepeat(this,e);
-
 				};
 			})
-
 			.bind("mouseup.spinbox", function(e){
 				stopAutorepeat();
 				$(this).removeClass(options.upClass).removeClass(options.downClass);
@@ -163,7 +146,6 @@ window.log = function(){
 			//})
 
 			.bind("keydown.spinbox",function(e){
-
 				// Filter key press by allowable options.keys if specified:
 				if( !options.keys ||
 					$.grep(options.keys, function(key){
@@ -188,26 +170,20 @@ window.log = function(){
 					// Cancel event if keys filter was specified but pressed key is not on the list:
 					return !options.keys;
 			})
-
 			.bind("change.spinbox", function(e){
 				//rajout test pour permettre le blur du placeHeld
 				if( $(this).val() != '' ) adjustValue.apply( this, [e,0] );
 			})
-
 			//rajout
 			.bind('focus', function(e){
 				if( $(this).val() == '' ) $(this).val(options.min).focus();
 			})
-
 			.addClass(options.spinboxClass);
-
-
 
 			// React to mousewheel if desired:
 			if( options.mousewheel ){
 
 				$(this).bind("mousewheel.spinbox DOMMouseScroll.spinbox", function(e){
-
 					var step = e.shiftKey ? $(this).data("spinboxBigStep") : $(this).data("spinboxStep");
 
 					// Respond to mouse wheel: (Allow for IE/Opera e.wheelDelta and W3C e.detail)
@@ -218,18 +194,13 @@ window.log = function(){
 
 					return false;
 				});
-
 			}
-
 
 			// Initialise the current value, ensuring it is within min/max etc:
 			adjustValue.apply( this, [$.Event(),0] );
 
-
-
 			// Helper called in response to click or mousewheel etc to apply step change:
 			function adjustValue(e,step,direction){
-
 				var $box	= $(this); if( options.ignore && $box.is(options.ignore) ) return;
 				step		= firstNum( step, $box.data("spinboxStep"), 1 );
 				direction	= direction || (hoverDown ? -1 : 1);
@@ -255,7 +226,6 @@ window.log = function(){
 				};
 			};
 
-
 			// Helper to begin autorepeat when mouse is held down:
 			function startAutorepeat(elem,e){
 				stopAutorepeat();
@@ -274,15 +244,10 @@ window.log = function(){
 				window.clearTimeout(delayId);
 				window.clearInterval(repeatId);
 			};
-
 		});
-
 	};
 
-
-
 	// Helper functions:
-
 		// More reliable alternative to isNaN and isFinite:
 		function isNum(num){
 			return !isNaN(parseFloat(num))
@@ -298,7 +263,6 @@ window.log = function(){
 
 		// Helper to extract settings stored in css class attribute string: (Eg: when class="spinbox spinboxStep0.5")
 		function classData(attr,elem){
-
 			var classes	= $(elem||this).attr("class"),
 				match	= new RegExp( "(\\b" + attr + ")(\\S*)" ).exec(classes),
 				lookupBoolean = { "true":true, "True":true, "false":false, "False":false };
@@ -311,10 +275,6 @@ window.log = function(){
 					match.length >= 3 ? match[2] :	// Specific value.
 					null;							// attr specified but value deliberately blank.
 		};
-
-
-
-
 
 	$.fn.spinbox.defaults = {
 		min				: 0,						// Lower limit or null.
@@ -341,7 +301,6 @@ window.log = function(){
 			return Math.round( num * Math.pow(10,dp) ) / Math.pow(10,dp);
 		}
 	};
-
 })(jQuery);
 
 
@@ -412,18 +371,18 @@ window.log = function(){
 				},
 				create: function(){
 					$('#holder').remove();
-					$holder = $('<div>', { id: 'holder', class: $container.parent().attr('class') }).removeClass('listContent');
+					$holder = $('<div>', { 'id': 'holder', 'class': $container.parent().attr('class') }).removeClass('listContent');
 					var dupplicate = $items.eq(0).clone().css({'background-image': null}).empty();
-					dupplicate.append( $('<div>', { class: 'block' }) );
+					dupplicate.append( $('<div>', { 'class': 'block' }) );
 					$holder.append( dupplicate );
 					$holder.appendTo('body');
 
 					settings.styles = [];
 					$container.addClass('rendered').css({
-						position: "relative",
+						position: 'relative',
 					});
 					$items.css({
-						position: "absolute",
+						position: 'absolute',
 						top: 0,
 						left: '50%'
 					});
@@ -431,7 +390,7 @@ window.log = function(){
 				relayout: function(){
 					return this.each(function(){
 						$container = $(this);
-						$items = $container.children().css({ position: "absolute", top: 0, left: '50%' });
+						$items = $container.children().css({ position: 'absolute', top: 0, left: '50%' });
 						$holder = $('#holder');
 
 						methods.resetLayout();

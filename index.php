@@ -7,10 +7,11 @@ try {
 	$metadata['motscles'] = 'librairie, contenu, gestion, gestionnaire, bibliothèque, livre, roman, auteur, vidéothèque, film, acteur, musique, musicothèque, album, groupe';
 	$lang = 'fr';
 
-	$cssTS = filemtime( LMS_PATH.'/css/style.css' );
+	if( file_exists(LMS_PATH.'/css/style.css') ) $cssTS = filemtime( LMS_PATH.'/css/style.css' );
 
-	$scriptTS = filemtime( LMS_PATH.'/js/script.js' );
-	$pluginTS = filemtime( LMS_PATH.'/js/script.js' );
+	if( file_exists(LMS_PATH.'/js/script.js') ) $scriptTS = filemtime( LMS_PATH.'/js/script.js' );
+	if( file_exists(LMS_PATH.'/js/script.js') ) $pluginTS = filemtime( LMS_PATH.'/js/script.js' );
+
 } catch (Exception $e) {
 	echo $e->getMessage();
 	die;

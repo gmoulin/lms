@@ -15,13 +15,13 @@
 <script id="movieListTemplate" type="text/x-jquery-tmpl">
 	<section class="listContent">
 		{{each(i, movie) list}}
-			<article class="item" style="background-image:url(image.php?cover=movie&id=${movie.movieID});">
+			<article class="item" style="background-image:url(${getFullUrl('image.php?cover=movie&id=', movie.movieID)});">
 				<a class="button icon detail" data-icon="}" href="${movie.movieID}" title="voir le détail"></a>
 				{{if movie.loanHolder != null}}
 					<span class="button icon loan" title="prêté à ${movie.loanHolder} - ${movie.loanDate}" data-icon="u"></span>
 				{{/if}}
 				<div class="block">
-					<img src="image.php?cover=movie&id=${movie.movieID}" alt="" class="cover" />
+					<img src="${getFullUrl('image.php?cover=movie&id=', movie.movieID)}" alt="" class="cover" />
 					<dl class="info">
 						<dt class="listHidden">Titre</dt>
 						<dd class="title">${movie.movieTitle}</dd>
@@ -38,7 +38,7 @@
 
 						{{if movie.sagaTitle != null}}
 							<dt class="listHidden">Saga</dt>
-							<dd class="saga">
+							<dd class="title saga">
 								${movie.sagaTitle} - ${movie.movieSagaPosition} / ${movie.movieSagaSize}
 								<a class="listHidden button icon update" data-icon="P" href="${movie.sagaID}" title="Mettre à jour les informations de cette saga" rel="saga"></a>
 								<a class="listHidden button icon delete" data-icon="t" href="${movie.sagaID}" title="Supprimer cette saga" rel="saga"></a>
