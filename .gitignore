@@ -30,7 +30,6 @@ dwsync.xml
 .svn
 publish
 intermediate
-intermediate/*
 covers/*
 stash
 .idea
