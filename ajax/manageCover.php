@@ -20,6 +20,15 @@ try {
 		$path = UPLOAD_STORAGE_PATH;
 	} else {
 		$path = UPLOAD_COVER_PATH;
+
+		//need to clean the folder
+		$handle = opendir($path);
+		while( $tmp = readdir($handle) ){
+			if( $tmp != '..' && $tmp != '.' && $tmp != '' ){
+				@unlink($tmp);
+			}
+		}
+		closedir($handle);
 	}
 
 	/**

@@ -29,6 +29,8 @@ dwsync.xml
 .hg
 .svn
 publish
+intermediate
+intermediate/*
 covers/*
 stash
 .idea

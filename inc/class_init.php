@@ -69,10 +69,10 @@ class init {
 	private function initialize() {
 		$this->_lms_infos = parse_ini_file( LMS_PATH . "/inc/lms.ini", true );
 
-		$this->_host	= $this->_lms_infos['database']['host'];
-		$this->_dbname	= $this->_lms_infos['database']['dbname'];
-		$this->_user	= $this->_lms_infos['database']['user'];
-		$this->_pass	= $this->_lms_infos['database']['pass'];
+		$this->_host	= $this->_lms_infos[ ENV ]['host'];
+		$this->_dbname	= $this->_lms_infos[ ENV ]['dbname'];
+		$this->_user	= $this->_lms_infos[ ENV ]['user'];
+		$this->_pass	= $this->_lms_infos[ ENV ]['pass'];
 	}
 }
 

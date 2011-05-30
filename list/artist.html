@@ -1,6 +1,6 @@
 <script id="artistPaginateTemplate" type="text/x-jquery-tmpl">
 	{{if nb > 0}}
-		<section class="paginate {{if nb == total}}end{{else}}begin{{/if}}">
+		<section class="paginate {{if nb == total}}begin{{/if}}">
 			<span>
 				{{if nb > total}}${total}{{else}}${nb}{{/if}} artiste{{if nb > 1}}s{{/if}} sur ${total}
 				{{if nb != total}}- descendez en bas de la liste pour en afficher plus{{/if}}

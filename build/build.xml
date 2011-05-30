@@ -563,7 +563,7 @@
         <replace token="/${dir.css}/style.css" value="/${style.css}" dir="${dir.intermediate}" includes="site.manifest"/>
 
         <echo message="Updating the site.manifest with the new js filename: ${scripts.js} and cleaning unconcatened files"/>
-        <replace token="/${dir.js.libs}/jquery.tmpl.min.js" value="" dir="${dir.intermediate}" includes="site.manifest"/>
+        <replace token="/${dir.js.mylibs}/jquery.tmpl.min.js" value="" dir="${dir.intermediate}" includes="site.manifest"/>
         <replace token="/${dir.js}/plugins.js" value="" dir="${dir.intermediate}" includes="site.manifest"/>
         <replace token="/${dir.js}/script.js" value="/${scripts.js}" dir="${dir.intermediate}" includes="site.manifest"/>
     </target>

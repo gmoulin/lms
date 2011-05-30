@@ -11,13 +11,13 @@ define('LMS_PATH', dirname(__FILE__));
 
 
 if( !isset($_SERVER['LOCATION']) || empty($_SERVER['LOCATION']) ){
-	define( "SERVER_NAME", 'http://kapok.hd.free.fr:5412/lms' );
+	define('ENV', 'WEB');
 
 } elseif( strpos('_DEV', $_SERVER['LOCATION']) !== false ){
-	define( "SERVER_NAME", 'http://lms.dev' );
+	define('ENV', 'LOCAL');
 
 } else {
-	define( "SERVER_NAME", 'http://lms' );
+	define('ENV', 'LOCAL');
 }
 
 define( "UPLOAD_COVER_PATH", LMS_PATH.'/covers/');

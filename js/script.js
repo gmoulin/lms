@@ -46,7 +46,7 @@ if( debugCacheManifest ){
 	setInterval(function(){cache.update()}, 10000);
 }
 
-var subDomains = ['s1', 's2'],
+var subDomains = ['s1', 's2', 's3'],
 	useSubDomains = false;
 
 $(document).ready(function(){
@@ -1616,23 +1616,21 @@ function getList( type ){
 					$(window).scrollTop(0);
 				}
 				if( type != 3 ){
+					$(window).unbind('scroll');
+					clearInterval(interval);
+
 					//remove old list
 					$list.children('.paginate, .listContent').remove();
 
 					$.tmpl( tab + 'Paginate', data).appendTo( $list );
 					$.tmpl( tab + 'List', data).appendTo( $list );
 
-					//font load time on firefox cause width "bug" on items with width auto (will be text related)
-					if( $.browser.mozilla && !$list.hasClass('hasCovers') && !$list.hasClass('rendered') ){
-						//setTimeout(function(){ $list.children('.listContent').render('relayout'); }, 1500);
-					}
-
 					$list.children('.listContent').render();
 
 					var $paginate = $list.children('.paginate');
 
 					//pagination on scroll
-					if( $paginate.hasClass('begin') ){
+					if( !$paginate.hasClass('end') ){
 						if( interval ) clearInterval( interval );
 						$(window).unbind('scroll').scroll(function(e){
 							didScroll = true;
@@ -1642,19 +1640,16 @@ function getList( type ){
 							if( didScroll ){
 								didScroll = false;
 								var $last = $list.find('.item:last');
-								if( $last.length
-									&& !$('#detailShow:checked, #editShow:checked').length
-									&& ($(window).scrollTop() + $(window).height() + 50) >= $last.offset().top
-								){
-									getList(3);
+								if( $last.length && !$('#detailShow:checked, #editShow:checked').length ){
+									var t = $last.attr('style').match(/translate\(.+,.+\)/g),
+										top = parseInt(t[0].substring(t[0].lastIndexOf(',')+2, t[0].lastIndexOf('px')));
+
+									if( ($(window).scrollTop() + $(window).height()) >= top ){
+										getList(3);
+									}
 								}
 							}
 						}, 250);
-
-
-					} else if( $paginate.hasClass('end') ){
-						$(window).unbind('scroll');
-						clearInterval(interval);
 					}
 
 					//hide detail

@@ -1236,7 +1236,7 @@
 			}
 
 		/* smallBoxes list display */
-			.smallBoxes .item {
+			.smallBoxes.hasCovers .item {
 				height: 200px;
 				width:  280px;
 				padding: 2px 3px;
