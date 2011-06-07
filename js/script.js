@@ -1268,38 +1268,40 @@ function addEscapeSupport(){
  */
 function addShortcutsSupport(){
 	$(document).unbind('keydown').keydown(function(e){
-		//"a" pressed for add
-		if( e.which == 65 ){
-			$('.add', '#'+$('#nav').data('activeTab')).click();
+		if( !$(e.target).is('input') && !$(e.target).is('textarea') ){
+			//"a" pressed for add
+			if( e.which == 65 ){
+				$('.add', '#'+$('#nav').data('activeTab')).click();
 
-		//"f" pressed for filter
-		} else if( e.which == 70 ){
-			$('.filterFormSwitch', '#'+$('#nav').data('activeTab')).click();
+			//"f" pressed for filter
+			} else if( e.which == 70 ){
+				$('.filterFormSwitch', '#'+$('#nav').data('activeTab')).click();
 
-		//"v" pressed for switch view
-		} else if( e.which == 86 ){
-			//find the current view, get the next view and click() it
-			var switches = $('.listDisplaySwitch a', '#'+$('#nav').data('activeTab'));
-			if( !switches.length ) return; //no view switches in active Tab
+			//"v" pressed for switch view
+			} else if( e.which == 86 ){
+				//find the current view, get the next view and click() it
+				var switches = $('.listDisplaySwitch a', '#'+$('#nav').data('activeTab'));
+				if( !switches.length ) return; //no view switches in active Tab
 
-			var current = $('.listDisplaySwitch', '#'+$('#nav').data('activeTab')).find('.disabled');
-			if( !current.length ) return; //no active view, security
+				var current = $('.listDisplaySwitch', '#'+$('#nav').data('activeTab')).find('.disabled');
+				if( !current.length ) return; //no active view, security
 
 
-			var index = switches.index(current);
-			index++;
-			if( index == switches.length ) index = 0;
+				var index = switches.index(current);
+				index++;
+				if( index == switches.length ) index = 0;
 
-			switches.eq(index).click();
+				switches.eq(index).click();
 
-		//tab index for switching tab
-		} else {
-			var index = parseInt( String.fromCharCode( e.which ) );
-			if( !isNaN(index) ){
-				if( $('.tab').eq( index-1 ).length ){
-					var newHash = $('.tab').eq( index-1 ).attr('id');
-					if( $('#nav').data('activeTab') == newHash ) getList(0); //tab already active, refresh it
-					else window.location.hash = '#' + newHash;
+			//tab index for switching tab
+			} else {
+				var index = parseInt( String.fromCharCode( e.which ) );
+				if( !isNaN(index) ){
+					if( $('.tab').eq( index-1 ).length ){
+						var newHash = $('.tab').eq( index-1 ).attr('id');
+						if( $('#nav').data('activeTab') == newHash ) getList(0); //tab already active, refresh it
+						else window.location.hash = '#' + newHash;
+					}
 				}
 			}
 		}
