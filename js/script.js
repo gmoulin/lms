@@ -59,7 +59,7 @@ $(document).ready(function(){
 	} else if( window.location.host == 'lms.kapok.fr' ){
 		useSubDomains = true;
 		for( var i = 0; i < subDomains.length; i++ ){
-			subDomains[ i ] = window.location.protocol + '//' + subDomains[ i ] + '.' + '.kapok.fr' + '/';
+			subDomains[ i ] = window.location.protocol + '//' + subDomains[ i ] + '.kapok.fr' + '/';
 		}
 	}
 
