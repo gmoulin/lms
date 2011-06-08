@@ -51,7 +51,7 @@ var subDomains = ['s1', 's2', 's3'],
 
 $(document).ready(function(){
 	//improve image loading using subdomains
-	if( window.location.host == 'lms.dev' || window.location.host == 'lms' ){
+	if( window.location.host == 'lms.dev' || window.location.host == 'lms' || window.location.host == 'lms.kapok.fr' ){
 		useSubDomains = true;
 		for( var i = 0; i < subDomains.length; i++ ){
 			subDomains[ i ] = window.location.protocol + '//' + subDomains[ i ] + '.' + window.location.host + '/';
