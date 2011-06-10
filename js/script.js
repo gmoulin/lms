@@ -1,4 +1,4 @@
-var debugCacheManifest = 1;
+var debugCacheManifest = 0;
 
 if( debugCacheManifest ){
 	var cacheStatusValues = [];
@@ -33,17 +33,23 @@ if( debugCacheManifest ){
 	cache.addEventListener('progress', logEvent, false);
 	cache.addEventListener('updateready', logEvent, false);
 
-	window.applicationCache.addEventListener(
-		'updateready',
-		function(){
+	window.applicationCache.addEventListener('updateready', function(){
+		if( confirm('Nouvelle version disponible, recharger la page ?') ){
 			window.applicationCache.swapCache();
 			window.location.reload();
-			console.log('swap cache has been called');
-		},
-		false
-	);
+		}
+	}, false);
 
 	setInterval(function(){cache.update()}, 10000);
+} else {
+	window.applicationCache.addEventListener('updateready', function(){
+		if( confirm('Nouvelle version disponible, recharger la page ?') ){
+			window.applicationCache.swapCache();
+			window.location.reload();
+		}
+	}, false);
+
+	window.applicationCache.update();
 }
 
 var subDomains = ['s1', 's2', 's3'],
@@ -55,6 +61,11 @@ $(document).ready(function(){
 		useSubDomains = true;
 		for( var i = 0; i < subDomains.length; i++ ){
 			subDomains[ i ] = window.location.protocol + '//' + subDomains[ i ] + '.' + window.location.host + '/';
+		}
+	} else if( window.location.host == 'lms.kapok.fr' ){
+		useSubDomains = true;
+		for( var i = 0; i < subDomains.length; i++ ){
+			subDomains[ i ] = window.location.protocol + '//' + subDomains[ i ] + '.kapok.fr/';
 		}
 	}
 
@@ -241,7 +252,9 @@ $(document).ready(function(){
 					.attr('name', nameLink + '_1')
 					.siblings('label').attr('for', idLink + '_1');
 			}
-			$manage.find(':input').val('').change();
+			$manage
+				.find(':input').val('')
+				.siblings('label').html(function(){ return $(this).text() });
 			$manage.find('.coverStatus').html(function(){
 				var tmp = 'Déposer ';
 				rel == 'book' || rel == 'album' ? tmp += 'la couverture' : tmp += 'l\'affiche';
@@ -267,8 +280,7 @@ $(document).ready(function(){
 			else if( rel == 'storage' ) text = 'rangement';
 
 			//place the form
-			$manage
-				.appendTo( $('#editForm .formWrapper').empty() );
+			$manage.appendTo( $('#editForm .formWrapper').empty() );
 
 			//set the form title
 			$('#editForm .formTitle').html( text );
@@ -649,6 +661,7 @@ $(document).ready(function(){
 
 				$('#detailShow').click();
 			});
+
 		$('.filter').live('click', function(e){
 			e.preventDefault();
 			var $this = $(this);
@@ -678,7 +691,6 @@ $(document).ready(function(){
 			this.addEventListener("invalid", checkField, true);
 			this.addEventListener("blur", checkField, true);
 			this.addEventListener("input", checkField, true);
-
 		}).submit(function(e){
 			e.preventDefault();
 			$('#formSubmit').click();
@@ -979,28 +991,58 @@ $(document).ready(function(){
 
 	//quick links for title in form
 		var $quickLink = $('<a>', { 'class': 'button icon externalLink small quickLink', 'target': '_blank', 'data-icon': '/' });
-		$('#movieTitle').change(function(){
-			$(this).siblings('label')
-				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' movie') : '' )
-				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur IMDB').attr('href', 'http://www.imdb.com/find?s=all&q=' + $(this).val() ) : '' );
-		});
-		$('#bookTitle').change(function(){
-			$(this).siblings('label')
-				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' book') : '' )
-				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur Fantastic Fiction').attr('href', 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val()) : '' );
-		});
-		$('#albumTitle').change(function(){
-			$(this).siblings('label')
-				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur Google Image').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' music album') : '' );
-		});
-		$('#bandName').change(function(){
-			$(this).siblings('label')
-				.html(function(){ return $(this).text() }) //clean the label of any html tag
-				.append( $(this).val() != '' ? $quickLink.clone().attr('title', 'Rechercher sur Wikipedia').attr('href', 'http://en.wikipedia.org/w/index.php?search=' + $(this).val()) : '' );
-		});
+		$('#movieTitle')[0].addEventListener('input', function(){
+			if( !$(this).val().length ){
+				$(this).siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
+			}
+			if( !$(this).siblings('label').children('.externalLink').length ){
+				$(this).siblings('label')
+					.html(function(){ return $(this).text() }) //clean the label of any html tag
+					.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image') )
+					.append( $quickLink.clone().attr('title', 'Rechercher sur IMDB') );
+			} else {
+				$(this).siblings('label').children('.externalLink:first').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' movie');
+				$(this).siblings('label').children('.externalLink:last').attr('href', 'http://www.imdb.com/find?s=all&q=' + $(this).val());
+			}
+		}, false);
+		$('#bookTitle')[0].addEventListener('input', function(){
+			if( !$(this).val().length ){
+				$(this).siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
+			}
+			if( !$(this).siblings('label').children('.externalLink').length ){
+				$(this).siblings('label')
+					.html(function(){ return $(this).text() }) //clean the label of any html tag
+					.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image') )
+					.append( $quickLink.clone().attr('title', 'Rechercher sur Fantastic Fiction') );
+			} else {
+				$(this).siblings('label').children('.externalLink:first').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' book');
+				$(this).siblings('label').children('.externalLink:last').attr('href', 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val());
+			}
+		}, false);
+		$('#albumTitle')[0].addEventListener('input', function(){
+			if( !$(this).val().length ){
+				$(this).siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
+			}
+			if( !$(this).siblings('label').children('a.externalLink').length ){
+				$(this).siblings('label')
+					.html(function(){ return $(this).text() }) //clean the label of any html tag
+					.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image') );
+			} else {
+				$(this).siblings('label').children('a.externalLink').attr('href', 'http://www.google.com/images?q=' + $('#albumBand_1').val() + ' ' + $(this).val() + ' music album');
+			}
+		}, false);
+		$('#bandName')[0].addEventListener('input', function(){
+			if( !$(this).val().length ){
+				$(this).siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
+			}
+			if( !$(this).siblings('label').children('.externalLink').length ){
+				$(this).siblings('label')
+					.html(function(){ return $(this).text() }) //clean the label of any html tag
+					.append( $quickLink.clone().attr('title', 'Rechercher sur Wikipedia') );
+			} else {
+				$(this).siblings('label').children('.externalLink').attr('href', 'http://en.wikipedia.org/w/index.php?search=' + $(this).val());
+			}
+		}, false);
 
 	//saga title in form
 		$('#bookSagaTitle, #movieSagaTitle').change(function(){
