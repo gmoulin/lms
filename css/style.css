@@ -1172,14 +1172,6 @@
 				display: none;
 			}
 
-			.thumbnails:hover .item {
-				opacity: 0.4;
-			}
-
-			.thumbnails .item:hover {
-				opacity: 1;
-			}
-
 			.thumbnails .item .info {
 				display: block;
 				width: 100%;

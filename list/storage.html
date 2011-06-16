@@ -16,27 +16,22 @@
 	<section class="listContent">
 		{{each(i, storage) list}}
 			{{if isStorageChanged(i)}}
-				{{if i > 0}}
-					</section>
-					<section class="listContent">
-				{{/if}}
-
-					<article class="item" style="background-image: url(${getFullUrl(currentStorageURL, '')});">
-						<div class="block">
-							<dl class="info">
-								<dt class="listHidden">Pièce</dt>
-								<dd class="title">
-									${storage.storageRoom}
-								</dd>
-								<dt class="listHidden">Type</dt>
-								<dd class="title">
-									${storage.storageType}
-								</dd>
-								<dd class="title">&nbsp;</dd>
-							</dl>
-						</div>
-						<a class="button icon storage" data-icon="}" href="${getFullUrl(currentStorageURL, '')}"></a>
-					</article>
+				<article class="item" style="background-image: url(${getFullUrl(currentStorageURL, '')});">
+					<div class="block">
+						<dl class="info">
+							<dt class="listHidden">Pièce</dt>
+							<dd class="title">
+								${storage.storageRoom}
+							</dd>
+							<dt class="listHidden">Type</dt>
+							<dd class="title">
+								${storage.storageType}
+							</dd>
+							<dd class="title">&nbsp;</dd>
+						</dl>
+					</div>
+					<a class="button icon storage" data-icon="}" href="${getFullUrl(currentStorageURL, '')}"></a>
+				</article>
 			{{/if}}
 
 			<article class="item" style="background-image: url(${getFullUrl(storage.storageURL, '')});">
@@ -73,3 +68,4 @@
 		{{/each}}
 	</section>
 </script>
+
