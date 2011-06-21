@@ -97,12 +97,12 @@ class album extends commun {
 			if( !empty($filters['albumSearch']) ){
 				$sqlSelect = array(
 					"MATCH(albumTitle) AGAINST (:searchS)",
-					"MATCH(bandName) AGAINST (:searchS)",
+					"MATCH(baft.bandName) AGAINST (:searchS)",
 					"MATCH(loanHolder) AGAINST (:searchS)",
 				);
 				$sqlWhere = array(
 					"MATCH(albumTitle) AGAINST (:searchW)",
-					"MATCH(bandName) AGAINST (:searchW)",
+					"MATCH(baft.bandName) AGAINST (:searchW)",
 					"MATCH(loanHolder) AGAINST (:searchW)",
 				);
 				$params[':searchS'] = $this->prepareForFullTextQuery($filters['albumSearch']);
@@ -115,8 +115,8 @@ class album extends commun {
 				$params[':albumTitleW'] = $params[':albumTitleS'];
 			}
 			if( !empty($filters['albumBandFilter']) ){
-				$sqlSelect[] = "MATCH(bandName) AGAINST (:bandS)";
-				$sqlWhere[] = "MATCH(bandName) AGAINST (:bandW)";
+				$sqlSelect[] = "MATCH(baft.bandName) AGAINST (:bandS)";
+				$sqlWhere[] = "MATCH(baft.bandName) AGAINST (:bandW)";
 				$params[':bandS'] = $this->prepareForFullTextQuery($filters['albumBandFilter']);
 				$params[':bandW'] = $params[':bandS'];
 			}

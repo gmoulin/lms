@@ -1,55 +1,57 @@
 var debugCacheManifest = 0;
 
-if( debugCacheManifest ){
-	var cacheStatusValues = [];
-	cacheStatusValues[0] = 'uncached';
-	cacheStatusValues[1] = 'idle';
-	cacheStatusValues[2] = 'checking';
-	cacheStatusValues[3] = 'downloading';
-	cacheStatusValues[4] = 'updateready';
-	cacheStatusValues[5] = 'obsolete';
+if( Modernizr.applicationcache ){
+	if( debugCacheManifest ){
+		var cacheStatusValues = [];
+		cacheStatusValues[0] = 'uncached';
+		cacheStatusValues[1] = 'idle';
+		cacheStatusValues[2] = 'checking';
+		cacheStatusValues[3] = 'downloading';
+		cacheStatusValues[4] = 'updateready';
+		cacheStatusValues[5] = 'obsolete';
 
-	function logEvent(e) {
-		var online, status, type, message;
-		online = (navigator.onLine) ? 'yes' : 'no';
-		status = cacheStatusValues[cache.status];
-		type = e.type;
-		message = 'online: ' + online;
-		message+= ', event: ' + type;
-		message+= ', status: ' + status;
-		if (type == 'error' && navigator.onLine) {
-			message+= ' (prolly a syntax error in manifest)';
+		function logEvent(e) {
+			var online, status, type, message;
+			online = (navigator.onLine) ? 'yes' : 'no';
+			status = cacheStatusValues[cache.status];
+			type = e.type;
+			message = 'online: ' + online;
+			message+= ', event: ' + type;
+			message+= ', status: ' + status;
+			if (type == 'error' && navigator.onLine) {
+				message+= ' (prolly a syntax error in manifest)';
+			}
+			console.log(message);
 		}
-		console.log(message);
+
+		var cache = window.applicationCache;
+		cache.addEventListener('cached', logEvent, false);
+		cache.addEventListener('checking', logEvent, false);
+		cache.addEventListener('downloading', logEvent, false);
+		cache.addEventListener('error', logEvent, false);
+		cache.addEventListener('noupdate', logEvent, false);
+		cache.addEventListener('obsolete', logEvent, false);
+		cache.addEventListener('progress', logEvent, false);
+		cache.addEventListener('updateready', logEvent, false);
+
+		window.applicationCache.addEventListener('updateready', function(){
+			if( confirm('Nouvelle version disponible, recharger la page ?') ){
+				window.applicationCache.swapCache();
+				window.location.reload();
+			}
+		}, false);
+
+		setInterval(function(){cache.update()}, 10000);
+	} else {
+		window.applicationCache.addEventListener('updateready', function(){
+			if( confirm('Nouvelle version disponible, recharger la page ?') ){
+				window.applicationCache.swapCache();
+				window.location.reload();
+			}
+		}, false);
+
+		window.applicationCache.update();
 	}
-
-	var cache = window.applicationCache;
-	cache.addEventListener('cached', logEvent, false);
-	cache.addEventListener('checking', logEvent, false);
-	cache.addEventListener('downloading', logEvent, false);
-	cache.addEventListener('error', logEvent, false);
-	cache.addEventListener('noupdate', logEvent, false);
-	cache.addEventListener('obsolete', logEvent, false);
-	cache.addEventListener('progress', logEvent, false);
-	cache.addEventListener('updateready', logEvent, false);
-
-	window.applicationCache.addEventListener('updateready', function(){
-		if( confirm('Nouvelle version disponible, recharger la page ?') ){
-			window.applicationCache.swapCache();
-			window.location.reload();
-		}
-	}, false);
-
-	setInterval(function(){cache.update()}, 10000);
-} else {
-	window.applicationCache.addEventListener('updateready', function(){
-		if( confirm('Nouvelle version disponible, recharger la page ?') ){
-			window.applicationCache.swapCache();
-			window.location.reload();
-		}
-	}, false);
-
-	window.applicationCache.update();
 }
 
 var subDomains = ['s1', 's2', 's3'],
@@ -95,12 +97,14 @@ $(document).ready(function(){
 
 	//input type number crossbrowser support
 	//@todo remove when firefox fully support input type number
-		$('.spinbox:not(.spinbox-active)').spinbox({
-			min: 1,		// Set lower limit or null for no limit.
-			max: null,	// Set upper limit or null for no limit.
-			step: 1,	// Set increment size.
-			reset: 0,	// reset value
-		});
+		if( !Modernizr.inputtypes.number ){
+			$('.spinbox:not(.spinbox-active)').spinbox({
+				min: 1,		// Set lower limit or null for no limit.
+				max: 999,	// Set upper limit or null for no limit.
+				step: 1,	// Set increment size.
+				reset: 0,	// reset value
+			});
+		}
 
 	//author, band and artist inputs in forms
 		$('.add_another').click(function(event){
@@ -1685,7 +1689,7 @@ function getList( type ){
 								didScroll = false;
 								var $last = $list.find('.item:last');
 								if( $last.length && !$('#detailShow:checked, #editShow:checked').length ){
-									var t = $last.attr('style').match(/translate\(.+,.+\)/g),
+									var t = $last.attr('style').match(/[a-z\-]?translate?\(.+,.+\)|[a-z\-]?translate3d?\(.+,.+\)/g),
 										top = parseInt(t[0].substring(t[0].lastIndexOf(',')+2, t[0].lastIndexOf('px')));
 
 									if( ($(window).scrollTop() + $(window).height()) >= top ){

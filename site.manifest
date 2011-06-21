@@ -26,8 +26,8 @@ CACHE:
 /css/fonts/raleway/raleway_thin.ttf
 
 # js files
-/js/libs/modernizr-1.7.min.js
-/js/libs/jquery-1.6.min.js
+/js/libs/modernizr-2.0.4.custom.min.js
+/js/libs/jquery-1.6.1.min.js
 /js/mylibs/jquery.tmpl.min.js
 /js/plugins.js
 /js/script.js
