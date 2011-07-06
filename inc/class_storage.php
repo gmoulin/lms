@@ -351,7 +351,6 @@ class storage extends commun {
 			if( empty($check) ){
 				throw new PDOException('Rangement inconnu.');
 			}
-			$check = $check[0];
 
 			$isDifferent = false;
 			if( $check['storageRoom'] != $data['room'] ) $isDifferent = true;
@@ -361,27 +360,29 @@ class storage extends commun {
 
 			if( $isDifferent ){
 				$filename = stripAccents($check['storageRoom'].'_'.$check['storageType'].( !empty($check['storageColumn']) || !empty($check['storageLine']) ? '_' : '' ).$check['storageColumn'].$check['storageLine'].'.png');
-				unlink(UPLOAD_STORAGE_PATH.$filename);
+
+				if( file_exists(UPLOAD_STORAGE_PATH.$filename) )unlink(UPLOAD_STORAGE_PATH.$filename);
 			}
 
 			$updStorage = $this->db->prepare("
 				UPDATE storage
 				SET storageRoom = :room,
 					storageType = :type,
-					storageColumn = :column,
-					storageLine = :line
+					storageColumn = ".(empty($data['column']) ? 'NULL' : ':column').",
+					storageLine = ".(empty($data['line']) ? 'NULL' : ':line')."
 				WHERE storageID = :id
 			");
 
-			$updStorage->execute(
-				array(
-					':id' => $data['id'],
-					':room' => $data['room'],
-					':type' => $data['type'],
-					':column' => $data['column'],
-					':line' => $data['line'],
-				)
+			$params = array(
+				':id' => $data['id'],
+				':room' => $data['room'],
+				':type' => $data['type'],
 			);
+
+			if( !empty($data['column']) ) $params[':column'] = $data['column'];
+			if( !empty($data['line']) ) $params[':line'] = $data['line'];
+
+			$updStorage->execute( $params );
 
 			//update the name of the storage image
 			if( file_exists(UPLOAD_STORAGE_PATH.'tmp_storage.png') ){
@@ -682,7 +683,7 @@ class storage extends commun {
 				if( is_null($line) || $line === false ){
 					$errors[] = array('storageLine', 'Ligne incorrecte.', 'error');
 				} elseif( empty($line) ){
-					$formData['line'] = trim($line);
+					$formData['line'] = '';
 				} else {
 					$line = filter_var($line, FILTER_VALIDATE_INT, array('min_range' => 1));
 					if( $line === false ){
