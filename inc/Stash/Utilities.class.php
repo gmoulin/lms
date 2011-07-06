@@ -178,7 +178,7 @@ class StashUtilities
 	 */
 	static function deleteRecursive($file)
 	{
-		if(substr($file, 0, 1) !== '/' && substr($file, 1, 2) !== ':\\')
+		if(substr($file, 0, 1) !== '/' && substr($file, 1, 1) !== ':')
 			throw new StashError('deleteRecursive function requires an absolute path.');
 
 		$badCalls = array('/', '/*', '/.', '/..');
