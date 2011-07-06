@@ -10,7 +10,7 @@ try {
 	if( file_exists(LMS_PATH.'/css/style.css') ) $cssTS = filemtime( LMS_PATH.'/css/style.css' );
 
 	if( file_exists(LMS_PATH.'/js/script.js') ) $scriptTS = filemtime( LMS_PATH.'/js/script.js' );
-	if( file_exists(LMS_PATH.'/js/script.js') ) $pluginTS = filemtime( LMS_PATH.'/js/script.js' );
+	if( file_exists(LMS_PATH.'/js/plugins.js') ) $pluginTS = filemtime( LMS_PATH.'/js/plugins.js' );
 
 } catch (Exception $e) {
 	echo $e->getMessage();

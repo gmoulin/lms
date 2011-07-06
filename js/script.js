@@ -1,7 +1,15 @@
-var debugCacheManifest = 0;
+/**
+ * Author: Guillaume Moulin <gmoulin.dev@gmail.com>
+ */
+var delayAjax = false,
+	delayTimeout;
 
+//cache the site via manifest if possible
 if( Modernizr.applicationcache ){
+	var debugCacheManifest = false;
+
 	if( debugCacheManifest ){
+		//force reload of the page if an update is available and log all the process
 		var cacheStatusValues = [];
 		cacheStatusValues[0] = 'uncached';
 		cacheStatusValues[1] = 'idle';
@@ -34,24 +42,171 @@ if( Modernizr.applicationcache ){
 		cache.addEventListener('progress', logEvent, false);
 		cache.addEventListener('updateready', logEvent, false);
 
-		window.applicationCache.addEventListener('updateready', function(){
-			if( confirm('Nouvelle version disponible, recharger la page ?') ){
-				window.applicationCache.swapCache();
-				window.location.reload();
-			}
-		}, false);
-
 		setInterval(function(){cache.update()}, 10000);
-	} else {
-		window.applicationCache.addEventListener('updateready', function(){
-			if( confirm('Nouvelle version disponible, recharger la page ?') ){
+	}
+
+	//just force reload of the page if an update is available
+	window.applicationCache.addEventListener(
+		'updateready',
+		function(){
+			//busy visual information
+			$('header').removeClass('loading');
+			if( confirm('Une nouvelle version est disponible, voulez-vous recharger la page ?') ){
 				window.applicationCache.swapCache();
 				window.location.reload();
+			} else {
+				delayAjax = false;
 			}
-		}, false);
+		},
+		false
+	);
 
-		window.applicationCache.update();
+	window.applicationCache.addEventListener(
+		'checking',
+		function(){
+			//delay ajax calls if there is a new manifest version
+			delayAjax = true;
+		},
+		false
+	);
+	window.applicationCache.addEventListener(
+		'downloading',
+		function(){
+			$('header').addClass('loading');
+		},
+		false
+	);
+	window.applicationCache.addEventListener(
+		'noupdate',
+		function(){
+			delayAjax = false;
+			$('header').removeClass('loading');
+		},
+		false
+	);
+	window.applicationCache.addEventListener(
+		'error',
+		function(){
+			//delay ajax calls if there is a new manifest version
+			delayAjax = false;
+			$('header').removeClass('loading');
+			alert('Error while downloading the new version');
+		},
+		false
+	);
+
+	//sometimes a DOM exception is raised by update()...
+	try {
+		if( !$.browser.opera ) window.applicationCache.update();
+	} catch(err){
+		if( $.browser.opera ) window.location.reload();
 	}
+}
+
+//opera mini does not support localStorage...
+if( !Modernizr.localstorage ){
+	(function(){
+		var Storage = function(type){
+			function createCookie(name, value, days){
+				var date, expires;
+
+				if( days ){
+					date = new Date();
+					date.setTime(date.getTime()+(days*24*60*60*1000));
+					expires = "; expires="+date.toGMTString();
+				} else {
+					expires = "";
+				}
+				document.cookie = name+"="+value+expires+"; path=/";
+			}
+
+			function readCookie(name){
+				var nameEQ = name + "=",
+					ca = document.cookie.split(';'),
+					i, c;
+
+				for( i=0; i < ca.length; i++ ){
+					c = ca[i];
+					while( c.charAt(0)==' ' ){
+						c = c.substring(1,c.length);
+					}
+
+					if( c.indexOf(nameEQ) == 0 ){
+						return c.substring(nameEQ.length,c.length);
+					}
+				}
+				return null;
+			}
+
+			function setData(data){
+				data = JSON.stringify(data);
+				if( type == 'session' ){
+					window.name = data;
+				} else {
+					createCookie('localStorage', data, 365);
+				}
+			}
+
+			function clearData(){
+				if( type == 'session' ){
+					window.name = '';
+				} else {
+					createCookie('localStorage', '', 365);
+				}
+			}
+
+			function getData(){
+				var data = type == 'session' ? window.name : readCookie('localStorage');
+				return data ? JSON.parse(data) : {};
+			}
+
+			// initialise if there's already data
+			var data = getData();
+
+			return {
+				length: 0,
+				clear: function(){
+					data = {};
+					this.length = 0;
+					clearData();
+				},
+				getItem: function(key){
+					return data[key] === undefined ? null : data[key];
+				},
+				getObject: function(key){
+					return data[key] === undefined ? null : JSON.parse( data[key] );
+				},
+				key: function(i){
+					// not perfect, but works
+					var ctr = 0;
+					for (var k in data) {
+						if (ctr == i) return k;
+						else ctr++;
+					}
+					return null;
+				},
+				removeItem: function(key){
+					delete data[key];
+					this.length--;
+					setData(data);
+				},
+				setItem: function(key, value){
+					data[key] = value+''; // forces the value to a string
+					this.length++;
+					setData(data);
+				},
+				setObject: function(key, value){
+					data[key] = JSON.stringify(value)+''; // forces the value to a string
+					this.length++;
+					setData(data);
+				}
+			};
+		};
+
+		if( typeof window.localStorage == 'undefined' ) window.localStorage = new Storage('local');
+		if( typeof window.sessionStorage == 'undefined' ) window.sessionStorage = new Storage('session');
+
+	})();
 }
 
 var subDomains = ['s1', 's2', 's3'],
@@ -87,9 +242,6 @@ $(document).ready(function(){
 
 	//tab change via menu and url#hash
 		window.addEventListener("hashchange", tabSwitch, false);
-
-	//launch first tab
-		tabSwitch();
 
 	//reset the modals
 	//sometimes the "show" checkbox is checked on page load
@@ -256,13 +408,16 @@ $(document).ready(function(){
 					.attr('name', nameLink + '_1')
 					.siblings('label').attr('for', idLink + '_1');
 			}
+
 			$manage
 				.find(':input').val('')
-				.siblings('label').html(function(){ return $(this).text() });
+				.siblings('label').html(function(){ return $(this).text() }); //clean the quick links
+
 			$manage.find('.coverStatus').html(function(){
 				var tmp = 'Déposer ';
 				rel == 'book' || rel == 'album' ? tmp += 'la couverture' : tmp += 'l\'affiche';
 			});
+
 			$('#editPreview').empty();
 			//setting action
 			$('#' + rel + 'Action').val('add');
@@ -901,6 +1056,15 @@ $(document).ready(function(){
 
 			if( $('#editPreview').find('img').length ) $('#previewShow').prop({ checked: true });
 
+			//set the storage to Miro for albums
+			if( rel == 'album' ){
+				$('#albumStorage').val( $('#albumStorage').children(':contains("Miro")').val() );
+			}
+
+			//autofocus the first field
+			//@todo not working
+			//$section.find('input[type=text], select').eq(0).focus();
+
 			$('datalist, select', $section).loadList();
 		});
 
@@ -1106,6 +1270,19 @@ $(document).ready(function(){
 				$('#list_' + $('#nav').data('activeTab')).children('.listContent').render('relayout');
 			}, 100);
 		});
+
+
+	//timeout function for loadList() and reloadParts();
+	function ajaxCalls(){
+		if( !delayAjax ){
+			if( delayTimeout ) clearTimeout(delayTimeout);
+			tabSwitch();
+		}
+		else delayTimeout = setTimeout(function(){ ajaxCalls(); }, 1000);
+	}
+
+	//"onload" ajax call for data
+	ajaxCalls();
 });
 
 /**
@@ -1717,13 +1894,18 @@ function getList( type ){
 
 							//force cover update by adding a timestamp to the url
 							//remove src then add it with new value to avoid flicker
-							var timestamp = new Date().getTime(),
-								$cover = $detailIcon.parent().find('.cover'),
-								src = $cover.attr('src') + '&ts=' + timestamp;
-							$cover.removeAttr('src').attr('src', src);
-							$detailIcon.parent().css('background-image', 'url(' + src + ')');
+							if( $detailIcon.length ){
+								var timestamp = new Date().getTime(),
+									$cover = $detailIcon.parent().find('.cover'),
+									src = $cover.attr('src') + '&ts=' + timestamp;
 
-							$detailIcon.click();
+								if( $cover.length ){
+									$cover.removeAttr('src').attr('src', src);
+									$detailIcon.parent().css('background-image', 'url(' + src + ')');
+
+									$detailIcon.click();
+								}
+							}
 						}
 					}
 
@@ -1748,4 +1930,3 @@ function getList( type ){
 		});
 	}
 }
-
