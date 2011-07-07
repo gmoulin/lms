@@ -5,8 +5,8 @@
 			<span></span>
 		</footer>
 		<!-- Grab local. fall back to Google CDN's jQuery if necessary -->
-		<script src="js/libs/jquery-1.6.1.min.js"></script>
-		<script>!window.jQuery && document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.js">\x3C/script>')</script>
+		<script src="js/libs/jquery-1.6.2.min.js"></script>
+		<script>!window.jQuery && document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js">\x3C/script>')</script>
 
 		<!-- scripts concatenated and minified via ant build script-->
 		<script src="js/mylibs/jquery.tmpl.min.js"></script>
