@@ -7,8 +7,8 @@ try {
 	$metadata['motscles'] = 'librairie, contenu, gestion, gestionnaire, bibliothèque, livre, roman, auteur, vidéothèque, film, acteur, musique, musicothèque, album, groupe';
 	$lang = 'fr';
 
+	//only for dev to assure last version
 	if( file_exists(LMS_PATH.'/css/style.css') ) $cssTS = filemtime( LMS_PATH.'/css/style.css' );
-
 	if( file_exists(LMS_PATH.'/js/script.js') ) $scriptTS = filemtime( LMS_PATH.'/js/script.js' );
 	if( file_exists(LMS_PATH.'/js/plugins.js') ) $pluginTS = filemtime( LMS_PATH.'/js/plugins.js' );
 
@@ -16,6 +16,13 @@ try {
 	echo $e->getMessage();
 	die;
 }
+
+//@todo find why the interface is "sluggish"
+//@todo quicklink on right
+//@todo autofocus first field of forms on show
+//@todo fix buttons (change with http://nicolasgallagher.com/pure-css-gui-icons/demo/)
+//@todo error tooltip placement
+//@todo change tooltip with html5 validation (future)
 ?>
 
 <?php include('html_header.php'); ?>

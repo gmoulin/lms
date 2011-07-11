@@ -249,7 +249,7 @@
 
 		#drop_overlay h1 {
 			color: #FFFFFF;
-			font-family: 'ralewayThin', Georgia, serif;
+			font-family: Georgia, serif;
 			font-size: 10em;
 			font-weight: bold;
 			/*line-height: 10em;*/
@@ -271,7 +271,6 @@
 			bottom: 0;
 			left: 0;
 			z-index: 301;
-			font-family: 'ralewayThin', serif;
 		}
 
 		#help:not(.deploy) {
@@ -384,30 +383,6 @@
 				font-style: normal;
 			}
 
-		/* raleway */
-			@font-face {
-				font-family: 'ralewayThin';
-				src: url('fonts/raleway/raleway_thin.eot');
-				src: local('☺'),
-					 /*url('fonts/raleway/raleway_thin.otf') format('opentype'),*/
-					 url('fonts/raleway/raleway_thin.ttf') format('truetype'),
-					 url('fonts/raleway/raleway_thin.svg#webfontpeVNweuo') format('svg');
-				font-weight: normal;
-				font-style: normal;
-			}
-
-		/* iconic */
-			@font-face {
-				font-family: 'iconic';
-				src: url("fonts/iconic/iconic_stroke.eot");
-				src: local('☺'),
-					 /*url("fonts/iconic/iconic_stroke.otf") format('opentype'),*/
-					 url('fonts/iconic/iconic_stroke.ttf') format('truetype'),
-					 url("fonts/iconic/iconic_stroke.svg#iconic") format('svg');
-				font-weight: normal;
-				font-style: normal;
-			}
-
 	/** font family size color and text shadow **/
 		/* family */
 			.slideMenu li,
@@ -421,31 +396,18 @@
 				font-family: 'lobster', Verdana, serif;
 			}
 
-			body,
-			input,
-			select,
-			textarea,
-			.tip,
-			.coverStatus,
-			.info,
-			.paginate span,
-			.listFilter,
-			.listSort {
-				font-family: 'ralewayThin', Verdana, serif;
+			body {
+				font-family: Cambria, Helvetica, serif;
 			}
 
 			input:-moz-placeholder,
 			textarea:-moz-placeholder {
-				font-family: 'ralewayThin', Helvetica, serif;
+				font-style: italic;
 			}
 
 			input:placeholder,
 			textarea:placeholder {
-				font-family: 'ralewayThin', Helvetica, serif;
-			}
-
-			#inform span {
-				font-family: Helvetica, serif;
+				font-style: italic;
 			}
 
 		/* size */
@@ -1667,23 +1629,12 @@
 			Turquoise: hsl(175, 66%, 51%);
 			Cerulean: hsl(196, 100%, 33%);
 
-			t delete
-			/ externalLink
-			f search, filter
-			i info
-			P update
-			u loan
-			x cancel
-			X close
-			y save
-			} detail, storage
-			b move
-			= add
 		*/
 		.button {
 			text-decoration: 	none;
 			line-height:		normal;
-			font:				bold 1.3em 'ralewayThin', sans-serif;
+			font-weight: bold;
+			font-size: 1.3em;
 
 			-webkit-user-select: 	none;
 			-moz-user-select: 		none;
@@ -2266,4 +2217,3 @@
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3{ page-break-after: avoid; }
 }
-
