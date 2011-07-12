@@ -411,7 +411,7 @@ $(document).ready(function(){
 
 			$manage
 				.find(':input').val('')
-				.siblings('label').html(function(){ return $(this).text() }); //clean the quick links
+				.siblings('.quickLink').remove(); //clean the quick links
 
 			$manage.find('.coverStatus').html(function(){
 				var tmp = 'Déposer ';
@@ -1161,54 +1161,54 @@ $(document).ready(function(){
 		var $quickLink = $('<a>', { 'class': 'button icon externalLink small quickLink', 'target': '_blank', 'data-icon': '/' });
 		$('#movieTitle')[0].addEventListener('input', function(){
 			if( !$(this).val().length ){
-				$(this).siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
+				$(this).siblings('.quickLink').remove(); //clean the quick links
 			}
-			if( !$(this).siblings('label').children('.externalLink').length ){
-				$(this).siblings('label')
-					.html(function(){ return $(this).text() }) //clean the label of any html tag
+			if( !$(this).siblings('.quickLink').length ){
+				$(this)
+					.parent()
 					.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image') )
 					.append( $quickLink.clone().attr('title', 'Rechercher sur IMDB') );
 			} else {
-				$(this).siblings('label').children('.externalLink:first').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' movie');
-				$(this).siblings('label').children('.externalLink:last').attr('href', 'http://www.imdb.com/find?s=all&q=' + $(this).val());
+				$(this).siblings('.quickLink:first').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' movie');
+				$(this).siblings('.quickLink:last').attr('href', 'http://www.imdb.com/find?s=all&q=' + $(this).val());
 			}
 		}, false);
 		$('#bookTitle')[0].addEventListener('input', function(){
 			if( !$(this).val().length ){
-				$(this).siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
+				$(this).siblings('.quickLink').remove(); //clean the quick links
 			}
-			if( !$(this).siblings('label').children('.externalLink').length ){
-				$(this).siblings('label')
-					.html(function(){ return $(this).text() }) //clean the label of any html tag
+			if( !$(this).siblings('.quickLink').length ){
+				$(this)
+					.parent()
 					.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image') )
 					.append( $quickLink.clone().attr('title', 'Rechercher sur Fantastic Fiction') );
 			} else {
-				$(this).siblings('label').children('.externalLink:first').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' book');
-				$(this).siblings('label').children('.externalLink:last').attr('href', 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val());
+				$(this).siblings('.quickLink:first').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' book');
+				$(this).siblings('.quickLink:last').attr('href', 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val());
 			}
 		}, false);
 		$('#albumTitle')[0].addEventListener('input', function(){
 			if( !$(this).val().length ){
-				$(this).siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
+				$(this).siblings('.quickLink').remove(); //clean the quick links
 			}
-			if( !$(this).siblings('label').children('a.externalLink').length ){
-				$(this).siblings('label')
-					.html(function(){ return $(this).text() }) //clean the label of any html tag
+			if( !$(this).siblings('.quickLink').length ){
+				$(this)
+					.parent()
 					.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image') );
 			} else {
-				$(this).siblings('label').children('a.externalLink').attr('href', 'http://www.google.com/images?q=' + $('#albumBand_1').val() + ' ' + $(this).val() + ' music album');
+				$(this).siblings('.quickLink').attr('href', 'http://www.google.com/images?q=' + $('#albumBand_1').val() + ' ' + $(this).val() + ' music album');
 			}
 		}, false);
 		$('#bandName')[0].addEventListener('input', function(){
 			if( !$(this).val().length ){
-				$(this).siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
+				$(this).siblings('.quickLink').remove(); //clean the quick links
 			}
-			if( !$(this).siblings('label').children('.externalLink').length ){
-				$(this).siblings('label')
-					.html(function(){ return $(this).text() }) //clean the label of any html tag
+			if( !$(this).siblings('.quickLink').length ){
+				$(this)
+					.parent()
 					.append( $quickLink.clone().attr('title', 'Rechercher sur Wikipedia') );
 			} else {
-				$(this).siblings('label').children('.externalLink').attr('href', 'http://en.wikipedia.org/w/index.php?search=' + $(this).val());
+				$(this).siblings('.quickLink').attr('href', 'http://en.wikipedia.org/w/index.php?search=' + $(this).val());
 			}
 		}, false);
 
@@ -1222,12 +1222,13 @@ $(document).ready(function(){
 			var decoder = $('<textarea>');
 
 			//is the saga present in the database
-			$this.siblings('label').html(function(){ return $(this).text() }); //clean the label of any html tag
+			$this.siblings('.quickLink').remove(); //clean the quick links
 			if( $this.val() != '' && $('option[value="'+$this.val()+'"]', $dl).length ){
 				$.post('ajax/manageSaga.php', 'action=getByTitleFor'+target+'&title='+$this.val(), function(saga){
 					if( !$.isEmptyObject(saga) ){
 						if( saga.sagaSearchURL != '' && saga.sagaSearchURL != null ){
-							$this.siblings('label')
+							$this
+								.parent()
 								.append( $quickLink.clone().attr('title', 'Détail de cette saga sur internet').attr('href', decoder.html(saga.sagaSearchURL).val()) );
 						}
 
