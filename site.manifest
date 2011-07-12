@@ -16,6 +16,11 @@ CACHE:
 #/css/fonts/lobster/lobster.1.4.svg
 /css/fonts/lobster/lobster.1.4.ttf
 
+#/css/fonts/iconic/iconic_stroke.eot
+#/css/fonts/iconic/iconic_stroke.otf
+#/css/fonts/iconic/iconic_stroke.svg
+/css/fonts/iconic/iconic_stroke.ttf
+
 # js files
 /js/libs/modernizr-2.0.4.custom.min.js
 /js/libs/jquery-1.6.2.min.js

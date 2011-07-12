@@ -20,9 +20,9 @@ try {
 //@todo find why the interface is "sluggish"
 //@todo quicklink on right
 //@todo autofocus first field of forms on show
-//@todo fix buttons (change with http://nicolasgallagher.com/pure-css-gui-icons/demo/)
-//@todo error tooltip placement
 //@todo change tooltip with html5 validation (future)
+//@todo remove protection on subdomains, but reroot all traffic to image.php
+//@todo for albums -> Miro
 ?>
 
 <?php include('html_header.php'); ?>
