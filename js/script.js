@@ -1158,16 +1158,14 @@ $(document).ready(function(){
 		});
 
 	//quick links for title in form
-		var $quickLink = $('<a>', { 'class': 'button icon externalLink small quickLink', 'target': '_blank', 'data-icon': '/' });
+		var $quickLink = $('<a>', { 'class': 'button icon externalLink quickLink', 'target': '_blank', 'data-icon': '/' });
 		$('#movieTitle')[0].addEventListener('input', function(){
 			if( !$(this).val().length ){
 				$(this).siblings('.quickLink').remove(); //clean the quick links
 			}
 			if( !$(this).siblings('.quickLink').length ){
-				$(this)
-					.parent()
-					.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image') )
-					.append( $quickLink.clone().attr('title', 'Rechercher sur IMDB') );
+				$quickLink.clone().attr('title', 'Rechercher sur Google Image').insertAfter( $(this) );
+				$quickLink.clone().attr('title', 'Rechercher sur IMDB').insertAfter( $(this).siblings('.quickLink') );
 			} else {
 				$(this).siblings('.quickLink:first').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' movie');
 				$(this).siblings('.quickLink:last').attr('href', 'http://www.imdb.com/find?s=all&q=' + $(this).val());
@@ -1178,10 +1176,8 @@ $(document).ready(function(){
 				$(this).siblings('.quickLink').remove(); //clean the quick links
 			}
 			if( !$(this).siblings('.quickLink').length ){
-				$(this)
-					.parent()
-					.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image') )
-					.append( $quickLink.clone().attr('title', 'Rechercher sur Fantastic Fiction') );
+				$quickLink.clone().attr('title', 'Rechercher sur Google Image').insertAfter( $(this) );
+				$quickLink.clone().attr('title', 'Rechercher sur Fantastic Fiction').insertAfter( $(this).siblings('.quickLink') );
 			} else {
 				$(this).siblings('.quickLink:first').attr('href', 'http://www.google.com/images?q=' + $(this).val() + ' book');
 				$(this).siblings('.quickLink:last').attr('href', 'http://www.fantasticfiction.co.uk/search/?searchfor=book&keywords=' + $(this).val());
@@ -1192,9 +1188,7 @@ $(document).ready(function(){
 				$(this).siblings('.quickLink').remove(); //clean the quick links
 			}
 			if( !$(this).siblings('.quickLink').length ){
-				$(this)
-					.parent()
-					.append( $quickLink.clone().attr('title', 'Rechercher sur Google Image') );
+				$quickLink.clone().attr('title', 'Rechercher sur Google Image').insertAfter( $(this) );
 			} else {
 				$(this).siblings('.quickLink').attr('href', 'http://www.google.com/images?q=' + $('#albumBand_1').val() + ' ' + $(this).val() + ' music album');
 			}
@@ -1204,9 +1198,7 @@ $(document).ready(function(){
 				$(this).siblings('.quickLink').remove(); //clean the quick links
 			}
 			if( !$(this).siblings('.quickLink').length ){
-				$(this)
-					.parent()
-					.append( $quickLink.clone().attr('title', 'Rechercher sur Wikipedia') );
+				$quickLink.clone().attr('title', 'Rechercher sur Wikipedia').insertAfter( $(this) );
 			} else {
 				$(this).siblings('.quickLink').attr('href', 'http://en.wikipedia.org/w/index.php?search=' + $(this).val());
 			}
@@ -1227,9 +1219,13 @@ $(document).ready(function(){
 				$.post('ajax/manageSaga.php', 'action=getByTitleFor'+target+'&title='+$this.val(), function(saga){
 					if( !$.isEmptyObject(saga) ){
 						if( saga.sagaSearchURL != '' && saga.sagaSearchURL != null ){
-							$this
-								.parent()
-								.append( $quickLink.clone().attr('title', 'Détail de cette saga sur internet').attr('href', decoder.html(saga.sagaSearchURL).val()) );
+							$this.siblings('.quickLink').remove() //clean the quick links
+
+							$quickLink
+								.clone()
+								.attr('title', 'Détail de cette saga sur internet')
+								.attr('href', decoder.html(saga.sagaSearchURL).val())
+								.insertAfter( $this );
 						}
 
 						//setting fields only if in add mode

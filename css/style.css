@@ -1144,6 +1144,10 @@
 				vertical-align: top;
 			}
 
+			.form label {
+				float: left;
+			}
+
 		/* field styles */
 			input,
 			select,
@@ -1183,6 +1187,21 @@
 				width: 231px;
 			}
 
+			.coverStatus,
+			.delete_another,
+			.form input,
+			.form select,
+			.form textarea {
+				float: right;
+			}
+
+			.coverStatus,
+			.form input,
+			.form select,
+			.form textarea {
+				margin-left: 20px;
+			}
+
 		/* field hover */
 			input:hover,
 			select:hover,
@@ -1220,7 +1239,7 @@
 			.form label::before {
 				content: "";
 				height: 16px;
-				left: 0;
+				left: 15px;
 				position: relative;
 				top: 3px;
 				width: 16px;
@@ -1268,7 +1287,7 @@
 
 				#help .invalid,
 				.required + label::before,
-				input:focus:required:invalid + label::before {
+				.form input:focus:required:invalid + label::before {
 					background-position: 0 -1244px;
 				}
 
@@ -1333,10 +1352,20 @@
 				content: "Étape " counter(fieldsets) " : ";
 			}
 
+			.form .quickLink {
+				position: absolute;
+				right: -16px;
+				top: 0;
+			}
+
+			.form .quickLink + .quickLink {
+				right: -38px;
+			}
+
 			.form ol li {
 				list-style: none;
 				padding: 2px 5px;
-				margin-bottom: 2px;
+				margin: 0 30px 2px;
 				position: relative;
 				clear: both;
 			}
@@ -1350,19 +1379,6 @@
 
 			.form ol li:after {
 				clear:both;
-			}
-
-		/* form fields and labels position */
-			.form label {
-				min-width: 150px;
-			}
-
-			.coverStatus,
-			.delete_another,
-			.form input,
-			.form select,
-			.form textarea {
-				margin-left: 20px
 			}
 
 		/* confirmation styles */

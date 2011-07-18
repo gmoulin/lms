@@ -82,7 +82,7 @@ class saga extends commun {
 			StashBox::setHandler($stashFileSystem);
 
 			StashManager::setHandler(get_class( $this ), $stashFileSystem);
-			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $title);
 			$results = $stash->get();
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getBookSagaByTitle = $this->db->prepare("

@@ -13,8 +13,8 @@ if( count($response) ){
 				$i = 0;
 				foreach( $response as $impact ){ ?>
 				<li>
-					<input type="checkbox" id="<?php echo $impact['type']; ?>ID_<?php echo $i; ?>" name="<?php echo $impact['type']; ?>ID[]" value="<?php echo $impact['impactID']; ?>" />
 					<label for="<?php echo $impact['type']; ?>ID_<?php echo $i; ?>"><?php echo $impact['impactTitle']; ?></label>
+					<input type="checkbox" id="<?php echo $impact['type']; ?>ID_<?php echo $i; ?>" name="<?php echo $impact['type']; ?>ID[]" value="<?php echo $impact['impactID']; ?>" />
 					<a class="button icon update" data-icon="P" href="<?php echo $impact['impactID']; ?>" title="Mettre à jour les informations de <?php echo $types[$impact['type']]; ?>" rel="<?php echo $impact['type']; ?>"></a>
 				</li>
 			<?php } ?>

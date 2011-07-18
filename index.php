@@ -18,7 +18,6 @@ try {
 }
 
 //@todo find why the interface is "sluggish"
-//@todo quicklink on right
 //@todo autofocus first field of forms on show
 //@todo change tooltip with html5 validation (future)
 //@todo remove protection on subdomains, but reroot all traffic to image.php
