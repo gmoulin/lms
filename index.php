@@ -17,11 +17,11 @@ try {
 	die;
 }
 
-//@todo find why the interface is "sluggish"
-//@todo autofocus first field of forms on show
-//@todo change tooltip with html5 validation (future)
-//@todo remove protection on subdomains, but reroot all traffic to image.php
-//@todo for albums -> Miro
+//@todo TODO: find why the interface is "sluggish"
+//@todo TODO: autofocus first field of forms on show
+//@todo TODO: change tooltip with html5 validation (future)
+//@todo TODO: remove protection on subdomains, but reroot all traffic to image.php
+//@todo TODO: for albums -> Miro
 ?>
 
 <?php include('html_header.php'); ?>
@@ -165,3 +165,4 @@ try {
 	?>
 
 <?php include('html_footer.php'); ?>
+

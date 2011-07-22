@@ -248,7 +248,7 @@ $(document).ready(function(){
 		$('#editHide, #detailHide, #storageHide, #previewHide, #confirmHide').click();
 
 	//input type number crossbrowser support
-	//@todo remove when firefox fully support input type number
+	//@todo TODO: remove when firefox fully support input type number
 		if( !Modernizr.inputtypes.number ){
 			$('.spinbox:not(.spinbox-active)').spinbox({
 				min: 1,		// Set lower limit or null for no limit.
@@ -1061,11 +1061,11 @@ $(document).ready(function(){
 				$('#albumStorage').val( $('#albumStorage').children(':contains("Miro")').val() );
 			}
 
-			//autofocus the first field
-			//@todo not working
-			//$section.find('input[type=text], select').eq(0).focus();
-
 			$('datalist, select', $section).loadList();
+
+			//autofocus the first field
+			//@todo TODO: not working
+			$section.first().focus();
 		});
 
 		$('.close').live('click', function(e){
@@ -1927,3 +1927,4 @@ function getList( type ){
 		});
 	}
 }
+
