@@ -1065,7 +1065,8 @@ $(document).ready(function(){
 
 			//autofocus the first field
 			//@todo TODO: not working
-			$section.first().focus();
+			console.log($section.find('fieldset:first').find(':input:first'));
+			$section.find('fieldset:first').find(':input:first').focus();
 		});
 
 		$('.close').live('click', function(e){

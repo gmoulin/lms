@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# v0.6
+# version 2011/08/08 17:33:22
 
 CACHE:
 # html files
@@ -22,7 +22,7 @@ CACHE:
 /css/fonts/iconic/iconic_stroke.ttf
 
 # js files
-/js/libs/modernizr-2.0.4.custom.min.js
+/js/libs/modernizr-2.0.6.custom.min.js
 /js/libs/jquery-1.6.2.min.js
 /js/mylibs/jquery.tmpl.min.js
 /js/plugins.js
@@ -41,3 +41,4 @@ FALLBACK:
 
 NETWORK:
 *
+

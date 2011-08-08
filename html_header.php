@@ -16,15 +16,18 @@
 	<meta name="revisit-after" content="1 days" />
 	<link href="favicon.ico" rel="shortcut icon" type="images/x-icon" />
 
-	<!-- Place favicon.ico and apple-touch-icon.png in the root of your domain and delete these references -->
-	<link rel="shortcut icon" href="/favicon.ico">
-	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
 
-	<!-- CSS: implied media="all" -->
-	<link rel="stylesheet" href="css/style.css?v=<?php echo $cssTS; ?>">
+  <!-- CSS: implied media=all -->
+  <!-- CSS concatenated and minified via ant build script-->
+  <link rel="stylesheet" href="css/style.css?v=<?php echo $cssTS; ?>">
+  <!-- end CSS-->
 
-	<!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
-	<script src="js/libs/modernizr-2.0.4.custom.min.js"></script>
+  <!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
+
+  <!-- All JavaScript at the bottom, except for Modernizr / Respond.
+       Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
+       For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
+  <script src="js/libs/modernizr-2.0.6.custom.min.js"></script>
 </head>
 <body>
-
