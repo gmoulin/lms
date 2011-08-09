@@ -26,7 +26,7 @@
 				</datalist>
 			</li>
 			<li>
-				<input type="range" id="movieLength" name="length" placeholder="Durée du film en minutes" required min="0" max="360" class="range" pattern="[0-9]+" />
+				<input type="text" id="movieLength" name="length" placeholder="Durée du film en minutes" required min="0" max="360" class="range" pattern="[0-9]+" />
 				<label for="movieLength">Durée *</label>
 				<output for="movieLength"></output>
 			</li>
@@ -82,7 +82,7 @@
 		<button id="another_artist" class="button add_another">Ajouter un artiste</button>
 		<ol id="movieArtists">
 			<li class="anotherInfo">
-				<button class="button icon delete_another" data-icon="t">Supprimer cet auteur</button>
+				<button class="button icon delete_another" data-icon="t"></button>
 				<input type="text" id="movieArtist_1" name="artist_1" list="movieArtistList" placeholder="Prénom et nom de l'artiste" required />
 				<label for="movieArtist_1">Artiste *</label>
 			</li>

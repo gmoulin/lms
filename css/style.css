@@ -353,6 +353,10 @@
 							inset 0 -10px 10px rgba(0, 0, 0, 0.3);
 			}
 
+			.listFilter {
+				border-right: 0;
+			}
+
 			#help.deploy {
 				border-left: none;
 				border-bottom: none;
@@ -407,9 +411,9 @@
 		*/
 		.button {
 			text-decoration: 	none;
-			line-height:		normal;
 			font-weight: bold;
-			font-size: 1.3em;
+			font-size: 13px;
+			line-height: 13px;
 
 			-webkit-user-select: 	none;
 			-moz-user-select: 		none;
@@ -419,7 +423,7 @@
 			position:	relative;
 			width:		auto;
 			margin:		0;
-			padding: 0.3em 0.4em;
+			padding: 3px 4px;
 
 			border-bottom:	1px solid hsl(45, 90%, 30%);
 			border-top:		1px solid hsl(45, 90%, 80%);
@@ -464,7 +468,7 @@
 		button.button {
 			border-left: none;
 			border-right: none;
-			padding: 0 0.4em 0.1em;
+			padding: 0 4px 1px;
 		}
 
 		span.button {
@@ -500,22 +504,23 @@
 
 		.button:not(span):active,
 		a.button:focus {
-			-webkit-transform:	translateY(0.1em);
-			-moz-transform:		translateY(0.1em);
-			transform:			translateY(0.1em);
+			-webkit-transform:	translate3d(0, 1px, 0);
+			-moz-transform:		translateY(1px);
+			-moz-transform:		translate3d(0, 1px, 0);
+			transform:			translateY(1px);
+			transform:			translate3d(0, 1px, 0);
 
 			background-image: -moz-linear-gradient(top, hsla(0, 100%, 0%, 0.4) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 100%, 0.5) 100%);
 			background-image: linear-gradient(top, hsla(0, 100%, 0%, 0.4) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 100%, 0.5) 100%);
 
-			-webkit-transition: all 0.05s ease-in-out 0s;
-			-moz-transition:	all 0.05s ease-in-out 0s;
-			transition:			all 0.05s ease-in-out 0s;
+			-webkit-transition: all 0.15s ease-in-out 0s;
+			-moz-transition:	all 0.15s ease-in-out 0s;
+			transition:			all 0.15s ease-in-out 0s;
 		}
 
 		.button::before {
-			font: 1.2em 'iconic', sans-serif;
+			font: 16px 'iconic', sans-serif;
 			content: attr(data-icon);
-			margin-right: 0.1em;
 			line-height: normal;
 			font-weight: normal;
 			font-style: normal;
@@ -530,48 +535,52 @@
 				text-indent: -999em;
 				padding: 0;
 				border-radius: 50%;
-				width: 1.5em;
-				height: 1.5em;
-				font-size: 1em;
+				width: 19px;
+				height: 19px;
+				font-size: 16px;
+				line-height: 16px;
 				border: none;
 			}
 
 			.icon.small {
-				font-size: 0.7em;
+				font-size: 12px;
 			}
 
 			.icon::before {
-				text-indent: 0.15em;
-				float: left;
+				text-indent: 1px;
 				line-height: normal;
 				text-align:center;
-				height: 1.5em;
-				line-height: 1.4em;
+				height: 16px;
+				line-height: 14px;
 				display: block;
-			}
-
-			.icon:not(button)::before {
-				margin-left: 0.1em;
+				padding-top: 1px;
 			}
 
 			/* specific position */
-				.icon.close::before {
-					text-indent: 0.2em;
-					margin-top: -0.05em;
+				.icon[data-icon=u]::before,
+				.icon[data-icon=d]::before {
+					text-indent: 3px;
 				}
 
-				.icon.loan::before,
-				.icon.addLoan::before {
-					text-indent: 0.25em;
+				.webkit .icon[data-icon=u]::before,
+				.icon[data-icon=P]::before,
+				.icon[data-icon=t]::before {
+					text-indent: 2px;
 				}
 
-				.icon.delete_another::before {
-					margin-top: -0.05em;
+				.webkit .icon[data-icon=P]::before,
+				.webkit .icon[data-icon=t]::before {
+					text-indent: 1px;
 				}
 
-				.item .icon.detail::before {
-					margin-left: 0.1em;
+				.icon.delete_another[data-icon=t]::before {
+					text-indent: 0;
 				}
+
+				.webkit .icon[data-icon=X]::before {
+					text-indent: 0;
+				}
+
 
 		/* icons using sprite */
 			#relocate::before,
@@ -609,19 +618,24 @@
 
 		/* help specific */
 			.icon.help {
-				width: 1.8em;
-				height: 1.8em;
+				width: 22px;
+				height: 22px;
 			}
 
 			.icon.help::before {
-				line-height: 1.15em;
-				text-indent: 0.25em;
-				height: 1.8em;
-				font-size: 1.5em;
+				line-height: 16px;
+				text-indent: 2px;
+				height: 22px;
+				font-size: 22px;
+			}
+			.webkit .icon.help::before {
+				line-height: 18px;
+				text-indent: 1px;
 			}
 
 			#help .icon {
 				top: 3px;
+				left: 3px;
 			}
 
 			#help .icon.order {
@@ -705,16 +719,28 @@
 				top: 0;
 				left: 1px;
 				content: "+";
+				line-height: 18px;
+			}
+			.add[rel=storage]::after{
+				line-height: 16px;
 			}
 
-			.add[rel=book]::before { background-position: -4px -382px; }
-			.add[rel=movie]::before { background-position: -2px -1311px; }
-			.add[rel=album]::before { background-position: -210px -66px; }
-			.add[rel=storage]::before { background-position: -213px 0; }
-			.add[rel=saga]::before { background-position: 12px -1836px; }
-			.add[rel=author]::before { background-position: -2px -294px; }
-			.add[rel=artist]::before { background-position: -4px -208px; }
-			.add[rel=band]::before { background-position: -210px -130px; }
+			.add[rel=book]::before { background-position: -2px -382px; }
+			.webkit .add[rel=book]::before { background-position: -5px -382px; }
+			.add[rel=movie]::before { background-position: 0px -1311px; }
+			.webkit .add[rel=movie]::before { background-position: -4px -1311px; }
+			.add[rel=album]::before { background-position: -206px -66px; }
+			.webkit .add[rel=album]::before { background-position: -210px -66px; }
+			.add[rel=storage]::before { background-position: -210px 0; }
+			.webkit .add[rel=storage]::before { background-position: -213px 0; }
+			.add[rel=saga]::before { background-position: 14px -1836px; }
+			.webkit .add[rel=saga]::before { background-position: 12px -1836px; }
+			.add[rel=author]::before { background-position: 2px -294px; }
+			.webkit .add[rel=author]::before { background-position: -2px -294px; }
+			.add[rel=artist]::before { background-position: -2px -208px; }
+			.webkit .add[rel=artist]::before { background-position: -4px -208px; }
+			.add[rel=band]::before { background-position: -208px -130px; }
+			.webkit .add[rel=band]::before { background-position: -210px -130px; }
 
 			#help .add::before {
 				margin: 2px 0 0 2px;
@@ -749,7 +775,7 @@
 			.sort[rel=saga] { background-position: 13px -1835px, 0 0; }
 			.sort[rel=author] { background-position: 1px -293px, 0 0; }
 			.sort[rel=artist] { background-position: -2px -206px, 0 0; }
-			.sort[rel=band] { background-position: -210px -130px, 0 0; }
+			.sort[rel=band] { background-position: -208px -130px, 0 0; }
 			.sort[rel=genre] { background-position: -203px -204px, 0 0; }
 			.sort[rel=date] { background-position: 4px -471px, 0 0; }
 
@@ -776,7 +802,7 @@
 				color: hsl(45, 90%, 50%);
 				text-shadow: none;
 				text-indent: 1px;
-				line-height: 16px;
+				line-height: 14px;
 
 				-webkit-transition: all 0.15s ease-in-out 0s;
 				-moz-transition: 	all 0.15s ease-in-out 0s;
@@ -784,15 +810,22 @@
 			}
 
 			.sort::before {
-				top: -6px;
+				top: -1px;
 				left: 1px;
 				content: "3";
 			}
+			.webkit .sort::before {
+				top: 0;
+			}
 
 			.sort::after {
-				top: 16px;
-				left: -14px;
+				top: 20px;
+				left: -13px;
 				content: "5";
+			}
+			.webkit .sort::after {
+				top: 22px;
+				text-indent: 0;
 			}
 
 			.sort:hover::before,
@@ -814,6 +847,16 @@
 				color: rgb(255, 255, 255);
 			}
 
+		/* edit form validation buttons */
+			.button.formButton {
+				line-height: 25px;
+				font-size: 16px;
+			}
+
+			.button.formButton::before {
+				font-size: 18px;
+			}
+
 		/* icons and buttons positions */
 			.delete_another {
 				margin-right: 2px;
@@ -833,14 +876,15 @@
 			}
 
 			.help {
-				margin: 0.3em;
+				/*margin: 0.3em;*/
 			}
 
 			.add_another {
 				position: absolute;
 				right: 15px;
 				top: -1px;
-				font-size: 1em;
+				font-size: 12px;
+				line-height: 16px;
 			}
 
 			.mozilla .add_another {
@@ -857,8 +901,8 @@
 
 			.search,
 			.cancel {
-			font-size: 1em;
-		}
+				font-size: 14px;
+			}
 	/** _______________________________________END BUTTONS **/
 
 	/** _______________________________________DISPLAY ON DETAIL "VIEW" **/
@@ -1017,8 +1061,9 @@
 
 			.filterFormSwitch::after {
 				top: 1px;
-				left: 2px;
+				left:1px;
 				content: "f";
+				line-height: 16px;
 			}
 
 			.deploy .filterFormSwitch::after {
@@ -1031,6 +1076,7 @@
 
 			#help .filterFormSwitch::after {
 				content: "f";
+				text-indent: 2px;
 			}
 
 			.listFilter:not(.deploy) .filterFormSwitch {
@@ -1128,9 +1174,6 @@
 
 			.list.smallBoxes:not(.hasCovers) dd:only-child {
 				font-size: 1.5em;
-			}
-			.list.smallBoxes:not(.hasCovers) dd:only-child .button {
-				font-size: 0.75em;
 			}
 
 			.paginate span,
@@ -1390,10 +1433,6 @@
 
 		.formButtons {
 			text-align: center;
-		}
-
-		.button.formButton {
-			line-height: 25px;
 		}
 
 		/* form styles */
@@ -1815,10 +1854,8 @@
 			}
 
 			.info a {
-				display: inline-block;
 				margin: 0 2px;
 				padding: 0;
-				top: 0.5em;
 			}
 
 		/* holder, for temporary invisible display (used for size calculations) */
@@ -1831,7 +1868,7 @@
 			}
 
 			#holder .item {
-				-webkit-transition: width 0s linear 0s, height 0s linear 0s; /* security, force instant transition */
+				-webkit-transition: width 0s linear 0s, height 0s linear 0s; /* security, folrce instant transition */
 			}
 
 		/* thumbnails with hover list display */
@@ -1963,7 +2000,7 @@
 			}
 
 			.smallBoxes:not(.hasCovers) .info a {
-				top: 0.25em;
+				top: 0;
 			}
 
 		/* big boxes list display */
@@ -2214,7 +2251,7 @@
 		.listDisplaySwitch {
 			z-index: 99;
 			right: 60px;
-			padding: 4px 5px 0;
+			padding: 4px 5px;
 		}
 
 		#inform span,

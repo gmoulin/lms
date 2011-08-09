@@ -228,6 +228,7 @@ $(document).ready(function(){
 
 	//for .add_another positonning bug in firefox
 		if( $.browser.mozilla ) $('html').addClass('mozilla');
+		else if( $.browser.webkit ) $('html').addClass('webkit');
 
 	//ajax global management
 		$('#ajax_loader').ajaxStart(function(){
@@ -775,13 +776,19 @@ $(document).ready(function(){
 				//storage list case
 				if( $this.closest('#list_storage').length ){
 					var $detailBox = $('#detailBox'),
-						$detail = $('#detail');
+						$detail = $('#detail'),
+						$closeButton = $('<button>').addClass('button icon close').attr('title', 'Fermer').attr('data-icon', 'X'),
+						$block = $this.parent().find('.block').clone(true);
+
+					if( !$block.children('.close').length ){
+						$block.append( $closeButton );
+					}
 
 					//saving for detail display after list refresh if needed
 					$detailBox.data('link', $this.attr('href'))
 						.data('tab', $('#nav').data('activeTab'));
 
-					$detail.html( $this.parent().find('.block').clone(true) );
+					$detail.html( $block );
 
 					$('#detailShow').click();
 
@@ -808,7 +815,12 @@ $(document).ready(function(){
 
 				var $detailBox = $('#detailBox'),
 					$detail = $('#detail'),
-					$closeButton = $detail.find('.close').clone();
+					$closeButton = $('<button>').addClass('button icon close').attr('title', 'Fermer').attr('data-icon', 'X'),
+					$block = $this.parent().find('.block').clone(true);
+
+				if( !$block.children('.close').length ){
+					$block.append( $closeButton );
+				}
 
 				//saving for detail display after list refresh if needed
 				$detailBox.data('link', $this.attr('href'))
@@ -816,7 +828,7 @@ $(document).ready(function(){
 
 				$('#storageHide').attr('checked', 'checked');
 
-				$detail.html( $this.parent().find('.block').clone(true).append( $closeButton ) );
+				$detail.html( $block );
 
 				$('#detailShow').click();
 			});

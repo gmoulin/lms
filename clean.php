@@ -11,29 +11,6 @@ try {
 
 	//ajax call for smarty cache, smarty templates_c and stash cleaning
 	if( filter_has_var(INPUT_GET, 'servercache') ){
-		//clean smarty templates_c
-		$handle = opendir($smarty->compile_dir);
-		while( $tmp = readdir($handle) ){
-			if( $tmp != '..' && $tmp != '.' && $tmp != '' ){
-				 if( is_file($smarty->compile_dir.DS.$tmp) ){
-						 unlink($smarty->compile_dir.DS.$tmp);
-				 }
-			}
-		}
-		closedir($handle);
-
-		//clean smarty cache
-		$handle = opendir($smarty->cache_dir);
-		while( $tmp = readdir($handle) ){
-			if( $tmp != '..' && $tmp != '.' && $tmp != '' ){
-				 if( is_file($smarty->cache_dir.DS.$tmp) ){
-						 unlink($smarty->cache_dir.DS.$tmp);
-				 }
-			}
-		}
-		closedir($handle);
-
-
 		if( !is_dir(STASH_PATH) ){
 			echo 'stash cache not cleaned, folder missing. ('.STASH_PATH.')';
 			die;
@@ -58,11 +35,15 @@ try {
 ?>
 
 <?php include('html_header.php'); ?>
-
+	<style>
+		body {
+			color: white;
+		}
+	</style>
 	<button onclick="cleanCache()">Nettoyer le cache pour ce site</button> (localStorage et applicationCache).
 
 	<!-- Grab local. fall back to Google CDN's jQuery if necessary -->
-	<script src="js/libs/jquery-1.6.1.min.js"></script>
+	<script src="js/libs/jquery-1.6.2.min.js"></script>
 	<script>!window.jQuery && document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.js">\x3C/script>')</script>
 
 	<script>
