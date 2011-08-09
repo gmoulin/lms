@@ -428,6 +428,7 @@
 			border-radius:			8px;
 
 			background-image: 	-moz-linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
+			background-image: 	-webkit-linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
 			background-image: 	linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
 			background-repeat:	no-repeat;
 

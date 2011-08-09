@@ -1064,9 +1064,8 @@ $(document).ready(function(){
 			$('datalist, select', $section).loadList();
 
 			//autofocus the first field
-			//@todo TODO: not working
-			console.log($section.find('fieldset:first').find(':input:first'));
-			$section.find('fieldset:first').find(':input:first').focus();
+			//pointer is not displayed inside the field but the user can type
+			setTimeout(function(){ $section.find('fieldset:first input[type=text]:first').focus(); }, 1000);
 		});
 
 		$('.close').live('click', function(e){
@@ -1254,7 +1253,7 @@ $(document).ready(function(){
 							}
 						}
 
-						$('#'+rel+'SagaPosition').focus().select();
+						$('#'+rel+'SagaPosition').focus();
 					}
 				});
 			}
@@ -1444,9 +1443,10 @@ function isStorageChanged(i){
  * add escape key support when a modal popup is visible
  */
 function addEscapeSupport(){
-	$('html').unbind('keypress').keypress(function(e){
+	//chrome don't catch escape with keypress event, so using keydown
+	$('html').unbind('keydown').keydown(function(e){
 		// ESCAPE key pressed
-		if( e.keyCode == 27 ){
+			if( e.keyCode == 27 ){
 
 			//inform visible ?
 			if( $('#inform span:visible').length ){
@@ -1872,7 +1872,7 @@ function getList( type ){
 									}
 								}
 							}
-						}, 250);
+						}, 1000);
 					}
 
 					//hide detail
