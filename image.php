@@ -79,8 +79,7 @@ try {
 				header('Cache-Control: max-age=' . $expires.', must-revalidate');
 				if( $lastModified != 0 ) header("Last-Modified: " . gmdate("D, d M Y H:i:s", $lastModified) . " GMT");
 				header('Content-Type: image/png');
-
-				echo $cover;
+				print_r($cover);
 				die;
 			}
 		}
@@ -89,7 +88,7 @@ try {
 	//place holder image
 	$ph = file_get_contents(LMS_PATH.'/img/placeholder.png');
 	header('Content-Type: image/png');
-	echo $ph;
+	print_r($ph);
 
 	die;
 } catch (Exception $e) {

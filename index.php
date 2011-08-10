@@ -95,7 +95,7 @@ try {
 		<div id="detailOverlay" class="overlay">
 			<input type="radio" id="storageShow" name="toggleStorage" class="boxToggleInput" autocomplete="off" />
 			<div id="detail" class="wrapper data">
-				<button class="button icon close" data-icon="X" title="Fermer">Fermer</button>
+				<button class="button icon close" data-icon="X" title="Fermer"></button>
 			</div>
 			<div id="storage" class="wrapper image">
 				<img id="storageImg" src="" class="boxImg" />
@@ -117,7 +117,7 @@ try {
 						<button type="submit" id="confirmSubmit" name="confirmSubmit" class="button formButton" data-icon="t" rel="delete">Supprimer</button>
 						<button type="reset" id="confirmCancel" name="confirmCancel" class="button formButton" data-icon="x" rel="cancel">Annuler</button>
 					</div>
-					<button class="button icon close" data-icon="X" title="Fermer">Fermer</button>
+					<button class="button icon close" data-icon="X" title="Fermer"></button>
 				</div>
 			</div>
 		</div>
@@ -136,7 +136,7 @@ try {
 						<button type="submit" id="formSubmit" name="formSubmit" class="button formButton" data-icon="y" rel="">Enregistrer</button>
 						<button type="reset" id="formCancel" name="formCancel" class="button formButton" data-icon="x" rel="cancel">Annuler</button>
 					</div>
-					<button class="button icon close" data-icon="X" title="Fermer">Fermer</button>
+					<button class="button icon close" data-icon="X" title="Fermer"></button>
 				</div>
 			</div>
 			<div id="editPreview" class="wrapper image">
