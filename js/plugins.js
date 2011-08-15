@@ -389,13 +389,13 @@ window.log = function(){
 					$items.css({
 						position: 'absolute',
 						top: 0,
-						left: '50%'
+						left: "50%"
 					});
 				},
 				relayout: function(){
 					return this.each(function(){
 						$container = $(this);
-						$items = $container.children().css({ position: 'absolute', top: 0, left: '50%' });
+						$items = $container.children().css({ position: 'absolute', top: 0, left: "50%" });
 						$holder = $('#holder');
 
 						methods.resetLayout();
@@ -432,7 +432,7 @@ window.log = function(){
 						settings.rows[ settings.currentRow ].elements.push( $item );
 					});
 
-					//for "centered" layout, calculate the left "margin" form the row width and the combined row items width
+					//for "centered" layout, calculate the left "margin" from the row width and the combined row items width
 					$.each(settings.rows, function(i, row){
 						settings.pos.x = (settings.width / 2) * -1 + (settings.width - row.width) / 2;
 						settings.pos.y = row.height;

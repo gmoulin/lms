@@ -214,17 +214,17 @@ var subDomains = ['s1', 's2', 's3'],
 
 $(document).ready(function(){
 	//improve image loading using subdomains
-	if( window.location.host == 'lms.dev' || window.location.host == 'lms' ){
-		useSubDomains = true;
-		for( var i = 0; i < subDomains.length; i++ ){
-			subDomains[ i ] = window.location.protocol + '//' + subDomains[ i ] + '.' + window.location.host + '/';
+		if( window.location.host == 'lms.dev' || window.location.host == 'lms' ){
+			useSubDomains = true;
+			for( var i = 0; i < subDomains.length; i++ ){
+				subDomains[ i ] = window.location.protocol + '//' + subDomains[ i ] + '.' + window.location.host + '/';
+			}
+		} else if( window.location.host == 'lms.kapok.fr' ){
+			useSubDomains = true;
+			for( var i = 0; i < subDomains.length; i++ ){
+				subDomains[ i ] = window.location.protocol + '//' + subDomains[ i ] + '.kapok.fr/';
+			}
 		}
-	} else if( window.location.host == 'lms.kapok.fr' ){
-		useSubDomains = true;
-		for( var i = 0; i < subDomains.length; i++ ){
-			subDomains[ i ] = window.location.protocol + '//' + subDomains[ i ] + '.kapok.fr/';
-		}
-	}
 
 	//for .add_another positonning bug in firefox
 		if( $.browser.mozilla ) $('html').addClass('mozilla');
@@ -1280,15 +1280,14 @@ $(document).ready(function(){
 			}, 100);
 		});
 
-
 	//timeout function for loadList() and reloadParts();
-	function ajaxCalls(){
-		if( !delayAjax ){
-			if( delayTimeout ) clearTimeout(delayTimeout);
-			tabSwitch();
+		function ajaxCalls(){
+			if( !delayAjax ){
+				if( delayTimeout ) clearTimeout(delayTimeout);
+				tabSwitch();
+			}
+			else delayTimeout = setTimeout(function(){ ajaxCalls(); }, 1000);
 		}
-		else delayTimeout = setTimeout(function(){ ajaxCalls(); }, 1000);
-	}
 
 	//"onload" ajax call for data
 	ajaxCalls();
@@ -1809,7 +1808,9 @@ function checkField(event){
  * @param integer type : 0 no filter, 1 filter from form, 2 use filter if present in session, 3 endless scroll pagination
  */
 var didScroll = false,
-	interval = null;
+	interval = null,
+	$last = null,
+	translateTop = new RegExp("translate[3d]?\([^p]+px, ([^p]+)\)");
 function getList( type ){
 	hideInform();
 	var $nav = $('#nav');
@@ -1861,6 +1862,7 @@ function getList( type ){
 					$.tmpl( tab + 'List', data).appendTo( $list );
 
 					$list.children('.listContent').render();
+					$last = $list.find('.item:last');
 
 					var $paginate = $list.children('.paginate');
 
@@ -1874,12 +1876,11 @@ function getList( type ){
 						interval = setInterval(function(){
 							if( didScroll ){
 								didScroll = false;
-								var $last = $list.find('.item:last');
 								if( $last.length && !$('#detailShow:checked, #editShow:checked').length ){
-									var t = $last.attr('style').match(/[a-z\-]?translate?\(.+,.+\)|[a-z\-]?translate3d?\(.+,.+\)/g),
-										top = parseInt(t[0].substring(t[0].lastIndexOf(',')+2, t[0].lastIndexOf('px')));
-
-									if( ($(window).scrollTop() + $(window).height()) >= top ){
+									var t = translateTop.exec($last.attr('style')),
+										top = ( t.length == 3 ? parseFloat(t[2]) : 0 );
+									if( top > 0 && ($(window).scrollTop() + $(window).height()) >= top ){
+										console.log('calling');
 										getList(3);
 									}
 								}
@@ -1929,8 +1930,10 @@ function getList( type ){
 
 					//get new list
 					var newList = $.tmpl( tab + 'List', data);
+
 					//append new list <li> to old one
 					$list.children('.listContent').append( newList.children() ).render('relayout');
+					$last = $list.find('.item:last');
 
 					if( $list.children('.paginate').hasClass('end') ){
 						$(window).unbind('scroll');
