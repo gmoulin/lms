@@ -525,7 +525,8 @@
 			font-weight: normal;
 			font-style: normal;
 			position: relative;
-			top: 1px;
+			top: 0;
+			left: 0;
 		}
 
 		/* icon only */
@@ -547,90 +548,28 @@
 			}
 
 			.icon::before {
-				text-indent: 1px;
+				text-indent: 0;
 				line-height: normal;
-				text-align:center;
-				height: 16px;
-				line-height: 16px;
+				text-align: center;
+				height: 20px;
+				width: 20px;
+				line-height: 18px;
 				display: block;
-				padding-top: 1px;
 			}
 
 			/* specific position */
-				.linux.mozilla #detail .icon::before,
-				.linux.mozilla .item .icon::before {
-					line-height: 18px;
-				}
-
-				.linux.webkit .item .icon::before {
-					line-height: 14px;
-				}
-				.linux.webkit .listDisplaySwitch .icon::before,
-				.linux.webkit #help span.icon::before,
-				.linux.webkit #detail .icon::before {
-					line-height: 14px;
-				}
-
-				.linux.webkit #detail .icon.close::before {
-					text-indent: 0px; /* -1 on windows */
-				}
-
-				.linux.mozilla .listDisplaySwitch .icon::before {
-					line-height: 18px;
-				}
-
-				#help .icon[data-icon=d]::before,
-				.listDisplaySwitch .icon[data-icon=d]::before {
-					text-indent: 3px;
-				}
-
-				.linux.mozilla #editForm .icon.close::before {
-					line-height: 18px;
-				}
-				.linux.webkit #editForm .icon.close::before {
-					line-height: 14px;
-					text-indent: 0px;
-				}
-
-				.linux.mozilla .add::after,
-				.linux.mozilla .filterFormSwitch::after {
-					line-height: 20px;
-				}
-
-				.linux.webkit #editForm .icon[data-icon=t]::before {
-					line-height: 14px;
-					text-indent: 0px;
-				}
-
-				.linux.mozilla .add[rel=storage]::after{
-					line-height: 20px;
-				}
-				/*
-				.icon[data-icon=u]::before,
-				.icon[data-icon=d]::before {
-					text-indent: 3px;
-				}
-
-				.webkit .icon[data-icon=u]::before,
-				.icon[data-icon=P]::before,
-				.icon[data-icon=t]::before {
+				.windows .icon[data-icon=d]::before {
 					text-indent: 2px;
 				}
 
-				.webkit .icon[data-icon=P]::before,
-				.webkit .icon[data-icon=t]::before {
-					text-indent: 1px;
+				.windows.mozilla .icon[data-icon=u]::before {
+					text-indent: 2px;
 				}
 
-				.icon.delete_another[data-icon=t]::before {
-					text-indent: 0;
+				.windows.webkit .delete_another::before,
+				.windows.webkit .close::before {
+					left: -4px;
 				}
-
-				.webkit .icon[data-icon=X]::before {
-					text-indent: 0;
-				}
-				*/
-
 
 		/* icons using sprite */
 			#relocate::before,
@@ -670,22 +609,23 @@
 			.icon.help {
 				width: 22px;
 				height: 22px;
+				margin: 3px;
 			}
 
 			.icon.help::before {
-				line-height: 20px;
+				line-height: 22px;
 				text-indent: 0px;
 				height: 22px;
+				width: 22px;
 				font-size: 22px;
-			}
-			.webkit .icon.help::before {
-				line-height: 18px;
-				text-indent: 1px;
+				text-align: center;
 			}
 
-			#help .icon.help {
-				top: 3px;
-				left: 3px;
+			.windows.webkit .icon.help::before {
+				left: -4px;
+			}
+			.windows.mozilla .icon.help::before {
+				text-indent: 1px;
 			}
 
 			#help .icon.order {
@@ -729,11 +669,11 @@
 
 				text-align: center;
 				font-family: 'iconic', sans-serif;
-				font-size: 16px;
-				text-shadow: none;
-				text-indent: 1px;
-				line-height: 20px;
 				font-weight: normal;
+				font-size: 18px;
+				text-shadow: none;
+				text-indent: 0;
+				line-height: 18px;
 				font-style: normal;
 
 				background-color: hsl(45, 90%, 23%);
@@ -771,8 +711,8 @@
 				content: "+";
 				line-height: 18px;
 			}
-			.add[rel=storage]::after{
-				line-height: 18px;
+			.windows .add::after {
+				text-indent: 1px;
 			}
 
 			.add[rel=book]::before { background-position: -2px -382px; }
@@ -847,16 +787,21 @@
 				border-radius: 7px; /* webkit border radius does not support percentages... */
 				border-radius: 50%;
 				font-family: 'iconic', sans-serif;
-				font-size: 12px;
+				font-size: 14px;
+				font-weight: normal;
 				background-color: hsl(45, 90%, 23%);
 				color: hsl(45, 90%, 50%);
 				text-shadow: none;
-				text-indent: 1px;
-				line-height: 16px;
+				text-indent: 0;
+				line-height: 14px;
 
 				-webkit-transition: all 0.15s ease-in-out 0s;
 				-moz-transition: 	all 0.15s ease-in-out 0s;
 				transition: 		all 0.15s ease-in-out 0s;
+			}
+			.windows .sort::before,
+			.windows .sort::after {
+				text-indent: 1px;
 			}
 
 			.sort::before {
@@ -864,20 +809,15 @@
 				left: 1px;
 				content: "3";
 			}
-			.webkit .sort::before {
+			.windows.webkit .sort::before {
 				top: -1px;
-				line-height: 14px;
+				line-height: 12px;
 			}
 
 			.sort::after {
 				top: 22px;
 				left: -13px;
 				content: "5";
-			}
-			.webkit .sort::after {
-				top: 21px;
-				text-indent: 0;
-				line-height: 14px;
 			}
 
 			.sort:hover::before,
@@ -927,10 +867,6 @@
 				left: 6px;
 			}
 
-			.help {
-				/*margin: 0.3em;*/
-			}
-
 			.add_another {
 				position: absolute;
 				right: 15px;
@@ -954,6 +890,10 @@
 			.search,
 			.cancel {
 				font-size: 14px;
+			}
+
+			.windows .cancel::before {
+				top: 1px;
 			}
 	/** _______________________________________END BUTTONS **/
 
@@ -1117,9 +1057,18 @@
 				content: "f";
 				line-height: 16px;
 			}
+			.windows.webkit .filterFormSwitch::after {
+				text-indent: 1px;
+			}
 
 			.deploy .filterFormSwitch::after {
 				content: "4";
+			}
+			.windows .deploy .filterFormSwitch::after {
+				text-indent: 1px;
+			}
+			.windows.webkit .filterFormSwitch::after {
+				line-height: 18px;
 			}
 
 			#help .filterFormSwitch {

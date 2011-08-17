@@ -229,7 +229,7 @@ $(document).ready(function(){
 	//for .add_another positonning bug in firefox
 		if( $.browser.mozilla ) $('html').addClass('mozilla');
 		else if( $.browser.webkit ) $('html').addClass('webkit');
-		
+
 		if( navigator.platform.search(/Win/) != -1 ) $('html').addClass('windows');
 		else if( navigator.platform.search(/Linux/) != -1 ) $('html').addClass('linux');
 
@@ -263,38 +263,37 @@ $(document).ready(function(){
 		}
 
 	//author, band and artist inputs in forms
-		$('.add_another').click(function(event){
-			event.preventDefault();
+		$('#editBox')
+			.delegate('.add_another', 'click', function(event){
+				event.preventDefault();
 
-			if( !$(this).is('button') ) return;
+				if( !$(this).is('button') ) return;
 
-			var $list = $(this).siblings('ol'),
-				$anotherBlock = $('.anotherInfo:last', $list).clone(true),
-				tmp = $('input', $anotherBlock).attr('id').split('_'),
-				indice = parseInt(tmp[1]);
+				var $list = $(this).siblings('ol'),
+					$anotherBlock = $('.anotherInfo:last', $list).clone(true),
+					tmp = $('input', $anotherBlock).attr('id').split('_'),
+					indice = parseInt(tmp[1]);
 
-			$anotherBlock.children('input')
-				.attr('id', function(index, attr){ return attr.replace(new RegExp(indice), indice + 1); })
-				.attr('name', function(index, attr){ return attr.replace(new RegExp(indice), indice + 1); })
-				.val('') //reseting the value
-				.siblings('label').attr('for', $('input', $anotherBlock).attr('id'));
+				$anotherBlock.children('input')
+					.attr('id', function(index, attr){ return attr.replace(new RegExp(indice), indice + 1); })
+					.attr('name', function(index, attr){ return attr.replace(new RegExp(indice), indice + 1); })
+					.val('') //reseting the value
+					.siblings('label').attr('for', $('input', $anotherBlock).attr('id'));
 
 
-			$list.append( $anotherBlock );
-		});
+				$list.append( $anotherBlock );
+			}).delegate('.delete_another', 'click', function(event){
+				event.preventDefault();
 
-		$('.delete_another').click(function(event){
-			event.preventDefault();
+				if( !$(this).is('button') ) return;
 
-			if( !$(this).is('button') ) return;
-
-			//only remove if not the only one
-			if( $(this).closest('ol').children('li').length > 1 ){
-				$(this).closest('.anotherInfo').remove();
-			} else { //reset the input
-				$(this).siblings('input').val('');
-			}
-		});
+				//only remove if not the only one
+				if( $(this).closest('ol').children('li').length > 1 ){
+					$(this).closest('.anotherInfo').remove();
+				} else { //reset the input
+					$(this).siblings('input').val('');
+				}
+			});
 
 	//tabs filter section
 		$('.filterForm')
@@ -774,47 +773,32 @@ $(document).ready(function(){
 				e.preventDefault();
 				var $this = $(this);
 
-				if( !$this.is('a') ) return;
-
 				//storage list case
-				if( $this.closest('#list_storage').length ){
-					var $detailBox = $('#detailBox'),
-						$detail = $('#detail'),
-						$closeButton = $('<button>').addClass('button icon close').attr('title', 'Fermer').attr('data-icon', 'X'),
-						$block = $this.parent().find('.block').clone(true);
+				var $detailBox = $('#detailBox'),
+					$detail = $('#detail'),
+					$closeButton = $('<button>').addClass('button icon close').attr('title', 'Fermer').attr('data-icon', 'X'),
+					$block = $this.parent().find('.block').clone(true);
 
-					if( !$block.children('.close').length ){
-						$block.append( $closeButton );
-					}
-
-					//saving for detail display after list refresh if needed
-					$detailBox.data('link', $this.attr('href'))
-						.data('tab', $('#nav').data('activeTab'));
-
-					$detail.html( $block );
-
-					$('#detailShow').click();
-
-					//remove src then add it with new value to avoid flicker
-					$('#storageImg').removeAttr('src').attr('src', $this.attr('href') );
-
-					$('#storageShow').click();
-
-				//in detailBox case
-				} else {
-					//toggle storage image show
-					if( $('#storageShow:checked').length ) $('#storageHide').click();
-					else {
-						$('#storageImg').attr('src', $this.attr('href') );
-						$('#storageShow').click();
-					}
+				if( !$block.children('.close').length ){
+					$block.append( $closeButton );
 				}
+
+				//saving for detail display after list refresh if needed
+				$detailBox.data('link', $this.attr('href'))
+					.data('tab', $('#nav').data('activeTab'));
+
+				$detail.html( $block );
+
+				$('#detailShow').click();
+
+				//remove src then add it with new value to avoid flicker
+				$('#storageImg').removeAttr('src').attr('src', $this.attr('href') );
+
+				$('#storageShow').click();
 			})
 			.delegate('.detail', 'click', function(e){
 				e.preventDefault();
 				var $this = $(this);
-
-				if( !$this.is('a') ) return;
 
 				var $detailBox = $('#detailBox'),
 					$detail = $('#detail'),
@@ -835,6 +819,17 @@ $(document).ready(function(){
 
 				$('#detailShow').click();
 			});
+
+		$('.box').delegate('.storage', 'click', function(e){
+			e.preventDefault();
+			var $this = $(this);
+			//toggle storage image show
+			if( $('#storageShow:checked').length ) $('#storageHide').click();
+			else {
+				$('#storageImg').attr('src', $this.attr('href') );
+				$('#storageShow').click();
+			}
+		});
 
 		$('.filter').live('click', function(e){
 			e.preventDefault();
