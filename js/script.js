@@ -282,7 +282,8 @@ $(document).ready(function(){
 
 
 				$list.append( $anotherBlock );
-			}).delegate('.delete_another', 'click', function(event){
+			})
+			.delegate('.delete_another', 'click', function(event){
 				event.preventDefault();
 
 				if( !$(this).is('button') ) return;
@@ -454,7 +455,7 @@ $(document).ready(function(){
 			$('#editShow').attr('rel', rel).click();
 		});
 
-		$('.smallBoxes .item, .bigBoxes .item, #detailBox')
+		$('.smallBoxes, .bigBoxes, #detailBox, #confirmBox')
 			.delegate('.update', 'click', function(e){
 				e.preventDefault();
 
@@ -601,7 +602,10 @@ $(document).ready(function(){
 							break;
 					}
 				});
-			}).delegate('.delete', 'click', function(e){
+			});
+
+		$('.smallBoxes, .bigBoxes, #detailBox')
+			.delegate('.delete', 'click', function(e){
 				e.preventDefault();
 
 				if( !$(this).is('a') ) return;
@@ -694,7 +698,7 @@ $(document).ready(function(){
 			}
 		});
 
-		$('.smallBoxes .item').delegate('.move', 'click', function(e){
+		$('.smallBoxes').delegate('.move', 'click', function(e){
 			e.preventDefault();
 
 			if( !$(this).is('a') ) return;
@@ -830,7 +834,7 @@ $(document).ready(function(){
 			}
 		});
 
-		$('#list_book .item, #list_movie .item, #list_album .item').delegate('.filter', 'click', function(e){
+		$('#list_book, #list_movie, #list_album, #detailBox').delegate('.filter', 'click', function(e){
 			e.preventDefault();
 			var $this = $(this);
 
