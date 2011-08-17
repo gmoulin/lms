@@ -454,219 +454,218 @@ $(document).ready(function(){
 			$('#editShow').attr('rel', rel).click();
 		});
 
-		$('.update').live('click', function(e){
-			e.preventDefault();
+		$('.smallBoxes .item, .bigBoxes .item, #detailBox')
+			.delegate('.update', 'click', function(e){
+				e.preventDefault();
 
-			if( !$(this).is('a') ) return;
+				if( !$(this).is('a') ) return;
 
-			var $this = $(this),
-				rel = $this.attr('rel'),
-				target = rel.charAt(0).toUpperCase() + rel.substr(1),
-				$manage = $('#manage_' + rel),
-				link = '',
-				text = 'Modifier les informations ',
-				$editPreview = $('#editPreview').empty();
+				var $this = $(this),
+					rel = $this.attr('rel'),
+					target = rel.charAt(0).toUpperCase() + rel.substr(1),
+					$manage = $('#manage_' + rel),
+					link = '',
+					text = 'Modifier les informations ',
+					$editPreview = $('#editPreview').empty();
 
-			if( rel == 'book' ) link = 'bookAuthors';
-			else if( rel == 'movie' ) link = 'movieArtists';
-			else if( rel == 'album' ) link = 'albumBands';
+				if( rel == 'book' ) link = 'bookAuthors';
+				else if( rel == 'movie' ) link = 'movieArtists';
+				else if( rel == 'album' ) link = 'albumBands';
 
-			//raz
-			if( link != '' ) $('#' + link).children('.anotherInfo:gt(0)').remove();
-			$manage.find(':input').val('');
-			$manage.find('.coverStatus').html(function(){
-				return 'Déposer ' + ( rel == 'movie' ? 'l\'affiche' : 'la couverture' );
-			});
+				//raz
+				if( link != '' ) $('#' + link).children('.anotherInfo:gt(0)').remove();
+				$manage.find(':input').val('');
+				$manage.find('.coverStatus').html(function(){
+					return 'Déposer ' + ( rel == 'movie' ? 'l\'affiche' : 'la couverture' );
+				});
 
-			//setting action
-			$('#' + rel + 'Action').val('update');
+				//setting action
+				$('#' + rel + 'Action').val('update');
 
-			//hidding and emptying results
-			hideInform();
+				//hidding and emptying results
+				hideInform();
 
-			//construct the popup title text
-			if( rel == 'book' ) text += 'du livre';
-			else if( rel == 'movie' ) text += 'du film';
-			else if( rel == 'album' ) text += 'du l\'album';
-			else if( rel == 'saga' ) text += 'de la saga';
-			else if( rel == 'author' ) text += 'de l\'auteur';
-			else if( rel == 'artist' ) text += 'de l\'artiste';
-			else if( rel == 'band' ) text += 'du groupe';
-			else if( rel == 'storage' ) text = 'du rangement';
+				//construct the popup title text
+				if( rel == 'book' ) text += 'du livre';
+				else if( rel == 'movie' ) text += 'du film';
+				else if( rel == 'album' ) text += 'du l\'album';
+				else if( rel == 'saga' ) text += 'de la saga';
+				else if( rel == 'author' ) text += 'de l\'auteur';
+				else if( rel == 'artist' ) text += 'de l\'artiste';
+				else if( rel == 'band' ) text += 'du groupe';
+				else if( rel == 'storage' ) text = 'du rangement';
 
-			//place the form
-			$manage.appendTo( $('#editForm .formWrapper').empty() );
+				//place the form
+				$manage.appendTo( $('#editForm .formWrapper').empty() );
 
-			$('#editForm .formTitle').html( text );
-			$('#formSubmit').data('save_clicked', 0).attr('rel', 'update').text('Enregistrer');
+				$('#editForm .formTitle').html( text );
+				$('#formSubmit').data('save_clicked', 0).attr('rel', 'update').text('Enregistrer');
 
-			//open the modal dialog
-			$('#editShow').attr('rel', rel).click();
+				//open the modal dialog
+				$('#editShow').attr('rel', rel).click();
 
-			var decoder = $('<textarea>');
-			//load the data and set the form fields with it
-			$.post('ajax/manage' + target + '.php', 'action=get&id=' + $this.attr('href'), function(data){
-				switch( rel ){
-					case 'book':
-							$('#bookID').val(data.bookID);
-							$('#bookTitle').val(decoder.html(data.bookTitle).val()).change();
-							$('#bookSize').val(data.bookSize);
-							$('#bookCover').val(data.bookCover);
-							$('<img>', { src : 'image.php?cover=book&id=' + data.bookID }).appendTo( $editPreview );
-							$('#bookSagaTitle').val(decoder.html(data.sagaTitle).val()).change();
-							$('#bookSagaPosition').val(data.bookSagaPosition);
+				var decoder = $('<textarea>');
+				//load the data and set the form fields with it
+				$.post('ajax/manage' + target + '.php', 'action=get&id=' + $this.attr('href'), function(data){
+					switch( rel ){
+						case 'book':
+								$('#bookID').val(data.bookID);
+								$('#bookTitle').val(decoder.html(data.bookTitle).val()).change();
+								$('#bookSize').val(data.bookSize);
+								$('#bookCover').val(data.bookCover);
+								$('<img>', { src : 'image.php?cover=book&id=' + data.bookID }).appendTo( $editPreview );
+								$('#bookSagaTitle').val(decoder.html(data.sagaTitle).val()).change();
+								$('#bookSagaPosition').val(data.bookSagaPosition);
 
-							//options for this select are reseted by loadList()
-							//at this point the list can be empty
-							$('#bookStorage').data('selectedId', data.storageID);
+								//options for this select are reseted by loadList()
+								//at this point the list can be empty
+								$('#bookStorage').data('selectedId', data.storageID);
 
-							var indice = 1;
-							$.each(data.authors, function(i, author){
-								if( indice > 1 ) $('#another_author').click();
-								$('#bookAuthor_' + indice).val(decoder.html(author.authorFirstName+' '+author.authorLastName).val());
-								indice++;
-							});
-						break;
-					case 'movie':
-							$('#movieID').val(data.movieID);
-							$('#movieTitle').val(decoder.html(data.movieTitle).val()).change();
-							$('#movieGenre').val(decoder.html(data.movieGenre).val());
-							$('#movieMediaType').val(decoder.html(data.movieMediaType).val());
-							$('#movieLength').val(data.movieLength);
-							$('#movieCover').val(data.movieCover);
-							$('<img>', { src : 'image.php?cover=movie&id=' + data.movieID }).appendTo( $editPreview );
-							$('#movieSagaTitle').val(decoder.html(data.sagaTitle).val()).change();
-							$('#movieSagaPosition').val(data.movieSagaPosition);
+								var indice = 1;
+								$.each(data.authors, function(i, author){
+									if( indice > 1 ) $('#another_author').click();
+									$('#bookAuthor_' + indice).val(decoder.html(author.authorFirstName+' '+author.authorLastName).val());
+									indice++;
+								});
+							break;
+						case 'movie':
+								$('#movieID').val(data.movieID);
+								$('#movieTitle').val(decoder.html(data.movieTitle).val()).change();
+								$('#movieGenre').val(decoder.html(data.movieGenre).val());
+								$('#movieMediaType').val(decoder.html(data.movieMediaType).val());
+								$('#movieLength').val(data.movieLength);
+								$('#movieCover').val(data.movieCover);
+								$('<img>', { src : 'image.php?cover=movie&id=' + data.movieID }).appendTo( $editPreview );
+								$('#movieSagaTitle').val(decoder.html(data.sagaTitle).val()).change();
+								$('#movieSagaPosition').val(data.movieSagaPosition);
 
-							//options for this select are reseted by initMovieFormList()
-							//at this point the list can be empty
-							$('#movieStorage').data('selectedId', data.storageID);
+								//options for this select are reseted by initMovieFormList()
+								//at this point the list can be empty
+								$('#movieStorage').data('selectedId', data.storageID);
 
-							var indice = 1;
-							$.each(data.artists, function(i, artist){
-								if( indice > 1 ) $('#another_artist').click();
-								$('#movieArtist_' + indice).val(decoder.html(artist.artistFirstName+' '+artist.artistLastName).val());
-								indice++;
-							});
-						break;
-					case 'album':
-							$('#albumID').val(data.albumID);
-							$('#albumTitle').val(decoder.html(data.albumTitle).val()).change();
-							$('#albumType').val(data.albumType);
-							$('#albumCover').val(data.albumCover);
-							$('<img>', { src : 'image.php?cover=album&id=' + data.albumID }).appendTo( $editPreview );
+								var indice = 1;
+								$.each(data.artists, function(i, artist){
+									if( indice > 1 ) $('#another_artist').click();
+									$('#movieArtist_' + indice).val(decoder.html(artist.artistFirstName+' '+artist.artistLastName).val());
+									indice++;
+								});
+							break;
+						case 'album':
+								$('#albumID').val(data.albumID);
+								$('#albumTitle').val(decoder.html(data.albumTitle).val()).change();
+								$('#albumType').val(data.albumType);
+								$('#albumCover').val(data.albumCover);
+								$('<img>', { src : 'image.php?cover=album&id=' + data.albumID }).appendTo( $editPreview );
 
-							//options for this select are reseted by initAlbumFormList()
-							//at this point the list can be empty
-							$('#albumStorage').data('selectedId', data.storageID);
+								//options for this select are reseted by initAlbumFormList()
+								//at this point the list can be empty
+								$('#albumStorage').data('selectedId', data.storageID);
 
-							var indice = 1;
-							$.each(data.bands, function(i, band){
-								if( indice > 1 ) $('#another_band').click();
-								$('#albumBand_' + indice).val(decoder.html(band.bandName).val());
-								indice++;
-							});
-						break;
-					case 'author':
-							$('#authorID').val(data.authorID);
-							$('#authorFirstName').val(decoder.html(data.authorFirstName).val());
-							$('#authorLastName').val(decoder.html(data.authorLastName).val());
-							$('#authorWebSite').val(data.authorWebSite);
-							$('#authorSearchURL').val(data.authorSearchURL);
-						break;
-					case 'band':
-							$('#bandID').val(data.bandID);
-							$('#bandName').val(decoder.html(data.bandName).val()).change();
-							$('#bandGenre').val(decoder.html(data.bandGenre).val());
-							$('#bandWebSite').val(data.bandWebSite);
-						break;
-					case 'artist':
-							$('#artistID').val(data.artistID);
-							$('#artistFirstName').val(decoder.html(data.artistFirstName).val());
-							$('#artistLastName').val(decoder.html(data.artistLastName).val());
-						break;
-					case 'saga':
-							$('#sagaID').val(data.sagaID);
-							$('#sagaTitle').val(decoder.html(data.sagaTitle).val());
-							$('#sagaSearchURL').val(data.sagaSearchURL);
-						break;
-					case 'storage':
-							$('#storageID').val(data.storageID);
-							$('#storageRoom').val(data.storageRoom);
-							$('#storageType').val(data.storageType);
-							$('#storageColumn').val(data.storageColumn);
-							$('#storageLine').val(data.storageLine);
-							$('<img>', { src : 'image.php?cover=storage&id=' + data.storageID }).appendTo( $editPreview );
-						break;
+								var indice = 1;
+								$.each(data.bands, function(i, band){
+									if( indice > 1 ) $('#another_band').click();
+									$('#albumBand_' + indice).val(decoder.html(band.bandName).val());
+									indice++;
+								});
+							break;
+						case 'author':
+								$('#authorID').val(data.authorID);
+								$('#authorFirstName').val(decoder.html(data.authorFirstName).val());
+								$('#authorLastName').val(decoder.html(data.authorLastName).val());
+								$('#authorWebSite').val(data.authorWebSite);
+								$('#authorSearchURL').val(data.authorSearchURL);
+							break;
+						case 'band':
+								$('#bandID').val(data.bandID);
+								$('#bandName').val(decoder.html(data.bandName).val()).change();
+								$('#bandGenre').val(decoder.html(data.bandGenre).val());
+								$('#bandWebSite').val(data.bandWebSite);
+							break;
+						case 'artist':
+								$('#artistID').val(data.artistID);
+								$('#artistFirstName').val(decoder.html(data.artistFirstName).val());
+								$('#artistLastName').val(decoder.html(data.artistLastName).val());
+							break;
+						case 'saga':
+								$('#sagaID').val(data.sagaID);
+								$('#sagaTitle').val(decoder.html(data.sagaTitle).val());
+								$('#sagaSearchURL').val(data.sagaSearchURL);
+							break;
+						case 'storage':
+								$('#storageID').val(data.storageID);
+								$('#storageRoom').val(data.storageRoom);
+								$('#storageType').val(data.storageType);
+								$('#storageColumn').val(data.storageColumn);
+								$('#storageLine').val(data.storageLine);
+								$('<img>', { src : 'image.php?cover=storage&id=' + data.storageID }).appendTo( $editPreview );
+							break;
+					}
+				});
+			}).delegate('.delete', 'click', function(e){
+				e.preventDefault();
+
+				if( !$(this).is('a') ) return;
+
+				//hidding and emptying results
+				hideInform();
+
+				var $this = $(this),
+					id = $this.attr('href'),
+					rel = $this.attr('rel'),
+					target = rel.charAt(0).toUpperCase() + rel.substr(1),
+					text = 'Etes-vous sûr de vouloir supprimer ',
+					$formWrapper = $('#confirmForm .formWrapper'),
+					$confirmSubmit = $('#confirmSubmit').data('save_clicked', 0);
+
+				if( rel == 'book' ) text += 'ce livre ?';
+				else if( rel == 'album' ) text += 'cet album ?';
+				else if( rel == 'movie' ) text += 'ce film ?';
+				else if( rel == 'saga' ) text += 'cette saga ?<br />Tous les livres et films listés ci-dessous seront également supprimés !';
+				else if( rel == 'author' ) text += 'cet auteur ?<br />Tous les livres listés ci-dessous seront également supprimés !';
+				else if( rel == 'artist' ) text += 'cet artiste ?<br />Tous les films listés ci-dessous seront également supprimés !';
+				else if( rel == 'band' ) text += 'ce groupe ?<br />Tous les albums listés ci-dessous seront également supprimés !';
+				else if( rel == 'storage' ) text += 'ce rangement ?';
+				else if( rel == 'loan' ) text += 'ce prêt ?';
+
+				$formWrapper.html( $('<span>', { 'class': 'confirmation' }).append( text ) );
+
+				//set the submit button text
+				$confirmSubmit.data('save_clicked', 0);
+
+				//open the modal dialog
+				$('#confirmShow').attr('rel', rel).data('id', id).click();
+
+				if( rel == 'saga' || rel == 'author' || rel == 'artist' || rel == 'band' ){
+					//chargement de la liste des livres ou films ou albums impactés
+					$.ajax({
+						url: 'ajax/manage' + target + '.php',
+						type: 'POST',
+						data: 'action=impact&id=' + id,
+						async: false,
+						dataType: 'html',
+						success: function(data){
+							$formWrapper.append(data);
+						}
+					});
+				}
+
+				if( rel == 'storage' ){
+					//chargement de la liste des livres ou films impactés
+					$.ajax({
+						url: 'ajax/manage' + target + '.php',
+						type: 'POST',
+						data: 'action=impact&id=' + id,
+						async: false,
+						dataType: 'html',
+						success: function(data){
+							$formWrapper.append(data);
+							$confirmSubmit.prop({ disabled: true });
+						}
+					});
 				}
 			});
-		});
 
-		$('.delete').live('click', function(e){
-			e.preventDefault();
-
-			if( !$(this).is('a') ) return;
-
-			//hidding and emptying results
-			hideInform();
-
-			var $this = $(this),
-				id = $this.attr('href'),
-				rel = $this.attr('rel'),
-				target = rel.charAt(0).toUpperCase() + rel.substr(1),
-				text = 'Etes-vous sûr de vouloir supprimer ',
-				$formWrapper = $('#confirmForm .formWrapper'),
-				$confirmSubmit = $('#confirmSubmit').data('save_clicked', 0);
-
-			if( rel == 'book' ) text += 'ce livre ?';
-			else if( rel == 'album' ) text += 'cet album ?';
-			else if( rel == 'movie' ) text += 'ce film ?';
-			else if( rel == 'saga' ) text += 'cette saga ?<br />Tous les livres et films listés ci-dessous seront également supprimés !';
-			else if( rel == 'author' ) text += 'cet auteur ?<br />Tous les livres listés ci-dessous seront également supprimés !';
-			else if( rel == 'artist' ) text += 'cet artiste ?<br />Tous les films listés ci-dessous seront également supprimés !';
-			else if( rel == 'band' ) text += 'ce groupe ?<br />Tous les albums listés ci-dessous seront également supprimés !';
-			else if( rel == 'storage' ) text += 'ce rangement ?';
-			else if( rel == 'loan' ) text += 'ce prêt ?';
-
-			$formWrapper.html( $('<span>', { 'class': 'confirmation' }).append( text ) );
-
-			//set the submit button text
-			$confirmSubmit.data('save_clicked', 0);
-
-			//open the modal dialog
-			$('#confirmShow').attr('rel', rel).data('id', id).click();
-
-			if( rel == 'saga' || rel == 'author' || rel == 'artist' || rel == 'band' ){
-				//chargement de la liste des livres ou films ou albums impactés
-				$.ajax({
-					url: 'ajax/manage' + target + '.php',
-					type: 'POST',
-					data: 'action=impact&id=' + id,
-					async: false,
-					dataType: 'html',
-					success: function(data){
-						$formWrapper.append(data);
-					}
-				});
-			}
-
-			if( rel == 'storage' ){
-				//chargement de la liste des livres ou films impactés
-				$.ajax({
-					url: 'ajax/manage' + target + '.php',
-					type: 'POST',
-					data: 'action=impact&id=' + id,
-					async: false,
-					dataType: 'html',
-					success: function(data){
-						$formWrapper.append(data);
-						$confirmSubmit.prop({ disabled: true });
-					}
-				});
-			}
-		});
-
-		$('#relocate').live('click', function(e){
+		$('#editBox').delegate('#relocate', 'click', function(e){
 			e.preventDefault();
 
 			if( !$(this).is('button') ) return;
@@ -695,7 +694,7 @@ $(document).ready(function(){
 			}
 		});
 
-		$('.move').live('click', function(e){
+		$('.smallBoxes .item').delegate('.move', 'click', function(e){
 			e.preventDefault();
 
 			if( !$(this).is('a') ) return;
@@ -733,7 +732,7 @@ $(document).ready(function(){
 			$('#editShow').attr('rel', 'move').data('id', id).click();
 		});
 
-		$('.addLoan').live('click', function(e){
+		$('#detailBox').delegate('.addLoan', 'click', function(e){
 			e.preventDefault();
 
 			if( !$(this).is('a') ) return;
@@ -831,7 +830,7 @@ $(document).ready(function(){
 			}
 		});
 
-		$('.filter').live('click', function(e){
+		$('#list_book .item, #list_movie .item, #list_album .item').delegate('.filter', 'click', function(e){
 			e.preventDefault();
 			var $this = $(this);
 
@@ -1078,7 +1077,7 @@ $(document).ready(function(){
 			setTimeout(function(){ $section.find('fieldset:first input[type=text]:first').focus(); }, 1000);
 		});
 
-		$('.close').live('click', function(e){
+		$('.box').delegate('.close', 'click', function(e){
 			e.preventDefault();
 
 			if( !$(this).is('button') ) return;
@@ -1129,9 +1128,11 @@ $(document).ready(function(){
 		addEscapeSupport();
 
 	//button blur for link (:active ok but no :focus...)
+		/*
 		$('a.button').live('click', function(e){
 			$(this).blur();
 		});
+		*/
 
 	//list display switch
 		$('.listDisplaySwitch a').click(function(e){
@@ -1148,7 +1149,7 @@ $(document).ready(function(){
 		});
 
 	//band last check date
-		$('.externalLink', '#list_band').live('click', function(e){
+		$('#list_band').delegate('.externalLink', 'click', function(e){
 			//update the date on band web site link click
 			$.post('ajax/manageBand.php', {action: 'updateLastCheckDate', id: $(this).attr('rel')});
 
