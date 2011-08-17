@@ -229,6 +229,9 @@ $(document).ready(function(){
 	//for .add_another positonning bug in firefox
 		if( $.browser.mozilla ) $('html').addClass('mozilla');
 		else if( $.browser.webkit ) $('html').addClass('webkit');
+		
+		if( navigator.platform.search(/Win/) != -1 ) $('html').addClass('windows');
+		else if( navigator.platform.search(/Linux/) != -1 ) $('html').addClass('linux');
 
 	//ajax global management
 		$('#ajax_loader').ajaxStart(function(){

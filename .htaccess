@@ -522,3 +522,11 @@ Require user gmoulin
 	Allow from env=sub
 	Satisfy any
 </Files>
+
+# Access to any png file does not required authentication in subdomains (/storage/)
+<Files *.png>
+	Allow from env=sub
+	Satisfy any
+</Files>
+
+
