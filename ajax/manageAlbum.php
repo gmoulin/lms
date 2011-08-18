@@ -95,7 +95,7 @@ try {
 
 				if( !isset($_SESSION['albums']) || !isset($_SESSION['albums']['page']) ){
 					$_SESSION['albums']['page'] = 0;
-					$_SESSION['albums']['numPerPage'] = 30;
+					$_SESSION['albums']['numPerPage'] = 20;
 				}
 
 				if( $type == 0 ){

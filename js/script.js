@@ -1294,6 +1294,7 @@ $(document).ready(function(){
 
 	//"onload" ajax call for data
 	ajaxCalls();
+
 });
 
 /**
@@ -1883,7 +1884,6 @@ function getList( type ){
 									var t = translateTop.exec($last.attr('style')),
 										top = ( t.length == 3 ? parseFloat(t[2]) : 0 );
 									if( top > 0 && ($(window).scrollTop() + $(window).height()) >= top ){
-										console.log('calling');
 										getList(3);
 									}
 								}

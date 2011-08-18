@@ -96,7 +96,7 @@ try {
 
 				if( !isset($_SESSION['movies']) || !isset($_SESSION['movies']['page']) ){
 					$_SESSION['movies']['page'] = 0;
-					$_SESSION['movies']['numPerPage'] = 30;
+					$_SESSION['movies']['numPerPage'] = 20;
 				}
 
 				if( $type == 0 ){

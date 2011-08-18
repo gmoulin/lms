@@ -94,7 +94,7 @@ try {
 
 				if( !isset($_SESSION['books']) || !isset($_SESSION['books']['page']) ){
 					$_SESSION['books']['page'] = 0;
-					$_SESSION['books']['numPerPage'] = 30;
+					$_SESSION['books']['numPerPage'] = 20;
 				}
 
 				if( $type == 0 ){
