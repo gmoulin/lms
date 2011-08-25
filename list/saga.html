@@ -21,7 +21,7 @@
 						<dd>
 							${saga.sagaTitle}
 							{{if saga.sagaSearchURL != null}}
-								<a class="button icon externalLink" data-icon="/" href="${saga.sagaSearchURL}" title="Rechercher les livres de la saga sur internet" target="_blank"></a>
+							<a class="button icon externalLink" data-icon="/" rel="${saga.sagaID}" href="${saga.sagaSearchURL}" title="Rechercher les livres de la saga sur internet" target="_blank"></a>
 							{{/if}}
 
 							<a class="button icon update" data-icon="P" href="${saga.sagaID}" title="Mettre à jour les informations de cette saga" rel="saga"></a>

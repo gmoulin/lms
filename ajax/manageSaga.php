@@ -56,6 +56,21 @@ try {
 				$oSaga->delSaga( $id );
 				$response = 'ok';
 			break;
+		case 'updateLastCheckDate' :
+				$id = filter_has_var(INPUT_POST, 'id');
+				if( is_null($id) || $id === false ){
+					throw new Exception('Gestion des sagas : identitifant de la saga manquant.');
+				}
+
+				$id = filter_var($_POST['id'], FILTER_VALIDATE_INT, array('min_range' => 1));
+				if( $id === false ){
+					throw new Exception('Gestion des sagas : identifiant incorrect.');
+				}
+
+				$oSaga = new saga();
+				$oSaga->updSagaLastCheckDate( $id );
+				$response = "ok";
+			break;
 		case 'impact' : //on deletion
 				$id = filter_has_var(INPUT_POST, 'id');
 				if( is_null($id) || $id === false ){

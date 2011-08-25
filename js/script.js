@@ -1132,11 +1132,9 @@ $(document).ready(function(){
 		addEscapeSupport();
 
 	//button blur for link (:active ok but no :focus...)
-		/*
-		$('a.button').live('click', function(e){
+		$('body').delegate('a.button', 'click', function(e){
 			$(this).blur();
 		});
-		*/
 
 	//list display switch
 		$('.listDisplaySwitch a').click(function(e){
@@ -1152,7 +1150,7 @@ $(document).ready(function(){
 			$wrapper.removeClass( listDisplay ).addClass( switchTo ).children('.listContent').render('relayout');
 		});
 
-	//band last check date
+	//last check date
 		$('#list_band').delegate('.externalLink', 'click', function(e){
 			//update the date on band web site link click
 			$.post('ajax/manageBand.php', {action: 'updateLastCheckDate', id: $(this).attr('rel')});
@@ -1163,6 +1161,25 @@ $(document).ready(function(){
 				var $ul = $li.parent();
 
 				if( $('#bandSortType').val() == 2 ){
+					//asc sort, oldest first, moving the li at the list end
+					$li.appendTo($ul);
+				} else {
+					//desc sort, newest first, moving the li at the list start
+					$li.prependTo($ul);
+				}
+			}
+		});
+
+		$('#list_saga').delegate('.externalLink', 'click', function(e){
+			//update the date on band web site link click
+			$.post('ajax/manageSaga.php', {action: 'updateLastCheckDate', id: $(this).attr('rel')});
+
+			//date sort active
+			if( $('#sagaSortType').val() >= 2 ){
+				var $li = $(this).closest('li');
+				var $ul = $li.parent();
+
+				if( $('#sagaSortType').val() == 2 ){
 					//asc sort, oldest first, moving the li at the list end
 					$li.appendTo($ul);
 				} else {

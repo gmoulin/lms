@@ -11,6 +11,13 @@
  * @category Saga
  */
 class saga extends commun {
+	private $_sortTypes = array(
+		'sagaTitle',
+		'sagaTitle DESC',
+		'sagaLastCheckDate',
+		'sagaLastCheckDate DESC',
+	);
+
 	// Constructor
 	public function __construct() {
 		//for "commun" ($this->db & co)
@@ -22,15 +29,28 @@ class saga extends commun {
 	 */
 	public function getSagas() {
 		try {
-			$getSagas = $this->db->prepare("
-				SELECT sagaID, sagaTitle, sagaSearchURL
-				FROM saga
-				ORDER BY sagaTitle
-			");
+			//stash cache init
+			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
+			StashBox::setHandler($stashFileSystem);
 
-			$getSagas->execute();
+			StashManager::setHandler(get_class( $this ), $stashFileSystem);
+			$stash = StashBox::getCache(get_class( $this ), __FUNCTION__);
+			$results = $stash->get();
+			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
+				$getBands = $this->db->prepare("
+					SELECT sagaID, sagaTitle, sagaSearchURL, sagaLastCheckDate
+					FROM saga
+					ORDER BY ".$this->_sortTypes[0]."
+				");
 
-			return $getSagas->fetchAll();
+				$getBands->execute();
+
+				$results = $getBands->fetchAll();
+
+				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+			}
+
+			return $results;
 
 		} catch ( PDOException $e ) {
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
@@ -386,8 +406,8 @@ class saga extends commun {
 	public function addSaga( $data ) {
 		try {
 			$addSaga = $this->db->prepare("
-				INSERT INTO saga (sagaTitle, sagaSearchURL)
-				VALUES (:title, :searchURL)
+				INSERT INTO saga (sagaTitle, sagaSearchURL, sagaLastCheckDate)
+				VALUES (:title, :searchURL, NULL)
 			");
 
 			$addSaga->execute(
@@ -434,6 +454,26 @@ class saga extends commun {
 			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
 		}
 	}
+
+	/**
+	 * @param integer $id
+	 */
+	public function updSagaLastCheckDate( $id ) {
+		try {
+			$updSagaLastCheckDate = $this->db->prepare("
+				UPDATE saga
+				SET sagaLastCheckDate = NOW()
+				WHERE sagaID = :id
+			");
+
+			$updSagaLastCheckDate->execute( array(':id' => $id) );
+
+		} catch ( PDOException $e ) {
+			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
+		}
+	}
+
+
 
 	/**
 	 * @param integer $id
@@ -705,5 +745,94 @@ class saga extends commun {
 
 		return $formData;
 	}
+
+	/**
+	 * dupplicate the band table into a myisam temporary table for full text search
+	 * @param array $filters
+	 * @return array[][]
+	 */
+	public function getSagasByFullTextSearch(){
+		try {
+			//sanitize the form data
+			$args = array(
+				'sagaTitleFilter'		=> FILTER_SANITIZE_STRING,
+				'sagaSortType'			=> FILTER_SANITIZE_NUMBER_INT,
+			);
+			$filters = filter_var_array($_POST, $args);
+
+			$filters['sagaSortType'] = filter_var($filters['sagaSortType'], FILTER_VALIDATE_INT, array('min_range' => 0, 'max-range' => 3));
+			if( $filters['sagaSortType'] === false ) $filters['sagaSortType'] = 0;
+
+			//construct the query
+			$sql = " SELECT *";
+
+			$sqlSelect = array();
+			$sqlWhere = array();
+			$sqlOrder = 'score DESC, ';
+			$params = array();
+			if( !empty($filters['sagaTitleFilter']) ){
+				$sqlSelect[] = "MATCH(sagaTitle) AGAINST (:sagaTitleS)";
+				$sqlWhere[] = "MATCH(sagaTitle) AGAINST (:sagaTitleW)";
+				$params[':sagaTitleS'] = $this->prepareForFullTextQuery($filters['sagaTitleFilter']);
+				$params[':sagaTitleW'] = $params[':sagaTitleS'];
+			}
+
+			$sql = " SELECT sft.*"
+				  .( !empty($sqlSelect) ? ', '.implode(' + ', $sqlSelect).' AS score' : '')
+				  ." FROM saga_ft sft"
+				  ." WHERE 1 "
+				  .( !empty($sqlWhere) ? ' AND '.implode(' AND ', $sqlWhere) : '')
+				  ." ORDER BY "
+				  .( !empty($sqlSelect) ? $sqlOrder : '')
+				  .$this->_sortTypes[$filters['sagaSortType']];
+
+
+			//stash cache init
+			$stashFileSystem = new StashFileSystem(array('path' => STASH_PATH));
+			StashBox::setHandler($stashFileSystem);
+
+			StashManager::setHandler(get_class( $this ), $stashFileSystem);
+			if( empty($params) ) $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql);
+			else $stash = StashBox::getCache(get_class( $this ), __FUNCTION__, $sql, serialize($params));
+			$results = $stash->get();
+			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
+
+				//drop the temporary table if it exists
+				$destroyTmpTable = $this->db->prepare("DROP TEMPORARY TABLE IF EXISTS saga_ft");
+				$destroyTmpTable->execute();
+
+				//create the temporary table
+				$tmpTable = $this->db->prepare("
+					CREATE TEMPORARY TABLE saga_ft AS
+					SELECT  sagaID, sagaTitle, sagaSearchURL, sagaLastCheckDate
+					FROM saga
+				");
+				$tmpTable->execute();
+
+				//add the fulltext index
+				$indexTmpTable = $this->db->prepare("
+					ALTER TABLE saga_ft ENGINE = MyISAM,
+					ADD FULLTEXT INDEX sagaTitleFT (sagaTitle),
+					ADD INDEX sagaLastCheckDate (sagaLastCheckDate)
+				");
+				$indexTmpTable->execute();
+
+
+				$getSagas = $this->db->prepare($sql);
+
+				$getSagas->execute( $params );
+
+				$results = $getSagas->fetchAll();
+
+				if( !empty($results) ) $stash->store($results, STASH_EXPIRE);
+			}
+
+			return $results;
+
+		} catch ( PDOException $e ){
+			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
+		}
+	}
+
 }
 ?>

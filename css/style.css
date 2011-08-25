@@ -1051,6 +1051,9 @@
 			.filterFormSwitch[rel=band]::before { background-position: -209px -127px; }
 			.deploy .filterFormSwitch[rel=band]::before { background-position: -207px -127px; }
 
+			.filterFormSwitch[rel=saga]::before { background-position: 14px -1836px; }
+			.deploy .filterFormSwitch[rel=saga]::before { background-position: 14px -1836px; }
+
 			.filterFormSwitch::after {
 				top: 1px;
 				left:1px;
