@@ -1071,7 +1071,7 @@ $(document).ready(function(){
 
 			//set the storage to Miro for albums
 			if( rel == 'album' ){
-				$('#albumStorage').val( $('#albumStorage').children(':contains("Miro")').val() );
+				setTimeout(function(){ $('#albumStorage').val( $('#albumStorage').children(':contains("Miro")').val() ); }, 500);
 			}
 
 			$('datalist, select', $section).loadList();
