@@ -337,7 +337,7 @@ window.log = function(){
 		}();
 
 		var self = this,
-			$container, $items, $holder, $hasCover,
+			$container, $items, $holder, $hasCover, isAlbumThumbnail,
 			defaults = {},
 			settings = {},
 			helper = {
@@ -408,15 +408,20 @@ window.log = function(){
 						styles: {'visibility': 'visible'}
 					});
 					$hasCover = $container.parent().hasClass('hasCovers');
+					isAlbumThumbnail = $container.parent().is('#list_album.thumbnails');
 
 					settings.width = $container.width();
 
 					settings.holderOuterWidth = $holder.children().outerWidth(true);
 					settings.holderOuterHeight = $holder.children().outerHeight(true);
+					if( isAlbumThumbnail ) settings.holderOuterHeight = settings.holderOuterWidth;
 
 					//put each item in a row in order to get the combined row items width
 					$items.each(function(){
 						var $item = $(this);
+						if( isAlbumThumbnail ){
+							$item.height( $item.width() );
+						}
 
 						//item with no covers have auto width and the "holder" trick does not work
 						if( !$hasCover ){

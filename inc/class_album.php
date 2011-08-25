@@ -115,8 +115,8 @@ class album extends commun {
 				$params[':albumTitleW'] = $params[':albumTitleS'];
 			}
 			if( !empty($filters['albumBandFilter']) ){
-				$sqlSelect[] = "MATCH(bft.bandName) AGAINST (:bandS)";
-				$sqlWhere[] = "MATCH(bft.bandName) AGAINST (:bandW)";
+				$sqlSelect[] = "MATCH(baft.bandName) AGAINST (:bandS)";
+				$sqlWhere[] = "MATCH(baft.bandName) AGAINST (:bandW)";
 				$params[':bandS'] = $this->prepareForFullTextQuery($filters['albumBandFilter']);
 				$params[':bandW'] = $params[':bandS'];
 			}
