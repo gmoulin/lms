@@ -71,6 +71,31 @@ try {
 				$oSaga->updSagaLastCheckDate( $id );
 				$response = "ok";
 			break;
+		case 'updateRating' :
+				$id = filter_has_var(INPUT_POST, 'id');
+				if( is_null($id) || $id === false ){
+					throw new Exception('Gestion des sagas : identitifant de la saga manquant.');
+				}
+
+				$id = filter_var($_POST['id'], FILTER_VALIDATE_INT, array('min_range' => 1));
+				if( $id === false ){
+					throw new Exception('Gestion des sagas : identifiant incorrect.');
+				}
+
+				$rating = filter_has_var(INPUT_POST, 'rating');
+				if( is_null($rating) || $rating === false ){
+					throw new Exception('Gestion des sagas : note de la saga manquante.');
+				}
+
+				$rating = filter_var($_POST['rating'], FILTER_VALIDATE_INT, array('min_range' => 1, 'max_range' => 5));
+				if( $rating === false ){
+					throw new Exception('Gestion des sagas : note incorrecte.');
+				}
+
+				$oSaga = new saga();
+				$oSaga->updRating( $id, $rating );
+				$response = "ok";
+			break;
 		case 'impact' : //on deletion
 				$id = filter_has_var(INPUT_POST, 'id');
 				if( is_null($id) || $id === false ){

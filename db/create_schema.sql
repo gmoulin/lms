@@ -21,8 +21,8 @@ CREATE  TABLE IF NOT EXISTS `lms`.`storage` (
   INDEX `storageIDX` (`storageRoom` ASC, `storageType` ASC) ,
   INDEX `storageCodeIDX` (`storageColumn` ASC, `storageLine` ASC) ,
   UNIQUE INDEX `storageUniqueIDX` (`storageRoom` ASC, `storageType` ASC, `storageColumn` ASC, `storageLine` ASC) )
-ENGINE = InnoDB
-COMMENT = 'lieux de rangement';
+ENGINE = InnoDB, 
+COMMENT = 'lieux de rangement' ;
 
 
 -- -----------------------------------------------------
@@ -34,10 +34,11 @@ CREATE  TABLE IF NOT EXISTS `lms`.`saga` (
   `sagaID` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `sagaTitle` VARCHAR(255) NOT NULL ,
   `sagaSearchURL` VARCHAR(255) NULL ,
+  `sagaLastCheckDate` DATETIME NULL ,
   PRIMARY KEY (`sagaID`) ,
   UNIQUE INDEX `SagaTitleIDX` (`sagaTitle` ASC) )
-ENGINE = InnoDB
-COMMENT = 'informations sur les sagas';
+ENGINE = InnoDB, 
+COMMENT = 'informations sur les sagas' ;
 
 
 -- -----------------------------------------------------
@@ -52,8 +53,8 @@ CREATE  TABLE IF NOT EXISTS `lms`.`loan` (
   PRIMARY KEY (`loanID`) ,
   INDEX `LoanHolderIDX` (`loanHolder` ASC) ,
   INDEX `LoanDateIDX` (`loanDate` ASC) )
-ENGINE = InnoDB
-COMMENT = 'gestion des prêts';
+ENGINE = InnoDB, 
+COMMENT = 'gestion des prêts' ;
 
 
 -- -----------------------------------------------------
@@ -96,7 +97,7 @@ CREATE  TABLE IF NOT EXISTS `lms`.`book` (
     ON DELETE SET NULL
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-COMMENT = 'informations sur les livres';
+COMMENT = 'informations sur les livres' ;
 
 
 -- -----------------------------------------------------
@@ -112,8 +113,8 @@ CREATE  TABLE IF NOT EXISTS `lms`.`author` (
   `authorSearchURL` VARCHAR(255) NULL ,
   PRIMARY KEY (`authorID`) ,
   UNIQUE INDEX `AuthorNameIDX` (`authorFirstName` ASC, `authorLastName` ASC) )
-ENGINE = InnoDB
-COMMENT = 'informations sur les auteurs';
+ENGINE = InnoDB, 
+COMMENT = 'informations sur les auteurs' ;
 
 
 -- -----------------------------------------------------
@@ -137,8 +138,8 @@ CREATE  TABLE IF NOT EXISTS `lms`.`books_authors` (
     REFERENCES `lms`.`book` (`bookID` )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'liaison entre livres et auteurs';
+ENGINE = InnoDB, 
+COMMENT = 'liaison entre livres et auteurs' ;
 
 
 -- -----------------------------------------------------
@@ -183,8 +184,8 @@ CREATE  TABLE IF NOT EXISTS `lms`.`movie` (
     REFERENCES `lms`.`loan` (`loanID` )
     ON DELETE SET NULL
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'informations sur les films';
+ENGINE = InnoDB, 
+COMMENT = 'informations sur les films' ;
 
 
 -- -----------------------------------------------------
@@ -199,8 +200,8 @@ CREATE  TABLE IF NOT EXISTS `lms`.`artist` (
   `artistPhoto` LONGTEXT NULL ,
   PRIMARY KEY (`artistID`) ,
   UNIQUE INDEX `ArtistNameIDX` (`artistFirstName` ASC, `artistLastName` ASC) )
-ENGINE = InnoDB
-COMMENT = 'informations sur les artistes';
+ENGINE = InnoDB, 
+COMMENT = 'informations sur les artistes' ;
 
 
 -- -----------------------------------------------------
@@ -224,8 +225,8 @@ CREATE  TABLE IF NOT EXISTS `lms`.`movies_artists` (
     REFERENCES `lms`.`movie` (`movieID` )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'liaison entre films et artistes';
+ENGINE = InnoDB, 
+COMMENT = 'liaison entre films et artistes' ;
 
 
 -- -----------------------------------------------------
@@ -257,8 +258,8 @@ CREATE  TABLE IF NOT EXISTS `lms`.`album` (
     REFERENCES `lms`.`loan` (`loanID` )
     ON DELETE SET NULL
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'informations sur les albums';
+ENGINE = InnoDB, 
+COMMENT = 'informations sur les albums' ;
 
 
 -- -----------------------------------------------------
@@ -275,8 +276,8 @@ CREATE  TABLE IF NOT EXISTS `lms`.`band` (
   PRIMARY KEY (`bandID`) ,
   UNIQUE INDEX `BandNameIDX` (`bandName` ASC, `bandGenre` ASC) ,
   INDEX `BandLastCheckDateIDX` (`bandLastCheckDate` ASC) )
-ENGINE = InnoDB
-COMMENT = 'informations sur les groupes';
+ENGINE = InnoDB, 
+COMMENT = 'informations sur les groupes' ;
 
 
 -- -----------------------------------------------------
@@ -300,8 +301,8 @@ CREATE  TABLE IF NOT EXISTS `lms`.`albums_bands` (
     REFERENCES `lms`.`album` (`albumID` )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'liaison entre les albums et les groupes';
+ENGINE = InnoDB, 
+COMMENT = 'liaison entre les albums et les groupes' ;
 
 
 -- -----------------------------------------------------

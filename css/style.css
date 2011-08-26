@@ -277,17 +277,17 @@
 
 		@-webkit-keyframes loader {
 			from { background-position: 0  0px; }
-			to   { background-position: 0 15px; }
+			to	 { background-position: 0 15px; }
 		}
 
 		@-moz-keyframes loader {
 			from { background-position: 0  0px; }
-			to   { background-position: 0 15px; }
+			to	 { background-position: 0 15px; }
 		}
 
 		@keyframes loader {
 			from { background-position: 0  0px; }
-			to   { background-position: 0 15px; }
+			to	 { background-position: 0 15px; }
 		}
 	/** _______________________________________END AJAX LOADER **/
 
@@ -410,14 +410,14 @@
 			= add
 		*/
 		.button {
-			text-decoration: 	none;
+			text-decoration:	none;
 			font-weight: bold;
 			font-size: 13px;
 			line-height: 13px;
 
-			-webkit-user-select: 	none;
-			-moz-user-select: 		none;
-			user-select: 			none;
+			-webkit-user-select:	none;
+			-moz-user-select:		none;
+			user-select:			none;
 
 			display:	inline-block;
 			position:	relative;
@@ -431,9 +431,9 @@
 			-webkit-border-radius:	8px;
 			border-radius:			8px;
 
-			background-image: 	-moz-linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
-			background-image: 	-webkit-linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
-			background-image: 	linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
+			background-image:	-moz-linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
+			background-image:	-webkit-linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
+			background-image:	linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
 			background-repeat:	no-repeat;
 
 			color:				hsl(45, 90%, 23%);
@@ -441,8 +441,8 @@
 
 			text-shadow: 1px 1px 0 hsl(45, 90%, 80%);
 			-webkit-transition: all 0.15s ease-in-out 0s;
-			-moz-transition: 	all 0.15s ease-in-out 0s;
-			transition: 		all 0.15s ease-in-out 0s;
+			-moz-transition:	all 0.15s ease-in-out 0s;
+			transition:			all 0.15s ease-in-out 0s;
 		}
 
 		.button:visited,
@@ -454,15 +454,15 @@
 		.button[disabled]:hover,
 		.button.disabled,
 		.button.disabled:hover {
-			opacity: 			.6;
-			cursor: 			default;
-			text-shadow: 		none;
-			background-image: 	none;
-			border-top: 		none;
-			border-bottom: 		none;
+			opacity:			.6;
+			cursor:				default;
+			text-shadow:		none;
+			background-image:	none;
+			border-top:			none;
+			border-bottom:		none;
 
 			-webkit-box-shadow: none;
-			box-shadow: 		none;
+			box-shadow:			none;
 		}
 
 		button.button {
@@ -473,8 +473,8 @@
 
 		span.button {
 			-webkit-transition: none;
-			-moz-transition: 	none;
-			transition: 		none;
+			-moz-transition:	none;
+			transition:			none;
 		}
 
 		span.button:hover {
@@ -680,8 +680,8 @@
 				color: hsl(45, 90%, 50%);
 
 				-webkit-transition: all 0.15s ease-in-out 0s;
-				-moz-transition: 	all 0.15s ease-in-out 0s;
-				transition: 		all 0.15s ease-in-out 0s;
+				-moz-transition:	all 0.15s ease-in-out 0s;
+				transition:			all 0.15s ease-in-out 0s;
 			}
 
 			.category:hover::after {
@@ -749,12 +749,12 @@
 				padding: 0;
 				display: inline-block;
 
-				background-image: 	url('../img/sprite.png');
+				background-image: url('../img/sprite.png');
 				background-repeat: no-repeat;
 
-				background-image: 	url('../img/sprite.png'), -webkit-gradient(linear, left top, left bottom, from(hsla(0, 100%, 100%, 0.5)), to(hsla(0, 100%, 0%, 0.4)), color-stop(0.1, hsla(0, 100%, 100%, 0)), color-stop(0.85, hsla(0, 100%, 100%, 0)));
-				background-image: 	url('../img/sprite.png'), -moz-linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
-				background-image: 	url('../img/sprite.png'), linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
+				background-image: url('../img/sprite.png'), -webkit-gradient(linear, left top, left bottom, from(hsla(0, 100%, 100%, 0.5)), to(hsla(0, 100%, 0%, 0.4)), color-stop(0.1, hsla(0, 100%, 100%, 0)), color-stop(0.85, hsla(0, 100%, 100%, 0)));
+				background-image: url('../img/sprite.png'), -moz-linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
+				background-image: url('../img/sprite.png'), linear-gradient(top, hsla(0, 100%, 100%, 0.5) 10%, hsla(0, 100%, 100%, 0) 85%, hsla(0, 100%, 0%, 0.4) 100%);
 				background-repeat: no-repeat, no-repeat;
 			}
 
@@ -796,8 +796,8 @@
 				line-height: 14px;
 
 				-webkit-transition: all 0.15s ease-in-out 0s;
-				-moz-transition: 	all 0.15s ease-in-out 0s;
-				transition: 		all 0.15s ease-in-out 0s;
+				-moz-transition:	all 0.15s ease-in-out 0s;
+				transition:			all 0.15s ease-in-out 0s;
 			}
 			.windows .sort::before,
 			.windows .sort::after {
@@ -828,8 +828,8 @@
 				text-shadow: none;
 
 				-webkit-transition: all 0.15s ease-in-out 0s;
-				-moz-transition:	all 0.15s ease-in-out 0s;
-				transition:			all 0.15s ease-in-out 0s;
+				   -moz-transition: all 0.15s ease-in-out 0s;
+						transition: all 0.15s ease-in-out 0s;
 			}
 
 			.sort.asc::before,
@@ -1122,7 +1122,7 @@
 			#detail .formTitle,
 			.formTitle,
 			.form legend,
-			.form label,
+			.form li label:first-child,
 			.list .title,
 			.list dd:only-child,
 			#help h2 {
@@ -1162,7 +1162,7 @@
 				font-size: 1.4em;
 			}
 
-			.form label {
+			.form label:not(.rate) {
 				font-size: 1.3em;
 			}
 
@@ -1198,7 +1198,7 @@
 			}
 
 			.form legend,
-			.form label,
+			.form label:not(.rate),
 			#detail .formTitle,
 			#detail dt,
 			.formTitle,
@@ -1348,7 +1348,7 @@
 			}
 
 		/* form validation */
-			.form label::before {
+			.form label:not(.rate)::before {
 				content: "";
 				height: 16px;
 				left: 15px;
@@ -1393,12 +1393,12 @@
 			}
 
 			/* form validation icons */
-				.form label::before { /* form validation icon position */
+				.form label:not(.rate)::before { /* form validation icon position */
 					background-position: 0 50px; /* transparent space there */
 				}
 
 				#help .invalid,
-				.required + label::before,
+				.required ~ label::before,
 				.form input:focus:required:invalid + label::before {
 					background-position: 0 -1244px;
 				}
@@ -1771,9 +1771,9 @@
 		/* item */
 			.listContent .item {
 				  -webkit-transition-property: -webkit-transform, height, width;
-					 -moz-transition-property:    -moz-transform, height, width;
-					   -o-transition-property:    -moz-transform, height, width;
-						  transition-property:         transform, height, width;
+					 -moz-transition-property:	  -moz-transform, height, width;
+					   -o-transition-property:	  -moz-transform, height, width;
+						  transition-property:		   transform, height, width;
 
 				  -webkit-transition-duration: 0.8s;
 					 -moz-transition-duration: 0.8s;
@@ -1793,7 +1793,7 @@
 
 			.item {
 				height: auto;
-				width:  auto;
+				width:	auto;
 				z-index: 2;
 				margin: 5px; /*Creates the 10px gap between each column and each line*/
 				padding: 3px;
@@ -1894,9 +1894,9 @@
 				position: relative;
 
 				  -webkit-transition-property: -webkit-transform, height, width;
-					 -moz-transition-property:    -moz-transform, height, width;
-					   -o-transition-property:    -moz-transform, height, width;
-						  transition-property:         transform, height, width;
+					 -moz-transition-property:	  -moz-transform, height, width;
+					   -o-transition-property:	  -moz-transform, height, width;
+						  transition-property:		   transform, height, width;
 
 				  -webkit-transition-duration: 0.8s, 0.8s, 0.8s;
 					 -moz-transition-duration: 0.8s, 0.8s, 0.8s;
@@ -1956,7 +1956,7 @@
 		/* smallBoxes list display */
 			.smallBoxes.hasCovers .item {
 				height: 200px;
-				width:  280px;
+				width:	280px;
 				padding: 2px 3px;
 			}
 
@@ -2075,6 +2075,60 @@
 			.bigBoxes .formTitle {
 				font-size: 2em;
 			}
+
+		/* rating */
+			.listContent .rating {
+				display: inline;
+			}
+
+			/* :not(:checked) is a filter, so that browsers that don’t support :checked don’t
+			   follow these rules. Every browser that supports :checked also supports :not(), so
+			   it doesn’t make the test unnecessarily selective */
+			.rating:not(:checked) > input {
+				position: absolute;
+				top: -9999px;
+				clip: rect(0,0,0,0);
+			}
+
+			.rating:not(:checked) > label.rate {
+				float: right;
+				width: 18px;
+				padding: 0;
+				overflow: hidden;
+				white-space: nowrap;
+				cursor: pointer;
+				font-size: 16px;
+				line-height: 14px;
+				color: #ddd;
+			}
+
+			.rating:not(:checked) > label.rate:before {
+				content: '★ ';
+			}
+
+			.rating > input:checked ~ label.rate {
+				color: #f70;
+			}
+
+			.rating:not(:checked) > label.rate:hover,
+			.rating:not(:checked) > label.rate:hover ~ label {
+				color: gold;
+			}
+
+			.rating > input:checked + label.rate:hover,
+			.rating > input:checked + label.rate:hover ~ label,
+			.rating > input:checked ~ label.rate:hover,
+			.rating > input:checked ~ label.rate:hover ~ label,
+			.rating > label.rate:hover ~ input.rate:checked ~ label {
+				color: #ea0;
+			}
+
+			.rating > label.rate:active {
+				position: relative;
+				top: 2px;
+				left: 2px;
+			}
+
 	/** ________________________________________END LISTS **/
 
 	/** ________________________________________MENU **/
@@ -2299,7 +2353,7 @@
 
 	/** ________________________________________SPRITE **/
 		#help .validation,
-		.form label::before,
+		.form label:first-child::before,
 		.categories li::before,
 		.slideMenu a::after {
 			background-image: url('../img/sprite.png');
@@ -2329,7 +2383,7 @@
 /* Hide for both screenreaders and browsers: h5bp.com/m */
 .hidden { display: none; visibility: hidden; }
 
-/* Hide only visually, but have it available for screenreaders: h5bp.com/n  & h5bp.com/o */
+/* Hide only visually, but have it available for screenreaders: h5bp.com/n	& h5bp.com/o */
 .visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
 
 /* Extends the .visuallyhidden class to allow the element to be focusable when navigated to via the keyboard: h5bp.com/p */

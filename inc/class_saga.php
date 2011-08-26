@@ -38,7 +38,7 @@ class saga extends commun {
 			$results = $stash->get();
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getBands = $this->db->prepare("
-					SELECT sagaID, sagaTitle, sagaSearchURL, sagaLastCheckDate
+					SELECT sagaID, sagaTitle, sagaSearchURL, sagaLastCheckDate, sagaRating
 					FROM saga
 					ORDER BY ".$this->_sortTypes[0]."
 				");
@@ -72,7 +72,7 @@ class saga extends commun {
 			$results = $stash->get();
 			if( $stash->isMiss() ){ //cache not found, retrieve values from database and stash them
 				$getSagaById = $this->db->prepare("
-					SELECT sagaID, sagaTitle, sagaSearchURL
+					SELECT sagaID, sagaTitle, sagaSearchURL, sagaRating
 					FROM saga
 					WHERE sagaID = :id
 				");
@@ -403,17 +403,18 @@ class saga extends commun {
 	 * @param array $data
 	 * @return integer
 	 */
-	public function addSaga( $data ) {
+	public function addSaga( $data ){
 		try {
 			$addSaga = $this->db->prepare("
-				INSERT INTO saga (sagaTitle, sagaSearchURL, sagaLastCheckDate)
-				VALUES (:title, :searchURL, NULL)
+				INSERT INTO saga (sagaTitle, sagaSearchURL, sagaLastCheckDate, sagaRating)
+				VALUES (:title, :searchURL, NULL, :rating)
 			");
 
 			$addSaga->execute(
 				array(
-					':title' => $data['title'],
+					':title'	 => $data['title'],
 					':searchURL' => $data['searchURL'],
+					':rating'	 => ( is_null($data['rating']) ? NULL : $data['rating'] ),
 				)
 			);
 
@@ -431,7 +432,7 @@ class saga extends commun {
 	/**
 	 * @param array $data
 	 */
-	public function updSaga( $data ) {
+	public function updSaga( $data ){
 		try {
 			$updSaga = $this->db->prepare("
 				UPDATE saga
@@ -458,7 +459,7 @@ class saga extends commun {
 	/**
 	 * @param integer $id
 	 */
-	public function updSagaLastCheckDate( $id ) {
+	public function updSagaLastCheckDate( $id ){
 		try {
 			$updSagaLastCheckDate = $this->db->prepare("
 				UPDATE saga
@@ -473,12 +474,30 @@ class saga extends commun {
 		}
 	}
 
+	/**
+	 * @param integer $id
+	 * @param integer $rating
+	 */
+	public function updRating( $id, $rating ){
+		try {
+			$updSagaLastCheckDate = $this->db->prepare("
+				UPDATE saga
+				SET sagaRating = :rating
+				WHERE sagaID = :id
+			");
+
+			$updSagaLastCheckDate->execute( array(':id' => $id, ':rating' => $rating) );
+
+		} catch ( PDOException $e ) {
+			erreur_pdo( $e, get_class( $this ), __FUNCTION__ );
+		}
+	}
 
 
 	/**
 	 * @param integer $id
 	 */
-	public function delSaga( $id ) {
+	public function delSaga( $id ){
 		try {
 			$delSaga = $this->db->prepare("
 				DELETE
@@ -501,7 +520,7 @@ class saga extends commun {
 	 * @param integer $id
 	 * @return array[][]
 	 */
-	public function delSagaImpact( $id ) {
+	public function delSagaImpact( $id ){
 		try {
 			$delSagaImpact = $this->db->prepare("
 				(
@@ -528,7 +547,7 @@ class saga extends commun {
 	 * @param integer $id
 	 * @return array[][]
 	 */
-	public function moveImpact( $id ) {
+	public function moveImpact( $id ){
 		try {
 			$moveSagaImpact = $this->db->prepare("
 				(
@@ -667,6 +686,7 @@ class saga extends commun {
 			'id'			=> FILTER_SANITIZE_NUMBER_INT,
 			'title'			=> FILTER_SANITIZE_STRING,
 			'searchURL'		=> FILTER_SANITIZE_URL,
+			'rating'		=> FILTER_SANITIZE_NUMBER_INT,
 		);
 
 		foreach( $args as $field => $validation ){
@@ -729,13 +749,29 @@ class saga extends commun {
 				} else {
 					if( !empty($searchURL) ){
 						$searchURL = filter_var($searchURL, FILTER_VALIDATE_URL);
-						if( $id === false ){
+						if( $searchURL === false ){
 							$errors[] = array('sagaSearchURL', 'URL de recherche invalide.', 'error');
 						} else {
 							$formData['searchURL'] = trim($searchURL);
 						}
 					} else {
 						$formData['searchURL'] = '';
+					}
+				}
+
+				//rating
+				if( is_null($rating) || $rating === false ){
+					$errors[] = array('sagaRating', 'Note incorrecte.', 'error');
+				} else {
+					if( !empty($rating) ){
+						$rating = filter_var($rating, FILTER_VALIDATE_INT, array( 'min_range' => 1, 'max_range' => 5 ));
+						if( $rating === false ){
+							$errors[] = array('sagaRating', 'Note invalide.', 'error');
+						} else {
+							$formData['rating'] = $rating;
+						}
+					} else {
+						$formData['rating'] = null;
 					}
 				}
 			}
@@ -804,7 +840,7 @@ class saga extends commun {
 				//create the temporary table
 				$tmpTable = $this->db->prepare("
 					CREATE TEMPORARY TABLE saga_ft AS
-					SELECT  sagaID, sagaTitle, sagaSearchURL, sagaLastCheckDate
+					SELECT	sagaID, sagaTitle, sagaSearchURL, sagaLastCheckDate
 					FROM saga
 				");
 				$tmpTable->execute();

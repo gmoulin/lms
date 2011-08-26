@@ -591,6 +591,9 @@ $(document).ready(function(){
 								$('#sagaID').val(data.sagaID);
 								$('#sagaTitle').val(decoder.html(data.sagaTitle).val());
 								$('#sagaSearchURL').val(data.sagaSearchURL);
+								if( data.sagaRating >= 1 ){
+									$('#star'+data.sagaRating).prop('checked', true);
+								}
 							break;
 						case 'storage':
 								$('#storageID').val(data.storageID);
@@ -1153,7 +1156,7 @@ $(document).ready(function(){
 	//last check date
 		$('#list_band').delegate('.externalLink', 'click', function(e){
 			//update the date on band web site link click
-			$.post('ajax/manageBand.php', {action: 'updateLastCheckDate', id: $(this).attr('rel')});
+			$.post('ajax/manageBand.php', { action: 'updateLastCheckDate', id: $(this).attr('rel') });
 
 			//date sort active
 			if( $('#bandSortType').val() >= 2 ){
@@ -1308,6 +1311,13 @@ $(document).ready(function(){
 			}
 			else delayTimeout = setTimeout(function(){ ajaxCalls(); }, 1000);
 		}
+
+	//rating for saga
+		$('#list_saga')
+			.delegate('.rating input', 'change', function(e){
+				var saga = this.id.split('_')[0].substring(4); //from format sagaX_starY
+				$.post('ajax/manageSaga.php', { 'action': 'updateRating', 'id': saga, 'rating': this.value });
+			});
 
 	//"onload" ajax call for data
 	ajaxCalls();
