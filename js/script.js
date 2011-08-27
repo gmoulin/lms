@@ -476,6 +476,7 @@ $(document).ready(function(){
 				//raz
 				if( link != '' ) $('#' + link).children('.anotherInfo:gt(0)').remove();
 				$manage.find(':input').val('');
+				$manage.find(':checkbox, :radio').prop('checked', false);
 				$manage.find('.coverStatus').html(function(){
 					return 'Déposer ' + ( rel == 'movie' ? 'l\'affiche' : 'la couverture' );
 				});

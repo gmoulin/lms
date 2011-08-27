@@ -1122,7 +1122,7 @@
 			#detail .formTitle,
 			.formTitle,
 			.form legend,
-			.form li label:first-child,
+			.form .validation,
 			.list .title,
 			.list dd:only-child,
 			#help h2 {
@@ -1162,7 +1162,7 @@
 				font-size: 1.4em;
 			}
 
-			.form label:not(.rate) {
+			.form .validation {
 				font-size: 1.3em;
 			}
 
@@ -1198,7 +1198,7 @@
 			}
 
 			.form legend,
-			.form label:not(.rate),
+			.form .validation,
 			#detail .formTitle,
 			#detail dt,
 			.formTitle,
@@ -1234,7 +1234,8 @@
 			#detail .formTitle,
 			.formTitle,
 			.form legend,
-			.form label {
+			.form .validation,
+			.form .rating label {
 				text-shadow: 0 2px 2px rgb(255, 161, 0);
 			}
 
@@ -1249,14 +1250,14 @@
 
 	/** _______________________________________FORM & FIELDS **/
 		/* label styles */
-			label {
+			.validation {
 				display: inline-block;
 				width: 110px;
 				line-height: 20px;
 				vertical-align: top;
 			}
 
-			.form label {
+			.form .validation {
 				float: left;
 			}
 
@@ -1308,7 +1309,7 @@
 			}
 
 			.coverStatus,
-			.form input,
+			.form input:not([type=radio]),
 			.form select,
 			.form textarea {
 				margin-left: 20px;
@@ -1348,7 +1349,7 @@
 			}
 
 		/* form validation */
-			.form label:not(.rate)::before {
+			.form .validation::before {
 				content: "";
 				height: 16px;
 				left: 15px;
@@ -1393,19 +1394,19 @@
 			}
 
 			/* form validation icons */
-				.form label:not(.rate)::before { /* form validation icon position */
+				.form .validation::before { /* form validation icon position */
 					background-position: 0 50px; /* transparent space there */
 				}
 
 				#help .invalid,
 				.required ~ label::before,
-				.form input:focus:required:invalid + label::before {
+				.form input:focus:required:invalid + .validation::before {
 					background-position: 0 -1244px;
 				}
 
 				#help .valid,
 				.valid + label::before,
-				.form input:focus:required:valid + label::before {
+				.form input:focus:required:valid + .validation::before {
 					background-position: 0 -1178px;
 				}
 
@@ -2080,6 +2081,10 @@
 			.listContent .rating {
 				display: inline;
 			}
+			.form .rating {
+				float: left;
+				margin-left: 20px;
+			}
 
 			/* :not(:checked) is a filter, so that browsers that don’t support :checked don’t
 			   follow these rules. Every browser that supports :checked also supports :not(), so
@@ -2090,7 +2095,7 @@
 				clip: rect(0,0,0,0);
 			}
 
-			.rating:not(:checked) > label.rate {
+			.rating:not(:checked) > label {
 				float: right;
 				width: 18px;
 				padding: 0;
@@ -2101,29 +2106,32 @@
 				line-height: 14px;
 				color: #ddd;
 			}
+			.form .rating:not(:checked) > label {
+				line-height: 20px;
+			}
 
-			.rating:not(:checked) > label.rate:before {
+			.rating:not(:checked) > label:before {
 				content: '★ ';
 			}
 
-			.rating > input:checked ~ label.rate {
+			.rating > input:checked ~ label {
 				color: #f70;
 			}
 
-			.rating:not(:checked) > label.rate:hover,
-			.rating:not(:checked) > label.rate:hover ~ label {
+			.rating:not(:checked) > label:hover,
+			.rating:not(:checked) > label:hover ~ label {
 				color: gold;
 			}
 
-			.rating > input:checked + label.rate:hover,
-			.rating > input:checked + label.rate:hover ~ label,
-			.rating > input:checked ~ label.rate:hover,
-			.rating > input:checked ~ label.rate:hover ~ label,
-			.rating > label.rate:hover ~ input.rate:checked ~ label {
+			.rating > input:checked + label:hover,
+			.rating > input:checked + label:hover ~ label,
+			.rating > input:checked ~ label:hover,
+			.rating > input:checked ~ label:hover ~ label,
+			.rating > label:hover ~ input:checked ~ label {
 				color: #ea0;
 			}
 
-			.rating > label.rate:active {
+			.rating > label:active {
 				position: relative;
 				top: 2px;
 				left: 2px;
@@ -2353,7 +2361,7 @@
 
 	/** ________________________________________SPRITE **/
 		#help .validation,
-		.form label:first-child::before,
+		.form .validation::before,
 		.categories li::before,
 		.slideMenu a::after {
 			background-image: url('../img/sprite.png');
