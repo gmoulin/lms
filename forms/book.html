@@ -9,11 +9,11 @@
 		<ol>
 			<li>
 				<input type="text" id="bookTitle" name="title" value="" placeholder="Titre du livre" required />
-				<label for="bookTitle">Titre *</label>
+				<label class="validation" for="bookTitle">Titre *</label>
 			</li>
 			<li>
 				<input type="text" id="bookSize" name="size" list="bookSizeList" placeholder="Format du livre" required />
-				<label for="bookSize">Format *</label>
+				<label class="validation" for="bookSize">Format *</label>
 				<datalist id="bookSizeList">
 					<option value="">Formats déjà présents</option>
 				</datalist>
@@ -28,7 +28,7 @@
 			<li>
 				<input type="hidden" id="bookCover" name="cover" value="" />
 				<div id="bookCoverStatus" class="coverStatus">Déposer la couverture</div>
-				<label for="bookCoverStatus">Image</label>
+				<label class="validation" for="bookCoverStatus">Image</label>
 			</li>
 		</ol>
 	</fieldset>
@@ -39,14 +39,14 @@
 		<ol>
 			<li>
 				<input type="text" id="bookSagaTitle" name="saga" list="bookSagaList" placeholder="Saga du livre" />
-				<label for="bookSagaTitleInput">Saga</label>
+				<label class="validation" for="bookSagaTitleInput">Saga</label>
 				<datalist id="bookSagaList">
 					<option value="">Saga déjà présentes</option>
 				</datalist>
 			</li>
 			<li>
 				<input type="number" id="bookSagaPosition" name="position" value="" placeholder="Position du livre" class="spinbox" min="1" max="999" step="1" autocomplete="off" />
-				<label for="bookSagaPosition">Position</label>
+				<label class="validation" for="bookSagaPosition">Position</label>
 			</li>
 		</ol>
 	</fieldset>
@@ -59,7 +59,7 @@
 				<select id="bookStorage" name="storage" required>
 					<option value="">Lieu de rangement du livre</option>
 				</select>
-				<label for="bookStorage">Rangement *</label>
+				<label class="validation" for="bookStorage">Rangement *</label>
 			</li>
 		</ol>
 	</fieldset>
@@ -72,7 +72,7 @@
 			<li class="anotherInfo">
 				<button class="button icon delete_another" data-icon="t"></button>
 				<input type="text" id="bookAuthor_1" name="author_1" class="deletable" list="bookAuthorList" placeholder="Prénom et nom de l'auteur" required />
-				<label for="bookAuthor_1">Auteur *</label>
+				<label class="validation" for="bookAuthor_1">Auteur *</label>
 			</li>
 		</ol>
 		<datalist id="bookAuthorList">

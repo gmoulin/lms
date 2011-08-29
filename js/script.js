@@ -415,7 +415,7 @@ $(document).ready(function(){
 
 			$manage
 				.find(':input').val('')
-				.siblings('.quickLink').remove(); //clean the quick links
+				.siblings('.quickLink, .tip').remove(); //clean the quick links and tips
 
 			$manage.find('.coverStatus').html(function(){
 				var tmp = 'Déposer ';
@@ -1075,7 +1075,7 @@ $(document).ready(function(){
 
 			//set the storage to Miro for albums
 			if( rel == 'album' ){
-				setTimeout(function(){ $('#albumStorage').val( $('#albumStorage').children(':contains("Miro")').val() ); }, 500);
+				setTimeout(function(){ $('#albumStorage').val( $('#albumStorage').children(':contains("Miro")').val() ); }, 800);
 			}
 
 			$('datalist, select', $section).loadList();
@@ -1657,7 +1657,7 @@ function dropCover(event){
 
 	var $section = $('#editBox').find('.form'),
 		rel = $section.attr('rel'),
-		$coverStatus = $('.coverStatus', $section).removeClass('required valid error upload'); //reset validation visual infos
+		$coverStatus = $('.coverStatus', $section).removeClass('required valid error upload').siblings('.tip').remove(); //reset validation visual infos and error tip
 
 	if( !$coverStatus.data('oldText') ) $coverStatus.data('oldText', $coverStatus.html());
 

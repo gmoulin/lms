@@ -9,25 +9,25 @@
 		<ol>
 			<li>
 				<input type="text" id="storageRoom" name="room" value="" list="storageRoomList" placeholder="Pièce du rangement" required />
-				<label for="storageRoom">Pièce *</label>
+				<label class="validation" for="storageRoom">Pièce *</label>
 				<datalist id="storageRoomList">
 					<option value="">Pièces déjà présentes</option>
 				</datalist>
 			</li>
 			<li>
 				<input type="text" id="storageType" name="type" value="" list="storageTypeList" placeholder="Type du rangement" required />
-				<label for="storageRoom">Type *</label>
+				<label class="validation" for="storageRoom">Type *</label>
 				<datalist id="storageTypeList">
 					<option value="">Types déjà présents</option>
 				</datalist>
 			</li>
 			<li>
 				<input type="text" id="storageColumn" name="column" value="" placeholder="Colonne du rangement" pattern="[a-zA-Z]+" />
-				<label for="storageColumn">Colonne</label>
+				<label class="validation" for="storageColumn">Colonne</label>
 			</li>
 			<li>
 				<input type="number" id="storageLine" name="line" value="" placeholder="Ligne du rangement" pattern="[0-9]+" class="spinbox" />
-				<label for="storageLine">Ligne</label>
+				<label class="validation" for="storageLine">Ligne</label>
 			</li>
 		</ol>
 	</fieldset>

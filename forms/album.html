@@ -11,7 +11,7 @@
 			<li class="anotherInfo">
 				<button class="button icon delete_another" data-icon="t"></button>
 				<input type="text" id="albumBand_1" name="band_1" class="deletable" list="albumBandList" placeholder="Nom du groupe" required />
-				<label for="albumBand_1">Groupe *</label>
+				<label class="validation" for="albumBand_1">Groupe *</label>
 			</li>
 		</ol>
 		<datalist id="albumBandList">
@@ -25,11 +25,11 @@
 		<ol>
 			<li>
 				<input type="text" id="albumTitle" name="title" value="" placeholder="Titre de l'album" required />
-				<label for="albumTitle">Titre *</label>
+				<label class="validation" for="albumTitle">Titre *</label>
 			</li>
 			<li>
 				<input type="text" id="albumType" name="type" list="albumTypeList" placeholder="Type de l'album" required />
-				<label for="albumType">Type *</label>
+				<label class="validation" for="albumType">Type *</label>
 				<datalist id="albumTypeList">
 					<option value="">Types déjà présents</option>
 				</datalist>
@@ -44,7 +44,7 @@
 			<li>
 				<input type="hidden" id="albumCover" name="cover" value="" />
 				<div id="albumCoverStatus" class="coverStatus">Déposer la couverture</div>
-				<label for="albumCoverStatus">Image</label>
+				<label class="validation" for="albumCoverStatus">Image</label>
 			</li>
 		</ol>
 	</fieldset>
@@ -57,7 +57,7 @@
 				<select id="albumStorage" name="storage" required>
 					<option value="">Lieu de rangement de l'album</option>
 				</select>
-				<label for="albumStorage">Rangement *</label>
+				<label class="validation" for="albumStorage">Rangement *</label>
 			</li>
 		</ol>
 	</fieldset>

@@ -9,25 +9,25 @@
 		<ol>
 			<li>
 				<input type="text" id="movieTitle" name="title" value="" placeholder="Titre du film" required />
-				<label for="movieTitle">Titre *</label>
+				<label class="validation" for="movieTitle">Titre *</label>
 			</li>
 			<li>
 				<input type="text" id="movieGenre" name="genre" list="movieGenreList" placeholder="Genre du film" required />
-				<label for="movieGenre">Genre *</label>
+				<label class="validation" for="movieGenre">Genre *</label>
 				<datalist id="movieGenreList">
 					<option value="">Genres déjà présents</option>
 				</datalist>
 			</li>
 			<li>
 				<input type="text" id="movieMediaType" name="mediaType" list="movieMediaTypeList" placeholder="Format du film" required />
-				<label for="movieMediaType">Format *</label>
+				<label class="validation" for="movieMediaType">Format *</label>
 				<datalist id="movieMediaTypeList">
 					<option value="">Format déjà présents</option>
 				</datalist>
 			</li>
 			<li>
 				<input type="text" id="movieLength" name="length" placeholder="Durée du film en minutes" required min="0" max="360" class="range" pattern="[0-9]+" />
-				<label for="movieLength">Durée *</label>
+				<label class="validation" for="movieLength">Durée *</label>
 				<output for="movieLength"></output>
 			</li>
 		</ol>
@@ -40,7 +40,7 @@
 			<li>
 				<input type="hidden" id="movieCover" name="cover" value="" />
 				<div id="movieCoverStatus" class="coverStatus">Déposer l'affiche</div>
-				<label for="movieCoverStatus">Image</label>
+				<label class="validation" for="movieCoverStatus">Image</label>
 			</li>
 		</ol>
 	</fieldset>
@@ -51,14 +51,14 @@
 		<ol>
 			<li>
 				<input type="text" id="movieSagaTitle" name="saga" list="movieSagaList" placeholder="Saga du film" />
-				<label for="movieSagaTitleInput">Saga</label>
+				<label class="validation" for="movieSagaTitleInput">Saga</label>
 				<datalist id="movieSagaList">
 					<option value="">Saga déjà présentes</option>
 				</datalist>
 			</li>
 			<li>
 				<input type="number" id="movieSagaPosition" name="position" value="" placeholder="Position du film" class="spinbox" min="1" max="999" step="1" />
-				<label for="movieSagaPosition">Position</label>
+				<label class="validation" for="movieSagaPosition">Position</label>
 			</li>
 		</ol>
 	</fieldset>
@@ -71,7 +71,7 @@
 				<select id="movieStorage" name="storage" required>
 					<option value="">Lieu de rangement du film</option>
 				</select>
-				<label for="movieStorage">Rangement *</label>
+				<label class="validation" for="movieStorage">Rangement *</label>
 			</li>
 		</ol>
 	</fieldset>
@@ -84,7 +84,7 @@
 			<li class="anotherInfo">
 				<button class="button icon delete_another" data-icon="t"></button>
 				<input type="text" id="movieArtist_1" name="artist_1" list="movieArtistList" placeholder="Prénom et nom de l'artiste" required />
-				<label for="movieArtist_1">Artiste *</label>
+				<label class="validation" for="movieArtist_1">Artiste *</label>
 			</li>
 		</ol>
 		<datalist id="movieArtistList">
