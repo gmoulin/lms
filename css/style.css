@@ -1400,22 +1400,22 @@
 
 				#help .invalid,
 				.required ~ label::before,
-				.form input:focus:required:invalid + .validation::before {
+				.form input:focus:required:invalid ~ .validation::before {
 					background-position: 0 -1244px;
 				}
 
 				#help .valid,
-				.valid + label::before,
-				.form input:focus:required:valid + .validation::before {
+				.valid ~ label::before,
+				.form input:focus:required:valid ~ .validation::before {
 					background-position: 0 -1178px;
 				}
 
 				#help .error,
-				.error + label::before {
+				.error ~ label::before {
 					background-position: 0 -902px;
 				}
 
-				.coverStatus.upload + label::before {
+				.coverStatus.upload ~ label::before {
 					background-image: url('../img/ajax-loader.png'); /* animated png */
 					background-position: 0 0;
 				}
